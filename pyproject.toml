@@ -1,0 +1,19 @@
+[project]
+name = "tparton"
+version = "0.2.2"
+authors = [
+    { name = "Congzhou M Sha", email="cms6712@psu.edu" }
+]
+description = "Evolution of the transversity parton distribution functions via two methods: (1) direct integration of the DGLAP equations along the energy scale and (2) fast Mellin inversion."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies= ["numpy>=1.20", "scipy>=1.13", "mpmath", "gmpy2"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
