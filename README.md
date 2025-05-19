@@ -2,7 +2,7 @@
 
 Copyright 2025 Congzhou M Sha
 
-This is an evolution code for the transversity parton distribution functions encountered in hadronic physics.
+This is an evolution code for the transversity parton distribution functions encountered in hadronic physics. The associated preprint can be found at [https://arxiv.org/abs/2409.00221v2](https://arxiv.org/abs/2409.00221v2).
 
 ## Installation
 
