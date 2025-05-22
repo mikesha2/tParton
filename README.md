@@ -34,7 +34,7 @@ We are evolving the `INPUTPDF.dat` from 3.1 to 10.6 GeV<sup>2</sup>, for the plu
 To use the Hirai ODE integration method:
 `from tparton.t_evolution import evolve`
 
-To use the Vogelsang Mellon moment method:
+To use the Vogelsang Mellin moment method:
 `from tparton.m_evolution import evolve`
 
 Run `help(evolve)` for a description of the inputs.
