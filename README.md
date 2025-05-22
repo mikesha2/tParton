@@ -17,7 +17,7 @@ pip install tparton
 
 `NAME` is your choice of label for the conda environment you are creating. The above commands only need to be executed once. To use this environment again after a terminal or computer restart, execute `conda activate {NAME}` again.
 
-The `gmpy2` package is not required, but highly recommended for better performance of the Mellin moment method.
+The `gmpy2` package is not required, but highly recommended for better performance of the Mellin moment method. `jupyterlab` is also not required, but it is needed to run the supplemental code in our article. If you choose not to install `jupyterlab`, make sure to install `numpy` and other packages if they are not found, either when creating the environment or by running `conda install numpy ...`.
 
 ## Running tParton as a standalone script
 
