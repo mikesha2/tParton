@@ -2,11 +2,22 @@
 
 Copyright 2025 Congzhou M Sha
 
-This is an evolution code for the transversity parton distribution functions encountered in hadronic physics. The associated preprint can be found at [https://arxiv.org/abs/2409.00221v2](https://arxiv.org/abs/2409.00221v2).
+This is an evolution code for the transversity parton distribution functions encountered in hadronic physics. The associated preprint can be found at [https://arxiv.org/abs/2409.00221v2](https://arxiv.org/abs/2409.00221v2). If you found this work helpful, please cite our preprint, and eventually our published paper!
 
 ## Installation
 
-First, install this package using `pip install tparton`.
+First, ensure that you have a Python package system installed. We recommend Miniconda [https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website).
+
+In your terminal, run:
+```
+conda create -n NAME -c conda-forge jupyterlab mpmath scipy gmpy2 -y
+conda activate NAME
+pip install tparton
+```
+
+`NAME` is your choice of label for the conda environment you are creating. The above commands only need to be executed once. To use this environment again after a terminal or computer restart, execute `conda activate {NAME}` again.
+
+The `gmpy2` package is not required, but highly recommended for better performance of the Mellin moment method.
 
 ## Running tParton as a standalone script
 
