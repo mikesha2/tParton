@@ -1,6 +1,6 @@
 [project]
 name = "tparton"
-version = "0.2.2"
+version = "0.2.4"
 authors = [
     { name = "Congzhou M Sha", email="cms6712@psu.edu" }
 ]
