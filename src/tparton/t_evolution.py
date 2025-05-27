@@ -252,16 +252,16 @@ def evolve(
 
     if alpha_num:
         # Use the numerically evolved alpha_S / 2 pi
-        alp2pi = alp2pi_num
+        alp2pi_use = alp2pi_num
     else:
         # Use the approximate analytical expression for alpha_S in Eq. (4)
-        alp2pi = alp2pi(ts, lnlam, order, beta0, beta1)
+        alp2pi_use = alp2pi(ts, lnlam, order, beta0, beta1)
 
     # Euler integration of Eq. (1) by a small timestep dt
     dt = (tmax - tmin) / n_t
     res = np.copy(pdf)
 
-    for i, alp in enumerate(alp2pi):
+    for i, alp in enumerate(alp2pi_use):
         if verbose:
             print(i+1, ' of ', len(ts), 'time steps')
         # Perform the convolution at each x using (possibly log-scaled) z integration points
