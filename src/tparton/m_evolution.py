@@ -95,7 +95,7 @@ def NLO_splitting_function_moment(n, eta, CF, NC, Tf):
         )
 
 def alpha_S(Q2, order, beta0, beta1, l_QCD):
-    '''The approximate alpha_S given in Eq. (4), as a function of the energy scale squared Q2, the order of approximation, and theory constants.'''
+    '''The approximate alpha_S given in Eq. (4), as a function of the energy scale Q^2, the order of approximation, and theory constants.'''
     ln_Q2_L_QCD = mp.log(Q2) - 2 * mp.log(l_QCD)
     ln_ln_Q2_L_QCD = mp.log(ln_Q2_L_QCD)
     alpha_S = 4 * pi / beta0 / ln_Q2_L_QCD
@@ -188,14 +188,14 @@ def evolve(
             prints (x, x * pdf_evolved(x)) during evolution if True
         
         Q0_2_a: float
-            the reference energy squared at which the strong coupling constant a0 is known
+            the reference energy scale Q^2 at which the strong coupling constant a0 = alpha_S / (4 pi) is known
             only used if alpha_num is True
-            default is the top quark mass squared
+            default is the Z boson mass squared
         
         a0: float
             the reference strong coupling constant at the energy scale Q0_2_a
             only used if alpha_num is True
-            default is a0 at the top quark mass squared
+            default is a0 = 0.118 / (4 pi) at the Z boson mass squared
         
         alpha_num: bool
             uses the numerically evolved coupling constant rather than Eq. (4) if True
@@ -286,8 +286,8 @@ def main():
     parser.add_argument('--order', metavar='order', nargs='?', action='store', type=int, default=2, help='1: leading order, 2: NLO DGLAP (default 2)')
     parser.add_argument('--nx', metavar='n_x', nargs='?', action='store', type=int, default=-1, help='The number of x values to sample the evolved PDF (default -1). If left at -1, will sample at input xs.')
     parser.add_argument('--alpha_num', metavar='alpha_num', nargs='?', action='store', type=bool, default=True, help='Set to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter.')
-    parser.add_argument('--Q0sqalpha', metavar='Q0sqalpha', nargs='?', action='store', type=float, default=91.1876**2, help='The reference energy squared at which the strong coupling constant is known. Default is the squared top quark mass. Use in conjunction with --a0. Only used when --alpha_num is True.')
-    parser.add_argument('--a0', metavar='a0', nargs='?', action='store', type=float, default=0.118 / 4 / np.pi, help='The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = top quark mass squared. Only used when --alpha_num is True.')
+    parser.add_argument('--Q0sqalpha', metavar='Q0sqalpha', nargs='?', action='store', type=float, default=91.1876**2, help='The reference energy squared at which the strong coupling constant is known. Default is the squared Z boson mass. Use in conjunction with --a0. Only used when --alpha_num is True.')
+    parser.add_argument('--a0', metavar='a0', nargs='?', action='store', type=float, default=0.118 / 4 / np.pi, help='The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = Z boson mass squared. Only used when --alpha_num is True.')
     parser.add_argument('--delim', nargs='?', action='store', type=str, default=' ', help='Delimiter for the output (default \' \'). If given without an argument, then the delimiter is whitespace (i.e. Mathematica output.)')
     parser.add_argument('-v', nargs='?', action='store', type=bool, default=False, help='Verbose output (default False)')
 

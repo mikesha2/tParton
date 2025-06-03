@@ -9,7 +9,7 @@ from scipy.special import spence
 pi = np.pi
 
 def alp2pi(t, lnlam, order, beta0, beta1):
-    '''The numerical approximation of alpha / 2 pi, Eq. (4)'''
+    '''The approximation expression of alpha / 2 pi, Eq. (4)'''
     dlnq2 = t - lnlam
     alpha = 4 * pi / beta0 / dlnq2
     alpha_factor = 1 if order == 1 else (1 - beta1 * np.log(dlnq2) / beta0**2 / dlnq2)
@@ -115,7 +115,7 @@ def splitting(z, CF, order, sign, CG, Tf):
 
 # Define the integration step required here
 def integrate(pdf, i, z, alp, order, CF, sign, CG, Tf, xs):
-    '''Performs the Mellin convolution of pdf(x) with the splitting function at x = z.
+    '''Performs the convolution of pdf(x) with the splitting function at x = z.
     z is assumed to be a 1D array so that this function is efficiently vectorized.'''
 
     # Handle the base case of an empty array
@@ -200,12 +200,12 @@ def evolve(
         Q0_2_a: float
             the reference energy squared at which the strong coupling constant a0 is known
             only used if alpha_num is True
-            default is the top quark mass squared
+            default is the Z boson mass squared
         
         a0: float
             the reference strong coupling constant at the energy scale Q0_2_a
             only used if alpha_num is True
-            default is a0 at the top quark mass squared
+            default is a0 = 0.118 / (4 pi) at the Z boson mass squared
         
         alpha_num: bool
             uses the numerically evolved coupling constant rather than Eq. (4) if True
@@ -249,7 +249,6 @@ def evolve(
     # Combine the alpha / 2 pi in increasing order of energy scale
     alp2pi_num_greater = alp2pi_num_greater[1:]
     alp2pi_num = list(alp2pi_num_less) + list(alp2pi_num_greater)
-
     if alpha_num:
         # Use the numerically evolved alpha_S / 2 pi
         alp2pi_use = alp2pi_num
@@ -293,8 +292,8 @@ def main():
     parser.add_argument('--logScale', nargs='?', action='store', type=bool, default=True, help='True if integration should be done on a log scale (default True)')
     parser.add_argument('--delim', nargs='?', action='store', type=str, default=' ', help='Delimiter for data file (default \' \'). If given without an argument, then the delimiter is whitespace (i.e. Mathematica output.)')
     parser.add_argument('--alpha_num', metavar='alpha_num', nargs='?', action='store', type=bool, default=True, help='Set to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter.')
-    parser.add_argument('--Q0sqalpha', metavar='Q0sqalpha', nargs='?', action='store', type=float, default=91.1876**2, help='The reference energy squared at which the strong coupling constant is known. Default is the squared top quark mass. Use in conjunction with --a0. Only used when --alpha_num is True.')
-    parser.add_argument('--a0', metavar='a0', nargs='?', action='store', type=float, default=0.118 / 4 / np.pi, help='The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = top quark mass squared. Only used when --alpha_num is True.')
+    parser.add_argument('--Q0sqalpha', metavar='Q0sqalpha', nargs='?', action='store', type=float, default=91.1876**2, help='The reference energy squared at which the strong coupling constant is known. Default is the squared Z boson mass. Use in conjunction with --a0. Only used when --alpha_num is True.')
+    parser.add_argument('--a0', metavar='a0', nargs='?', action='store', type=float, default=0.118 / 4 / np.pi, help='The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = Z boson mass squared. Only used when --alpha_num is True.')
     parser.add_argument('-v', nargs='?', action='store', type=bool, default=False, help='Verbose output (default False)')
 
 
