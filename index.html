@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>tParton - Transversity PDF Evolution</title>
+    <!-- Version: 2024-12-16-v2 -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            background: #f6f8fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section {
+            background: white;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+        .section h3 {
+            color: #764ba2;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .feature {
+            padding: 1.5rem;
+            background: #f6f8fa;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .feature h4 {
+            color: #24292e;
+            margin-bottom: 0.5rem;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        code {
+            background: #f6f8fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 2px solid white;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            background: rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+        }
+        .button-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        .button-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .api-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .api-link:hover {
+            background: #764ba2;
+        }
+        .equation {
+            text-align: center;
+            font-style: italic;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f6f8fa;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>tParton</h1>
+        <p>Next-to-Leading Order Evolution of Transversity Parton Distribution Functions</p>
+        <div class="buttons">
+            <a href="api/tparton.html" class="button">📚 API Documentation</a>
+            <a href="https://github.com/mikesha2/tParton" class="button-secondary">💻 GitHub</a>
+            <a href="https://arxiv.org/abs/2409.00221" class="button-secondary">📄 Paper</a>
+            <a href="https://pypi.org/project/tparton/" class="button-secondary">📦 PyPI</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>🎯 Overview</h2>
+            <p><strong>tParton</strong> is a Python package for evolving transversity parton distribution functions (PDFs) using the DGLAP equations. It provides two complementary methods implemented in modern Python, making transversity evolution accessible and efficient.</p>
+            
+            <p style="margin-top: 1rem;">Transversity PDFs encode information about the transverse spin structure of hadrons and are essential for understanding QCD and analyzing high-energy physics experiments.</p>
+        </div>
+
+        <div class="section">
+            <h2>✨ Key Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <h4>🔄 Two Methods</h4>
+                    <p>Direct integration (Hirai) and Mellin moment (Vogelsang) methods for different use cases</p>
+                </div>
+                <div class="feature">
+                    <h4>🚀 Modern Python</h4>
+                    <p>Built on NumPy & SciPy, easy to install via pip and integrate into workflows</p>
+                </div>
+                <div class="feature">
+                    <h4>✅ Validated</h4>
+                    <p>Extensively validated against APFEL++ and Mathematica implementations</p>
+                </div>
+                <div class="feature">
+                    <h4>📊 Examples Included</h4>
+                    <p>Comprehensive Jupyter notebooks with validation and parameter studies</p>
+                </div>
+                <div class="feature">
+                    <h4>🎓 LO & NLO</h4>
+                    <p>Supports both leading order and next-to-leading order evolution</p>
+                </div>
+                <div class="feature">
+                    <h4>⚡ Dual Interface</h4>
+                    <p>Command-line tools and Python API for flexibility</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📥 Installation</h2>
+            <p>Install from PyPI using pip:</p>
+            <pre><code>pip install tparton</code></pre>
+            
+            <p style="margin-top: 1rem;">Or install from source:</p>
+            <pre><code>git clone https://github.com/mikesha2/tParton.git
+cd tParton
+pip install -e .</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🚀 Quick Start</h2>
+            
+            <h3>Command-Line Usage</h3>
+            <pre><code># Using Mellin moment method (faster)
+python -m tparton m input.dat 3.1 10.6 --morp plus -o output.dat
+
+# Using direct integration method (more control)
+python -m tparton t input.dat 3.1 10.6 --morp plus -o output.dat
+
+# Get help
+python -m tparton m -h</code></pre>
+
+            <h3>Python API</h3>
+            <pre><code>from tparton.m_evolution import evolve as m_evolve
+from tparton.t_evolution import evolve as t_evolve
+
+# Evolve using Mellin method
+result = m_evolve(
+    input_pdf, 
+    Q0_squared=3.1,  # Initial scale (GeV²)
+    Q_squared=10.6,   # Final scale (GeV²)
+    morp='plus',      # Distribution type: 'plus' or 'minus'
+    order='NLO'       # 'LO' or 'NLO'
+)
+
+# Evolve using direct integration
+result = t_evolve(
+    input_pdf,
+    Q0_squared=3.1,
+    Q_squared=10.6,
+    morp='plus',
+    order='NLO'
+)</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🔬 Methods</h2>
+            
+            <h3>Method 1: Direct Integration (Hirai Method)</h3>
+            <p>Discretizes both momentum fraction <em>x</em> and energy scale <em>Q²</em> into grids and solves the integro-differential equation using:</p>
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li>Euler method for <em>Q²</em> evolution</li>
+                <li>Simpson's rule for <em>x</em> integration</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>Best for:</strong> When precise control over discretization is needed</p>
+
+            <h3>Method 2: Mellin Moment Method (Vogelsang Method)</h3>
+            <p>Exploits the convolution theorem for Mellin transforms. The solution is expressed as:</p>
+            <div class="equation">
+                M[Δ<sub>T</sub>q<sup>±</sup>](Q²;s) = K(s,Q²,Q₀²) M[Δ<sub>T</sub>q<sup>±</sup>](Q₀²;s)
+            </div>
+            <p>The evolved PDF is reconstructed via inverse Mellin transform using Talbot contour integration.</p>
+            <p><strong>Best for:</strong> Faster computation with smooth PDFs, less sensitive to discretization</p>
+        </div>
+
+        <div class="section">
+            <h2>📖 Documentation</h2>
+            <p>Complete API documentation is available:</p>
+            <a href="api/tparton.html" class="api-link">→ Browse API Documentation</a>
+            
+            <h3 style="margin-top: 2rem;">Key Modules</h3>
+            <ul style="margin-left: 2rem;">
+                <li><code>tparton.m_evolution</code> - Mellin moment method implementation</li>
+                <li><code>tparton.t_evolution</code> - Direct integration method implementation</li>
+                <li><code>tparton.constants</code> - Physical constants and parameters</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📚 Examples</h2>
+            <p>The repository includes extensive examples in the <code>examples/</code> directory:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li>Jupyter notebooks comparing both methods</li>
+                <li>Validation against APFEL++</li>
+                <li>Parameter sensitivity studies</li>
+                <li>Figure reproduction from the paper</li>
+                <li>Mathematica validation notebooks</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>📄 Citation</h2>
+            <p>If you use tParton in your research, please cite:</p>
+            <pre><code>@article{sha2024tparton,
+  author = {Sha, Congzhou M and Ma, Bailing},
+  title = {tParton: Implementation of next-to-leading order evolution 
+           of transversity parton distribution functions},
+  year = {2024},
+  eprint = {2409.00221},
+  archivePrefix = {arXiv},
+  primaryClass = {hep-ph}
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>👥 Authors</h2>
+            <p><strong>Congzhou M Sha</strong> - Penn State College of Medicine<br>
+            <strong>Bailing Ma</strong> - Wake Forest University School of Medicine</p>
+        </div>
+
+        <div class="section">
+            <h2>📜 License</h2>
+            <p>MIT License - see the <a href="https://github.com/mikesha2/tParton/blob/main/LICENSE">LICENSE</a> file for details.</p>
+        </div>
+    </div>
+</body>
+</html>
