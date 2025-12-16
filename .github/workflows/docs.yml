@@ -27,16 +27,12 @@ jobs:
       
       - name: Build documentation
         run: |
-          # Save custom index page if it exists
-          if [ -f docs/index.html ]; then
-            cp docs/index.html docs/index_custom.html
-          fi
-          # Generate API documentation (pdoc 3+ syntax)
-          pdoc src/tparton -o docs
-          # Restore custom index page
-          if [ -f docs/index_custom.html ]; then
-            mv docs/index_custom.html docs/index.html
-          fi
+          # Save custom index page
+          cp docs/index.html docs/index_custom.html
+          # Generate API documentation to api/ subdirectory
+          pdoc src/tparton -o docs/api
+          # Restore custom index page as main landing page
+          mv docs/index_custom.html docs/index.html
           # Create .nojekyll to bypass Jekyll processing
           touch docs/.nojekyll
       
