@@ -257,42 +257,43 @@ def evolve(
     of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
     
     Args:
-        pdf: Input PDF as x*f(x). Can be 1D array (values at x evenly spaced on [0, 1])
-            or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        pdf (array_like): Input PDF as x*f(x). Can be 1D array (values at x evenly
+            spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
         
-        Q0_2: Initial energy scale squared in GeV² (default: 0.16).
+        Q0_2 (float): Initial energy scale squared in GeV² (default: 0.16).
         
-        Q2: Final energy scale squared in GeV² (default: 5.0).
+        Q2 (float): Final energy scale squared in GeV² (default: 5.0).
         
-        l_QCD: QCD scale parameter Λ in GeV (default: 0.25). Only used if alpha_num=False.
+        l_QCD (float): QCD scale parameter Λ in GeV (default: 0.25).
+            Only used if alpha_num=False.
         
-        n_f: Number of active quark flavors (default: 5).
+        n_f (int): Number of active quark flavors (default: 5).
         
-        CG: Number of colors, NC (default: 3).
+        CG (float): Number of colors, NC (default: 3).
         
-        n_t: Number of Euler time steps for integrating Eq. (1) (default: 100).
+        n_t (int): Number of Euler time steps for integrating Eq. (1) (default: 100).
             More steps = better accuracy but slower.
         
-        n_z: Number of z points for convolution integrals (Eq. 3) (default: 500).
+        n_z (int): Number of z points for convolution integrals (Eq. 3) (default: 500).
             More points = better accuracy but slower.
         
-        morp: Distribution type (default: 'plus'). Options are 'plus' (ΔT q⁺ = ΔT u + ΔT d)
-            or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
+        morp (str): Distribution type (default: 'plus'). Options are 'plus'
+            (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
         
-        order: Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
+        order (int): Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
         
-        logScale: Use logarithmic spacing for z points if True (default: False).
+        logScale (bool): Use logarithmic spacing for z points if True (default: False).
             Log spacing recommended for peaked PDFs.
         
-        verbose: Print progress (time step count) if True (default: False).
+        verbose (bool): Print progress (time step count) if True (default: False).
         
-        Q0_2_a: Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+        Q0_2_a (float): Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
             Only used if alpha_num=True (default is Z boson mass).
         
-        a0: Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+        a0 (float): Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
             Only used if alpha_num=True.
         
-        alpha_num: Use numerical ODE evolution for αs if True (default: True).
+        alpha_num (bool): Use numerical ODE evolution for αs if True (default: True).
             If False, uses analytical approximation from Eq. (4).
     
     Returns:
