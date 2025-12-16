@@ -14,15 +14,13 @@ def constants(CG, n_f):
     Calculates the color factors (NC, CF), flavor factor (Tf), and
     QCD beta function coefficients (β₀, β₁) used throughout the evolution.
     
-    Parameters
-    ----------
-    CG : float
+    Args:
+        CG:
         Number of colors, NC (typically 3 for QCD)
-    n_f : int
+        n_f:
         Number of active quark flavors (typically 3-6 depending on Q²)
     
-    Returns
-    -------
+    Returns:
     tuple of float
         (NC, CF, Tf, beta0, beta1) where:
         
@@ -32,8 +30,7 @@ def constants(CG, n_f):
         - beta0 : Leading QCD beta function coefficient
         - beta1 : Next-to-leading QCD beta function coefficient
     
-    Notes
-    -----
+    Note:
     These constants are defined after Eq. (4) in the paper.
     
     The beta function coefficients govern the running of αs:
@@ -46,8 +43,7 @@ def constants(CG, n_f):
     - CF = 4/3
     - beta0 ≈ 11 - (4/3)n_f
     
-    Examples
-    --------
+    Example:
     >>> from tparton.constants import constants
     >>> NC, CF, Tf, beta0, beta1 = constants(CG=3, n_f=5)
     >>> print(f"CF = {CF:.4f}, beta0 = {beta0:.4f}")

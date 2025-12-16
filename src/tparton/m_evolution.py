@@ -64,15 +64,13 @@ def S_p1(n, f):
     
     Implements Eq. (28) using the interpolation formula Eq. (31).
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    f : complex
+        f:
         Factor η^N where η = ±1 for plus/minus distributions
     
-    Returns
-    -------
+    Returns:
     complex
         Polarized harmonic sum S'_1(N)
     """
@@ -84,15 +82,13 @@ def S_p2(n, f):
     
     Implements Eq. (29) using the interpolation formula Eq. (31).
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    f : complex
+        f:
         Factor η^N where η = ±1 for plus/minus distributions
     
-    Returns
-    -------
+    Returns:
     complex
         Polarized harmonic sum S'_2(N)
     """
@@ -104,15 +100,13 @@ def S_p3(n, f):
     
     Implements Eq. (30) using the interpolation formula Eq. (31).
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    f : complex
+        f:
         Factor η^N where η = ±1 for plus/minus distributions
     
-    Returns
-    -------
+    Returns:
     complex
         Polarized harmonic sum S'_3(N)
     """
@@ -127,20 +121,17 @@ def Stilde(n, f):
     
     Implements Eq. (32) which appears in the NLO splitting function moment.
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    f : complex
+        f:
         Factor η^N where η = ±1 for plus/minus distributions
     
-    Returns
-    -------
+    Returns:
     complex
         S-tilde value at moment N
     
-    Notes
-    -----
+    Note:
     This function involves:
     - Riemann zeta function ζ(3)
     - Dilogarithm integral
@@ -157,20 +148,17 @@ def LO_splitting_function_moment(n, CF):
     
     Implements Eq. (26) for the LO transversity splitting function moment.
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    CF : float
+        CF:
         Color factor CF = (NC² - 1)/(2NC)
     
-    Returns
-    -------
+    Returns:
     complex
         LO splitting function moment M[ΔT P_qq^(0)](n)
     
-    Notes
-    -----
+    Note:
     Uses harmonic sum S₁(n) defined via polygamma functions.
     """
     return CF * (1.5 - 2 * S_1(n))
@@ -180,26 +168,23 @@ def NLO_splitting_function_moment(n, eta, CF, NC, Tf):
     
     Implements Eq. (27) for the NLO transversity splitting function moment.
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    eta : int
+        eta:
         Distribution type: 1 for plus, -1 for minus
-    CF : float
+        CF:
         Color factor
-    NC : float
+        NC:
         Number of colors
-    Tf : float
+        Tf:
         Flavor factor TR × Nf
     
-    Returns
-    -------
+    Returns:
     complex
         NLO splitting function moment M[ΔT P_qq,η^(1)](n)
     
-    Notes
-    -----
+    Note:
     Includes CF², CF×NC, and CF×Tf terms with harmonic sums.
     More complex than LO due to two-loop corrections.
     """
@@ -233,26 +218,23 @@ def alpha_S(Q2, order, beta0, beta1, l_QCD):
     
     Implements Eq. (4) from the paper for α_s(Q²).
     
-    Parameters
-    ----------
-    Q2 : float
+    Args:
+        Q2:
         Energy scale squared (GeV²)
-    order : int
+        order:
         Perturbative order: 1 for LO, 2 for NLO
-    beta0 : float
+        beta0:
         Leading QCD beta function coefficient
-    beta1 : float
+        beta1:
         Next-to-leading QCD beta function coefficient
-    l_QCD : float
+        l_QCD:
         QCD scale parameter Λ (GeV)
     
-    Returns
-    -------
+    Returns:
     float
         Strong coupling constant α_s(Q²)
     
-    Notes
-    -----
+    Note:
     The NLO approximation includes the β₁ correction term.
     """
     ln_Q2_L_QCD = mp.log(Q2) - 2 * mp.log(l_QCD)
@@ -268,28 +250,25 @@ def alpha_S_num(Q2, order, Q0_2_a, a0, beta0, beta1):
     Solves the QCD beta function differential equation numerically for α_s(Q²).
     More accurate than the analytical approximation, especially at low scales.
     
-    Parameters
-    ----------
-    Q2 : float
+    Args:
+        Q2:
         Energy scale squared (GeV²)
-    order : int
+        order:
         Perturbative order: 1 for LO, 2 for NLO
-    Q0_2_a : float
+        Q0_2_a:
         Reference energy scale squared where α_s is known (GeV²)
-    a0 : float
+        a0:
         Reference coupling α_s(Q0_2_a)/(4π)
-    beta0 : float
+        beta0:
         Leading QCD beta function coefficient
-    beta1 : float
+        beta1:
         Next-to-leading QCD beta function coefficient
     
-    Returns
-    -------
+    Returns:
     float
         Strong coupling constant α_s(Q²)
     
-    Notes
-    -----
+    Note:
     Uses mpmath's odefun for high-precision ODE integration.
     """
     if order == 2:
@@ -309,20 +288,17 @@ def mellin(f, s):
     
     Implements Eq. (20): M[f](s) = ∫₀¹ t^(s-1) f(t) dt
     
-    Parameters
-    ----------
-    f : callable
+    Args:
+        f:
         Function to transform, defined on [0, 1]
-    s : complex
+        s:
         Mellin moment number
     
-    Returns
-    -------
+    Returns:
     complex
         Mellin transform M[f](s)
     
-    Notes
-    -----
+    Note:
     Uses mpmath.quad for high-precision integration.
     """
     return mp.quad(lambda t: mp.power(t, s-1) * f(t), [0, 1])
@@ -332,29 +308,25 @@ def inv_mellin(f, x, degree=5, verbose=True):
     
     Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
     
-    Parameters
-    ----------
-    f : callable
+    Args:
+        f:
         Function in Mellin space, f(s)
-    x : float
+        x:
         Point in x-space where to evaluate the inverse transform
-    degree : int, optional
+        degree:
         Number of terms in Cohen's convergence acceleration (default: 5)
-    verbose : bool, optional
+        verbose:
         Print intermediate results if True (default: True)
     
-    Returns
-    -------
+    Returns:
     float
         Inverse Mellin transform value at x
     
-    Notes
-    -----
+    Note:
     Uses mpmath's invertlaplace with the 'cohen' method for optimal
     convergence. Higher degree values increase accuracy but slow computation.
     
-    References
-    ----------
+    References:
     Cohen et al. (2000), Experiment. Math. 9(1): 3-12
     """
     res = invertlaplace(f, -mp.log(x), method='cohen', degree=degree)
@@ -367,36 +339,33 @@ def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, 
     
     Implements Eq. (24) from the paper (Vogelsang's formula).
     
-    Parameters
-    ----------
-    n : complex
+    Args:
+        n:
         Mellin moment number
-    pdf_m : complex
+        pdf_m:
         Mellin moment of input PDF at initial scale
-    alpha_S_Q0_2 : float
+        alpha_S_Q0_2:
         Strong coupling at initial scale Q₀²
-    alpha_S_Q2 : float
+        alpha_S_Q2:
         Strong coupling at final scale Q²
-    beta0 : float
+        beta0:
         Leading QCD beta function coefficient
-    beta1 : float
+        beta1:
         Next-to-leading QCD beta function coefficient
-    eta : int
+        eta:
         Distribution type: 1 for plus, -1 for minus
-    CF : float
+        CF:
         Color factor
-    NC : float
+        NC:
         Number of colors
-    Tf : float
+        Tf:
         Flavor factor
     
-    Returns
-    -------
+    Returns:
     complex
         Evolved Mellin moment at scale Q²
     
-    Notes
-    -----
+    Note:
     Combines LO and NLO splitting function moments with running coupling.
     """
     total = 1
@@ -425,94 +394,75 @@ def evolve(
     This is the main function for PDF evolution using Mellin transforms.
     Faster and less discretization-dependent than the direct integration method.
     
-    Parameters
-    ----------
-    pdf : array_like
-        Input PDF as x*f(x). Can be:
+    Args:
+        pdf: Input PDF as x*f(x). Can be 1D array (values at x evenly spaced on [0, 1])
+            or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
         
-        - 1D array: values at x evenly spaced on [0, 1]
-        - 2D array: [[x0, x0*f(x0)], [x1, x1*f(x1)], ...]
-    Q0_2 : float, optional
-        Initial energy scale squared in GeV² (default: 0.16)
-    Q2 : float, optional
-        Final energy scale squared in GeV² (default: 5.0)
-    l_QCD : float, optional
-        QCD scale parameter Λ in GeV (default: 0.25).
-        Only used if alpha_num=False.
-    n_f : int, optional
-        Number of active quark flavors (default: 5)
-    CG : float, optional
-        Number of colors, NC (default: 3)
-    morp : {'plus', 'minus'}, optional
-        Distribution type (default: 'minus'):
+        Q0_2: Initial energy scale squared in GeV² (default: 0.16).
         
-        - 'plus': ΔT q⁺ = ΔT u + ΔT d  
-        - 'minus': ΔT q⁻ = ΔT u - ΔT d
-    order : int, optional
-        Perturbative order (default: 2):
+        Q2: Final energy scale squared in GeV² (default: 5.0).
         
-        - 1: Leading order (LO)
-        - 2: Next-to-leading order (NLO)
-    n_x : int, optional
-        Number of x grid points minus 1 for output (default: 200)
-    verbose : bool, optional
-        Print (x, x*pdf(x)) during evolution if True (default: False)
-    Q0_2_a : float, optional
-        Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
-        Only used if alpha_num=True (default is Z boson mass).
-    a0 : float, optional
-        Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
-        Only used if alpha_num=True.
-    alpha_num : bool, optional
-        Use numerical ODE evolution for αs if True (default: True).
-        If False, uses analytical approximation from Eq. (4).
-    degree : int, optional
-        Convergence acceleration degree for inverse Mellin (default: 5).
-        Higher values increase accuracy but slow computation.
+        l_QCD: QCD scale parameter Λ in GeV (default: 0.25). Only used if alpha_num=False.
+        
+        n_f: Number of active quark flavors (default: 5).
+        
+        CG: Number of colors, NC (default: 3).
+        
+        morp: Distribution type (default: 'minus'). Options are 'plus' (ΔT q⁺ = ΔT u + ΔT d)
+            or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
+        
+        order: Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
+        
+        n_x: Number of x grid points minus 1 for output (default: 200).
+        
+        verbose: Print (x, x*pdf(x)) during evolution if True (default: False).
+        
+        Q0_2_a: Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+            Only used if alpha_num=True (default is Z boson mass).
+        
+        a0: Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+            Only used if alpha_num=True.
+        
+        alpha_num: Use numerical ODE evolution for αs if True (default: True).
+            If False, uses analytical approximation from Eq. (4).
+        
+        degree: Convergence acceleration degree for inverse Mellin (default: 5).
+            Higher values increase accuracy but slow computation.
     
-    Returns
-    -------
-    ndarray
-        Evolved PDF as 2D array [[x, x*f_evolved(x)], ...].
-        Shape: (n_x+1, 2)
+    Returns:
+        ndarray: Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n_x+1, 2)
     
-    Notes
-    -----
-    This method:
+    Note:
+        This method:
+        
+        1. Computes Mellin moments of input PDF
+        2. Evolves moments using splitting function moments (Eq. 24)
+        3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+        
+        Advantages over direct integration (t_evolve):
+        - Typically 10-100x faster
+        - Less sensitive to discretization
+        - Better for smooth PDFs
+        
+        Disadvantages:
+        - Less direct control over integration
+        - May have issues with very peaked PDFs
     
-    1. Computes Mellin moments of input PDF
-    2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+    Example:
+        >>> import numpy as np
+        >>> from tparton.m_evolution import evolve
+        >>> # Simple power-law PDF
+        >>> x = np.linspace(0, 1, 100)
+        >>> pdf_in = x * (1-x)**3  # x*f(x) format
+        >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
+        >>> x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
     
-    Advantages over direct integration (t_evolve):
+    See Also:
+        t_evolution.evolve: Direct integration method (Hirai)
     
-    - Typically 10-100x faster
-    - Less sensitive to discretization
-    - Better for smooth PDFs
-    
-    Disadvantages:
-    
-    - Less direct control over integration
-    - May have issues with very peaked PDFs
-    
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from tparton.m_evolution import evolve
-    >>> # Simple power-law PDF
-    >>> x = np.linspace(0, 1, 100)
-    >>> pdf_in = x * (1-x)**3  # x*f(x) format
-    >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
-    >>> x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
-    
-    See Also
-    --------
-    t_evolution.evolve : Direct integration method (Hirai)
-    
-    References
-    ----------
-    .. [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
-    .. [2] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+    References:
+        [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+        [2] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
     """
 
     if pdf.shape[-1] == 1:
@@ -586,9 +536,8 @@ def main():
     Parses command-line arguments and runs PDF evolution using Vogelsang's method.
     This function is called when running `python -m tparton m`.
     
-    See Also
-    --------
-    evolve : The main evolution function called by this CLI
+    See Also:
+        evolve:
     """
     import argparse
     parser = argparse.ArgumentParser(description='Evolution of the nonsinglet transversity PDF, using Vogelsang\'s moment method.')
