@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Sha
+    given-names: Congzhou M
+    email: cms6712@psu.edu
+    orcid: https://orcid.org/0000-0001-5301-9459
+  - family-names: Ma
+    given-names: Bailing
+title: "tParton: A Python package for next-to-leading order evolution of transversity parton distribution functions"
+version: 2.0.0
+date-released: 2025-12-16
+url: "https://github.com/mikesha2/tParton"
+repository-code: "https://github.com/mikesha2/tParton"
+license: MIT
+keywords:
+  - Python
+  - physics
+  - particle physics
+  - QCD
+  - parton distribution functions
+  - transversity
+  - DGLAP evolution
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Sha
+      given-names: Congzhou M
+      email: cms6712@psu.edu
+      orcid: https://orcid.org/0000-0001-5160-1971
+    - family-names: Ma
+      given-names: Bailing
+      email: bailing.ma@wfusm.edu 
+      orcid: https://orcid.org/0000-0001-5160-1971
+  title: "tParton: Implementation of next-to-leading order evolution of transversity parton distribution functions"
+  year: 2024
+  journal: "arXiv preprint"
+  url: "https://arxiv.org/abs/2409.00221"
