@@ -450,6 +450,15 @@ def evolve(
 
 
 def main():
+    """Command-line interface for direct integration evolution method.
+    
+    Parses command-line arguments and runs PDF evolution using Hirai's method.
+    This function is called when running `python -m tparton t`.
+    
+    See Also
+    --------
+    evolve : The main evolution function called by this CLI
+    """
     import argparse, sys
     parser = argparse.ArgumentParser(description='Evolution of the nonsinglet transversity PDF, according to the DGLAP equation.')
     parser.add_argument('type',action='store',type=str,help='The method you chose')

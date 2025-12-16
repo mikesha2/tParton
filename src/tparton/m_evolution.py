@@ -60,20 +60,62 @@ etaN = lambda n, eta: 1 if eta == 1 else mp.power(eta, n)
 
 
 def S_p1(n, f):
-    '''Define the derivative of the harmonic sum in Eq. (28) using Eq. (31).
-    n is the moment and f = eta ^ N.'''
+    """Compute first-order polarized harmonic sum S'_1.
+    
+    Implements Eq. (28) using the interpolation formula Eq. (31).
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions
+    
+    Returns
+    -------
+    complex
+        Polarized harmonic sum S'_1(N)
+    """
     return 0.5 * (
         (1 + f) * S_1(n/2) + (1 - f) * S_1((n-1)/2))
 
 def S_p2(n, f):
-    '''Define the derivative of the harmonic sum in Eq. (29) using Eq. (31).
-    n is the moment and f = eta ^ N.'''
+    """Compute second-order polarized harmonic sum S'_2.
+    
+    Implements Eq. (29) using the interpolation formula Eq. (31).
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions
+    
+    Returns
+    -------
+    complex
+        Polarized harmonic sum S'_2(N)
+    """
     return 0.5 * (
         (1 + f) * S_2(n/2) + (1 - f) * S_2((n-1)/2))
 
 def S_p3(n, f):
-    '''Define the derivative of the harmonic sum in Eq. (30) using Eq. (31).
-    n is the moment and f = eta ^ N.'''
+    """Compute third-order polarized harmonic sum S'_3.
+    
+    Implements Eq. (30) using the interpolation formula Eq. (31).
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions
+    
+    Returns
+    -------
+    complex
+        Polarized harmonic sum S'_3(N)
+    """
     return 0.5 * (
         (1 + f) * S_3(n/2) + (1 - f) * S_3((n-1)/2))
 
@@ -81,8 +123,29 @@ def S_p3(n, f):
 G = lambda n: psi0((n+1)/2) - psi0(n/2)
 
 def Stilde(n, f):
-    '''Define S-tilde according to Eq. (32).
-    n is the moment and f = eta ^ N.'''
+    """Compute the S-tilde harmonic sum function.
+    
+    Implements Eq. (32) which appears in the NLO splitting function moment.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions
+    
+    Returns
+    -------
+    complex
+        S-tilde value at moment N
+    
+    Notes
+    -----
+    This function involves:
+    - Riemann zeta function ζ(3)
+    - Dilogarithm integral
+    - Digamma function ψ_0
+    """
     temp = -5/8 * zeta3
     term = f
     term *= S_1(n) / n / n - zeta2/2 * G(n) + \
@@ -518,6 +581,15 @@ def evolve(
     return pdf_evolved
 
 def main():
+    """Command-line interface for Mellin moment evolution method.
+    
+    Parses command-line arguments and runs PDF evolution using Vogelsang's method.
+    This function is called when running `python -m tparton m`.
+    
+    See Also
+    --------
+    evolve : The main evolution function called by this CLI
+    """
     import argparse
     parser = argparse.ArgumentParser(description='Evolution of the nonsinglet transversity PDF, using Vogelsang\'s moment method.')
     parser.add_argument('type',action='store',type=str,help='The method you chose')
