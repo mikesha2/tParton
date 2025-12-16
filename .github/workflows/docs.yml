@@ -6,10 +6,16 @@ on:
   workflow_dispatch:  # Allow manual trigger
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-docs:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -28,20 +34,27 @@ jobs:
       - name: Build documentation
         run: |
           # Create fresh docs directory
-          rm -rf docs_build
-          mkdir -p docs_build
+          rm -rf _site
+          mkdir -p _site
           # Copy custom index page
-          cp docs/index.html docs_build/index.html
+          cp docs/index.html _site/index.html
           # Generate API documentation to api/ subdirectory
-          pdoc src/tparton -o docs_build/api
-          # Create .nojekyll to bypass Jekyll processing (CRITICAL)
-          touch docs_build/.nojekyll
-          # Also add explicit _config.yml to disable Jekyll
-          echo "# Disable Jekyll" > docs_build/_config.yml
+          pdoc src/tparton -o _site/api
+          # Create .nojekyll to bypass Jekyll processing
+          touch _site/.nojekyll
       
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs_build
-          force_orphan: true
+          path: './_site'
+  
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
