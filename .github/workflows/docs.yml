@@ -27,7 +27,12 @@ jobs:
       
       - name: Build documentation
         run: |
+          # Save custom index page
+          cp docs/index.html docs/index_custom.html
+          # Generate API documentation
           pdoc src/tparton -o docs --html
+          # Restore custom index page
+          mv docs/index_custom.html docs/index.html
           # Create .nojekyll to bypass Jekyll processing
           touch docs/.nojekyll
       

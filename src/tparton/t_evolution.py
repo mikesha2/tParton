@@ -1,4 +1,37 @@
 # Copyright Congzhou M Sha 2024
+"""Direct integration method for transversity PDF evolution (Hirai method)
+
+This module implements the Hirai et al. method for evolving transversity parton
+distribution functions by directly solving the DGLAP integro-differential equation.
+
+The evolution is performed by:
+1. Discretizing the momentum fraction x and energy scale Q² into grids
+2. Using Euler method for Q² evolution steps
+3. Using Simpson's rule for integration over x
+
+This method provides direct control over discretization but can be computationally
+expensive for fine grids. It is more suitable when precise control over numerical
+parameters is needed.
+
+Key Functions
+-------------
+evolve : Main function to evolve a transversity PDF
+splitting : Compute the transversity splitting functions
+alp2pi : Compute the strong coupling α_s(Q²)/(2π)
+
+Theoretical Background
+---------------------
+Solves the DGLAP equation:
+
+    ∂/∂t Δ_T q^±(x,t) = (α_s(t)/(2π)) Δ_T P_{q^±}(x) ⊗ Δ_T q^±(x,t)
+
+where t = ln(Q²) and ⊗ denotes Mellin convolution.
+
+References
+----------
+- Hirai, M., Kumano, S., & Miyama, M. (1998). Comput. Phys. Commun. 111, 150-166
+- Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+"""
 from .constants import constants
 import numpy as np
 from scipy.integrate import simpson

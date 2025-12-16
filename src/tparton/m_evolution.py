@@ -1,4 +1,32 @@
 # Copyright Congzhou M Sha 2024
+"""Mellin moment method for transversity PDF evolution (Vogelsang method)
+
+This module implements the Vogelsang method for evolving transversity parton 
+distribution functions using Mellin transforms. The method is typically faster 
+and less sensitive to discretization effects compared to direct integration.
+
+The evolution is performed by:
+1. Computing Mellin moments of the input PDF
+2. Evolving the moments using analytic expressions for splitting function moments
+3. Reconstructing the evolved PDF via inverse Mellin transform (Talbot method)
+
+Key Functions
+-------------
+evolve : Main function to evolve a transversity PDF
+
+Theoretical Background
+---------------------
+The solution uses the convolution theorem for Mellin transforms:
+
+    M[Δ_T q^±](Q²;s) = K(s,Q²,Q₀²) M[Δ_T q^±](Q₀²;s)
+
+where K contains the evolution kernel with splitting function moments.
+
+References
+----------
+- Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+- Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+"""
 from .constants import constants
 import mpmath as mp
 import numpy as np
