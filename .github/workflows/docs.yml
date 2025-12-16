@@ -34,8 +34,10 @@ jobs:
           cp docs/index.html docs_build/index.html
           # Generate API documentation to api/ subdirectory
           pdoc src/tparton -o docs_build/api
-          # Create .nojekyll to bypass Jekyll processing
+          # Create .nojekyll to bypass Jekyll processing (CRITICAL)
           touch docs_build/.nojekyll
+          # Also add explicit _config.yml to disable Jekyll
+          echo "# Disable Jekyll" > docs_build/_config.yml
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
