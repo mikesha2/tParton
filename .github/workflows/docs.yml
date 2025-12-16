@@ -27,18 +27,19 @@ jobs:
       
       - name: Build documentation
         run: |
-          # Save custom index page
-          cp docs/index.html docs/index_custom.html
+          # Create fresh docs directory
+          rm -rf docs_build
+          mkdir -p docs_build
+          # Copy custom index page
+          cp docs/index.html docs_build/index.html
           # Generate API documentation to api/ subdirectory
-          pdoc src/tparton -o docs/api
-          # Restore custom index page as main landing page
-          mv docs/index_custom.html docs/index.html
+          pdoc src/tparton -o docs_build/api
           # Create .nojekyll to bypass Jekyll processing
-          touch docs/.nojekyll
+          touch docs_build/.nojekyll
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./docs_build
           force_orphan: true
