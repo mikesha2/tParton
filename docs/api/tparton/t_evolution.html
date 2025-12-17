@@ -530,32 +530,8 @@ This function is called when running <code>python -m tparton t</code>.</p>
     #######################################################################################################
     # First, we evaluate the plus function contributions
     if order == 2:
-        # For NLO terms in the splitting function, evaluate Eq. (11) at x = z
-        # log z
-        lnz = np.log(z)
-        # log (1 - z)
-        lno = np.log(omz+1e-100)
-        # First line of Eq. (12)
-        dP0 = 2 * z / (omz+1e-100)
-        # The terms excluding the plus and delta function terms in the first line of Eq. (12)
-        pp1 = omz - (3 / 2 + 2 * lno) * lnz * dP0
-        # The terms excluding the plus and delta function terms in the second line of Eq. (12)
-        pp2 = -omz + (67/9 + 11/3 * lnz + lnz**2 - pi**2 / 3) * dP0
-        # The terms excluding the plus and delta function terms in the third line of Eq. (12)
-        pp3 = (-lnz - 5/3) * dP0
-
-        # Summing the non-delta function terms in Eq. (12)
-        dpqq = CF * CF * pp1 + CF * CG * 0.5 * pp2 + 2 / 3 * CF * Tf * pp3
-
-        # Implementation of Eq. (13)
-        pp4 = -omz + 2 * s2 * 2 * -z / (1 + z)
-        dpqqb = CF * (CF-CG / 2) * pp4
-        # Adding the additional contribution from Eq. (13) to Eq. (12)
-        p1 = dpqq + sign * dpqqb
-        # Avoid the possible singularity at x = 0
-        p1[0] = 0
+        p1 = _nlo_regular_terms(z, omz, s2, CF, CG, Tf, sign)
     else:
-        # At LO, the NLO terms are 0
         p1 = 0
     
     #######################################################################################################
@@ -564,11 +540,7 @@ This function is called when running <code>python -m tparton t</code>.</p>
     # Enforcing the plus prescriptions for the relevant terms in Eq. (12)
     # The plus prescription in line 0 of Eq. (12) results in 0, so it is ignored
     # Line 2 plus prescription in Eq. (12)
-    p2plus = -(67/9-pi**2/3) * 2 / (omz+1e-100)
-    # Line 3 plus prescription in Eq. (12)
-    p3plus = 5 / 3 * 2 / (omz+1e-100)
-    # The plus function contributions from all three lines in Eq. (12)
-    p1pf = CF * CG / 2 * p2plus + 2 / 3 * CF * Tf * p3plus
+    p1pf = _nlo_plus_terms(omz, CF, CG, Tf)
 
     # Necessary to avoid numerical singularities
     p0[-1] = 0
@@ -585,22 +557,9 @@ This function is called when running <code>python -m tparton t</code>.</p>
     # Plus function, -f(1) g(x)_+ in Eq. (10), and delta function contributions to the splitting function
     #######################################################################################################
     if order == 2:
-        # Hard code zta = zeta(3)
-        zta = 1.2020569031595943
-        # The delta function contributions from Eq. (12), at x = 1
-        del1 = CF * CF * (3 / 8 - pi**2 / 2 + 6 * zta) + \
-            CF * CG / 2 * (17 / 12 + 11 * pi**2 /9 - 6 * zta) - \
-            2 / 3 * CF * Tf * (1 / 4 + pi**2 / 3)
-        # The plus prescription terms from Eq. (12)
-        # Again, the plus prescription in line 0 of Eq. (12) results in 0, so it is ignored
-        p2pl = (67 / 9 - pi**2/3) * 2
-        p3pl = -5 / 3 * 2
-        # The sum of the f(1)g(x) plus parts
-        plus1 = CF * CG / 2 * p2pl + 2 / 3 * CF * Tf * p3pl
+        plus1, del1 = _nlo_plus_delta_constants(CF, CG, Tf)
     else:
-        # At LO, the NLO terms are 0
-        plus1 = 0
-        del1 = 0
+        plus1, del1 = 0, 0
 
     return p0, p1, p0pf, p1pf, plus0, del0, plus1, del1</code></pre>
 </details>

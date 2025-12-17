@@ -96,32 +96,8 @@ def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: floa
     #######################################################################################################
     # First, we evaluate the plus function contributions
     if order == 2:
-        # For NLO terms in the splitting function, evaluate Eq. (11) at x = z
-        # log z
-        lnz = np.log(z)
-        # log (1 - z)
-        lno = np.log(omz+1e-100)
-        # First line of Eq. (12)
-        dP0 = 2 * z / (omz+1e-100)
-        # The terms excluding the plus and delta function terms in the first line of Eq. (12)
-        pp1 = omz - (3 / 2 + 2 * lno) * lnz * dP0
-        # The terms excluding the plus and delta function terms in the second line of Eq. (12)
-        pp2 = -omz + (67/9 + 11/3 * lnz + lnz**2 - pi**2 / 3) * dP0
-        # The terms excluding the plus and delta function terms in the third line of Eq. (12)
-        pp3 = (-lnz - 5/3) * dP0
-
-        # Summing the non-delta function terms in Eq. (12)
-        dpqq = CF * CF * pp1 + CF * CG * 0.5 * pp2 + 2 / 3 * CF * Tf * pp3
-
-        # Implementation of Eq. (13)
-        pp4 = -omz + 2 * s2 * 2 * -z / (1 + z)
-        dpqqb = CF * (CF-CG / 2) * pp4
-        # Adding the additional contribution from Eq. (13) to Eq. (12)
-        p1 = dpqq + sign * dpqqb
-        # Avoid the possible singularity at x = 0
-        p1[0] = 0
+        p1 = _nlo_regular_terms(z, omz, s2, CF, CG, Tf, sign)
     else:
-        # At LO, the NLO terms are 0
         p1 = 0
     
     #######################################################################################################
@@ -130,11 +106,7 @@ def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: floa
     # Enforcing the plus prescriptions for the relevant terms in Eq. (12)
     # The plus prescription in line 0 of Eq. (12) results in 0, so it is ignored
     # Line 2 plus prescription in Eq. (12)
-    p2plus = -(67/9-pi**2/3) * 2 / (omz+1e-100)
-    # Line 3 plus prescription in Eq. (12)
-    p3plus = 5 / 3 * 2 / (omz+1e-100)
-    # The plus function contributions from all three lines in Eq. (12)
-    p1pf = CF * CG / 2 * p2plus + 2 / 3 * CF * Tf * p3plus
+    p1pf = _nlo_plus_terms(omz, CF, CG, Tf)
 
     # Necessary to avoid numerical singularities
     p0[-1] = 0
@@ -151,24 +123,84 @@ def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: floa
     # Plus function, -f(1) g(x)_+ in Eq. (10), and delta function contributions to the splitting function
     #######################################################################################################
     if order == 2:
-        # Hard code zta = zeta(3)
-        zta = 1.2020569031595943
-        # The delta function contributions from Eq. (12), at x = 1
-        del1 = CF * CF * (3 / 8 - pi**2 / 2 + 6 * zta) + \
-            CF * CG / 2 * (17 / 12 + 11 * pi**2 /9 - 6 * zta) - \
-            2 / 3 * CF * Tf * (1 / 4 + pi**2 / 3)
-        # The plus prescription terms from Eq. (12)
-        # Again, the plus prescription in line 0 of Eq. (12) results in 0, so it is ignored
-        p2pl = (67 / 9 - pi**2/3) * 2
-        p3pl = -5 / 3 * 2
-        # The sum of the f(1)g(x) plus parts
-        plus1 = CF * CG / 2 * p2pl + 2 / 3 * CF * Tf * p3pl
+        plus1, del1 = _nlo_plus_delta_constants(CF, CG, Tf)
     else:
-        # At LO, the NLO terms are 0
-        plus1 = 0
-        del1 = 0
+        plus1, del1 = 0, 0
 
     return p0, p1, p0pf, p1pf, plus0, del0, plus1, del1
+
+def _nlo_regular_terms(z: np.ndarray, omz: np.ndarray, s2: np.ndarray,
+                       CF: float, CG: int, Tf: float, sign: int) -> np.ndarray:
+    """NLO non-plus, non-delta contributions to ΔT P_qq(z).
+
+    Implements the regular parts of Eq. (12) and the additional term Eq. (13).
+
+    Parameters
+    ----------
+    z : ndarray
+        Momentum fraction grid.
+    omz : ndarray
+        1 - z values.
+    s2 : ndarray
+        Dilogarithm combination from Eq. (16).
+    CF, CG, Tf : float
+        Color and flavor factors.
+    sign : int
+        +1 for plus, -1 for minus distribution.
+
+    Returns
+    -------
+    ndarray
+        Regular NLO contribution array.
+    """
+    lnz = np.log(z)
+    lno = np.log(omz+1e-100)
+    dP0 = 2 * z / (omz+1e-100)
+    pp1 = omz - (3 / 2 + 2 * lno) * lnz * dP0
+    pp2 = -omz + (67/9 + 11/3 * lnz + lnz**2 - pi**2 / 3) * dP0
+    pp3 = (-lnz - 5/3) * dP0
+    dpqq = CF * CF * pp1 + CF * CG * 0.5 * pp2 + 2 / 3 * CF * Tf * pp3
+    pp4 = -omz + 2 * s2 * 2 * -z / (1 + z)
+    dpqqb = CF * (CF - CG / 2) * pp4
+    p1 = dpqq + sign * dpqqb
+    p1[0] = 0
+    return p1
+
+def _nlo_plus_terms(omz: np.ndarray, CF: float, CG: int, Tf: float) -> np.ndarray:
+    """NLO plus-prescription function coefficients.
+
+    Parameters
+    ----------
+    omz : ndarray
+        1 - z values.
+    CF, CG, Tf : float
+        Color and flavor factors.
+
+    Returns
+    -------
+    ndarray
+        Plus-function coefficients p1pf.
+    """
+    p2plus = -(67/9 - pi**2/3) * 2 / (omz+1e-100)
+    p3plus = 5 / 3 * 2 / (omz+1e-100)
+    return CF * CG / 2 * p2plus + 2 / 3 * CF * Tf * p3plus
+
+def _nlo_plus_delta_constants(CF: float, CG: int, Tf: float) -> tuple[float, float]:
+    """NLO plus and delta-function constants evaluated at z → 1.
+
+    Returns
+    -------
+    tuple
+        (plus1, del1) constants in Eq. (12).
+    """
+    zta = 1.2020569031595943
+    del1 = CF * CF * (3 / 8 - pi**2 / 2 + 6 * zta) + \
+        CF * CG / 2 * (17 / 12 + 11 * pi**2 / 9 - 6 * zta) - \
+        2 / 3 * CF * Tf * (1 / 4 + pi**2 / 3)
+    p2pl = (67 / 9 - pi**2/3) * 2
+    p3pl = -5 / 3 * 2
+    plus1 = CF * CG / 2 * p2pl + 2 / 3 * CF * Tf * p3pl
+    return plus1, del1
 
 # Define the integration step required here
 def integrate(pdf: np.ndarray, i: int, z: np.ndarray, alp: float, order: int, 
