@@ -71,26 +71,51 @@ d = np.stack((x, pdf_d(x))).T
 </code></pre>
 
 <h4>Step 3: Evolve Using the Hirai Method (Direct Integration)</h4>
-<pre><code class="language-python"># Evolve from Q₀² = 4 GeV² to Q² = 200 GeV²
+<p>First, let's evolve using the analytical approximation for α_s (Eq. 4 from the paper):</p>
+<pre><code class="language-python"># Evolve from Q₀² = 4 GeV² to Q² = 200 GeV² using analytical alpha_s
 u_evolved_hirai = t_evolve(
     u, 
     Q0_2=4.0,           # Initial scale
     Q2=200.0,           # Final scale
-    l_QCD=0.231,        # QCD scale parameter
+    l_QCD=0.231,        # QCD scale parameter (Λ_QCD)
     n_f=4,              # Number of flavors
     n_t=100,            # Number of time steps
     n_z=500,            # Number of integration points
     morp='minus',       # Evolution type
     logScale=True,      # Use log spacing for z
-    alpha_num=False     # Use analytical alpha_s
+    alpha_num=False     # Use analytical alpha_s approximation
 )
 
 d_evolved_hirai = t_evolve(d, Q0_2=4, Q2=200, l_QCD=0.231, n_f=4, 
                            n_t=100, morp='minus', logScale=True, alpha_num=False)
 </code></pre>
 
+<h4>Step 3b: Using Numerical Running Coupling (More Accurate)</h4>
+<p>For higher accuracy, use numerical ODE integration for α_s instead of the analytical approximation:</p>
+<pre><code class="language-python"># Evolve using numerically evolved alpha_s (exact)
+u_evolved_exact = t_evolve(
+    u,
+    Q0_2=4.0,
+    Q2=200.0,
+    n_f=4,
+    n_t=100,
+    n_z=500,
+    morp='minus',
+    logScale=True,
+    alpha_num=True,           # Use numerical ODE for alpha_s
+    Q0_2_a=91.1876**2,        # Reference scale (Z boson mass²)
+    a0=0.118/(4*np.pi)        # alpha_s(M_Z²)/(4π)
+)
+
+d_evolved_exact = t_evolve(d, Q0_2=4, Q2=200, n_f=4, n_t=100, n_z=500,
+                           morp='minus', logScale=True, alpha_num=True,
+                           Q0_2_a=91.1876**2, a0=0.118/(4*np.pi))
+</code></pre>
+<p><strong>Note:</strong> The numerical method eliminates approximation errors from Eq. 4 but is slightly slower. The difference between methods is typically small for moderate Q² ranges.</p>
+
 <h4>Step 4: Evolve Using the Vogelsang Method (Mellin Moments)</h4>
-<pre><code class="language-python"># Evolve using Mellin moment method (typically faster)
+<p>The Mellin method is typically 10-100x faster for smooth PDFs:</p>
+<pre><code class="language-python"># Evolve using Mellin moment method with analytical alpha_s
 u_evolved_vogel = m_evolve(
     u,
     Q0_2=4.0,
@@ -100,11 +125,25 @@ u_evolved_vogel = m_evolve(
     n_f=4,
     morp='minus',
     degree=5,           # Convergence acceleration degree
-    alpha_num=False
+    alpha_num=False     # Analytical alpha_s
 )
 
 d_evolved_vogel = m_evolve(d, Q0_2=4, Q2=200, n_x=n, l_QCD=0.231, 
                            n_f=4, morp='minus', alpha_num=False)
+
+# Or with numerical alpha_s for higher accuracy
+u_evolved_vogel_exact = m_evolve(
+    u,
+    Q0_2=4.0,
+    Q2=200.0,
+    n_x=n,
+    n_f=4,
+    morp='minus',
+    degree=5,
+    alpha_num=True,          # Numerical ODE for alpha_s
+    Q0_2_a=91.1876**2,
+    a0=0.118/(4*np.pi)
+)
 </code></pre>
 
 <h4>Step 5: Plot and Compare Results</h4>
@@ -135,6 +174,11 @@ plt.show()
 
 <section id="validation">
 <h2>Method Validation</h2>
+
+<p>All comparisons use the GS-A transversity distribution evolved from Q₀² = 4 GeV² to Q² = 200 GeV². 
+<strong>Mathematica results</strong> are generated from the <code>Evolve-Final.nb</code> notebook included in the 
+<code>examples/</code> directory. <strong>APFEL++ comparison data</strong> was provided by V. Bertone and 
+serves as an independent validation of our implementation.</p>
 
 <h3>Analytical Running Coupling</h3>
 <p>Using the analytical approximation for α_s(Q²) (Eq. 4 from the paper), both tParton methods agree with each other, the original Mathematica implementation, and the APFEL++ code:</p>
