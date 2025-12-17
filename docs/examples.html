@@ -229,15 +229,154 @@ result = m_evolve(pdf, Q0_2=4, Q2=200, morp='minus')
 </code></pre>
 </section>
 
-<section id="more-examples">
-<h2>More Examples</h2>
-<p>Additional Jupyter notebooks are available in the <a href="https://github.com/mikesha2/tParton/tree/main/examples">examples directory</a> on GitHub:</p>
+<section id="parameter-studies">
+<h2>Parameter Studies and Optimization</h2>
+
+<h3>Optimal Convergence Degree for Mellin Method</h3>
+<p>The Vogelsang method uses Cohen's accelerated alternating series for the inverse Mellin transform. The <code>degree</code> parameter controls convergence accuracy. Higher degrees improve accuracy but increase computation time:</p>
+
+<img src="fig3_optimal_degree_heatmap.svg" alt="Optimal degree analysis" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 3: Relative error as a function of degree and number of x points. The optimal degree depends on the desired accuracy and available computational resources. For most applications, degree=5 provides a good balance.</em></p>
+
+<h3>Discretization Analysis for Hirai Method</h3>
+<p>The direct integration method requires careful selection of time steps (<code>n_t</code>) and integration points (<code>n_z</code>). Both parameters affect accuracy and computation time:</p>
+
+<img src="fig4_heatmap.svg" alt="Discretization parameter study" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 4: Relative error as a function of n_t (time steps) and n_x (spatial resolution). The Hirai method converges with sufficient discretization, but requires more points than the Mellin method for comparable accuracy.</em></p>
+
+<h3>Recommendations</h3>
 <ul>
-<li><strong>Generate Mathematica initial distributions.ipynb</strong> - How to create GS-A initial PDFs</li>
-<li><strong>Running Hirai.ipynb</strong> - Complete workflow for the direct integration method</li>
-<li><strong>Running Vogelsang.ipynb</strong> - Complete workflow for the Mellin moment method</li>
-<li><strong>Figures.ipynb</strong> - Reproduction of all validation figures including comparisons with APFEL++ and Mathematica</li>
+<li><strong>For speed:</strong> Use Vogelsang method with degree=3-5 and n_x=100-200</li>
+<li><strong>For accuracy:</strong> Use Vogelsang method with degree=7-10 and n_x=500-1000</li>
+<li><strong>For peaked PDFs:</strong> Use Hirai method with logScale=True, n_t=200-500, n_z=1000-2000</li>
+<li><strong>For smooth PDFs:</strong> Use Vogelsang method (typically 10-100x faster)</li>
 </ul>
+</section>
+
+<section id="notebook-examples">
+<h2>Jupyter Notebook Examples</h2>
+<p>Complete Jupyter notebooks demonstrating all features are available in the <a href="https://github.com/mikesha2/tParton/tree/main/examples">examples directory</a> on GitHub. Here's what each notebook covers:</p>
+
+<h3>1. Generate Mathematica initial distributions.ipynb</h3>
+<p>Shows how to create the GS-A (Gehrmann-Stirling A-type) transversity distribution used for validation:</p>
+<pre><code class="language-python">import numpy as np
+from scipy.special import gamma
+
+# Define GS-A parametrization
+def A(a, b, g, rho):
+    return (1 + g * a / (a + b + 1)) * gamma(a) * gamma(b+1) / gamma(a + b + 1) \
+        + rho * gamma(a + 0.5) * gamma(b + 1) / gamma(a + b + 1.5)
+
+def pdf_u(x, eta_u=0.918, a_u=0.512, b_u=3.96, gamma_u=11.65, rho_u=-4.60):
+    return eta_u / A(a_u, b_u, gamma_u, rho_u) * \
+           np.power(x, a_u) * np.power(1-x, b_u) * \
+           (1 + gamma_u * x + rho_u * np.sqrt(x))
+
+# Save initial distributions for evolution
+np.savetxt('input_upd.dat', np.stack((x, u[:,1]+d[:,1])).T)
+np.savetxt('input_diff.dat', np.stack((x, u[:,1]-d[:,1])).T)
+</code></pre>
+
+<h3>2. Running Hirai.ipynb & Running Hirai-exact_alpha.ipynb</h3>
+<p>Complete workflow for the direct integration method, including:</p>
+<ul>
+<li>Loading initial distributions</li>
+<li>Evolving using analytical or numerical α_s</li>
+<li>Comparing results with different numerical parameters</li>
+<li>Saving results for further analysis</li>
+</ul>
+<pre><code class="language-python">from tparton.t_evolution import evolve
+
+# Evolve with analytical alpha_s (faster)
+u_evolved = evolve(u, Q0_2=4, Q2=200, l_QCD=0.231, n_f=4, 
+                   n_t=100, n_z=500, morp='minus', 
+                   logScale=True, alpha_num=False)
+
+# Evolve with numerical alpha_s (more accurate)
+u_evolved_num = evolve(u, Q0_2=4, Q2=200, n_f=4,
+                       n_t=100, n_z=500, morp='minus',
+                       logScale=True, alpha_num=True,
+                       Q0_2_a=91.1876**2, a0=0.118/(4*np.pi))
+
+# Save results
+np.savez('hirai_results.npz', x=x, u_evolved=u_evolved[1])
+</code></pre>
+
+<h3>3. Running Vogelsang.ipynb & Running Vogelsang-exact_alpha.ipynb</h3>
+<p>Complete workflow for the Mellin moment method with:</p>
+<ul>
+<li>Evolution using Mellin transforms</li>
+<li>Inverse Mellin transform via Cohen method</li>
+<li>Parameter studies varying degree of convergence acceleration</li>
+<li>Comparison with direct integration results</li>
+</ul>
+<pre><code class="language-python">from tparton.m_evolution import evolve
+
+# Evolve with varying convergence degrees
+for deg in [3, 5, 7, 10]:
+    result = evolve(u, Q0_2=4, Q2=200, n_x=3000, 
+                   l_QCD=0.231, n_f=4, morp='minus',
+                   degree=deg, alpha_num=False)
+    np.savez(f'vogelsang_deg_{deg}.npz', 
+             x=result[0], evolved=result[1])
+</code></pre>
+
+<h3>4. Figures.ipynb</h3>
+<p>Reproduces all validation figures from the paper, including:</p>
+<ul>
+<li>Comparison of Python implementations with Mathematica and APFEL++</li>
+<li>Relative difference plots showing agreement between methods</li>
+<li>Parameter optimization heatmaps</li>
+<li>Convergence studies for both methods</li>
+</ul>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+# Load all evolution results
+hirai = np.load('hirai_approx.npz')
+vogelsang = np.load('vogelsang_approx.npz')
+mathematica = np.genfromtxt('mathematica_hirai_ana.dat').T
+apfel = np.genfromtxt('apfel_out.txt').T
+
+# Create comparison plot
+plt.figure(figsize=(10, 6))
+plt.plot(hirai['x'], hirai['u_evolved'] + hirai['d_evolved'], 
+         label='Python Hirai', alpha=0.7)
+plt.plot(vogelsang['evolved_x'], vogelsang['u_evolved'] + vogelsang['d_evolved'],
+         label='Python Vogelsang', alpha=0.7)
+plt.plot(*mathematica, ':', label='Mathematica', alpha=0.7)
+plt.plot(*apfel, '-.', label='APFEL++', alpha=0.7)
+plt.xscale('log')
+plt.legend()
+plt.savefig('fig1.svg')
+</code></pre>
+</section>
+
+<section id="more-examples">
+<h2>Additional Resources</h2>
+<p>All notebooks and data files are available in the <a href="https://github.com/mikesha2/tParton/tree/main/examples">examples directory</a> on GitHub. The repository also includes:</p>
+<ul>
+<li><strong>Evolve-Final.nb</strong> - Mathematica notebook for independent validation of Mellin moments and numerical integration</li>
+<li><strong>vogelsang_exact_alpha_variable_degree/</strong> - Directory with systematic studies of convergence acceleration degree</li>
+<li><strong>hirai_exact_alpha_nx_nt/</strong> - Directory with systematic studies of discretization parameters</li>
+<li><strong>Comparison data files</strong> - Pre-computed results from Mathematica and APFEL++ for validation</li>
+</ul>
+
+<h3>Running the Examples</h3>
+<p>To run the example notebooks:</p>
+<pre><code class="language-bash"># Clone the repository
+git clone https://github.com/mikesha2/tParton.git
+cd tParton/examples
+
+# Create environment with required packages
+conda create -n transversity python=3.10 jupyterlab matplotlib scipy numpy
+conda activate transversity
+
+# Install tParton
+pip install tparton
+
+# Launch Jupyter
+jupyter lab
+</code></pre>
 </section>
 
 <section id="references">
@@ -266,7 +405,9 @@ result = m_evolve(pdf, Q0_2=4, Q2=200, morp='minus')
 <li><a href="#validation">Method Validation</a></li>
 <li><a href="#command-line">Command-Line Interface</a></li>
 <li><a href="#advanced">Advanced Usage</a></li>
-<li><a href="#more-examples">More Examples</a></li>
+<li><a href="#parameter-studies">Parameter Studies</a></li>
+<li><a href="#notebook-examples">Jupyter Notebooks</a></li>
+<li><a href="#more-examples">Additional Resources</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 </nav>
