@@ -16,11 +16,25 @@ evolve : Main function to evolve a transversity PDF
 
 Theoretical Background
 ---------------------
-The solution uses the convolution theorem for Mellin transforms:
+The Mellin transform of a function f is defined as (Eq. 20):
 
-    M[Δ_T q^±](Q²;s) = K(s,Q²,Q₀²) M[Δ_T q^±](Q₀²;s)
+    M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
 
-where K contains the evolution kernel with splitting function moments.
+The inverse Mellin transform (Eq. 21) is:
+
+    f(x) = M^{-1}[f̂](x) = (1)/(2πi) ∫_{c-i∞}^{c+i∞} x^{-s} f̂(s) ds
+
+The convolution theorem (Eq. 23) gives: M[f ⊗ g] = M[f]·M[g]
+
+The NLO solution (Eq. 24) for the moments is:
+
+    M[Δ_T q^±](Q²;s) = (1 + (α_S(Q₀²) - α_S(Q²))/(π β₀)
+                        [M[Δ_T P_{qq}^{(0)}](s) - (β₁)/(2β₀)M[Δ_T P_{qq}^{(0)}](s)])
+                     × (α_S(Q²)/α_S(Q₀²))^{-2M[Δ_T P_{qq}^{(0)}](s)/β₀}
+                     × M[Δ_T q^±](Q₀²;s)
+
+where the splitting function moments are given by Eq. (26) for LO and Eq. (27)
+for NLO. The inverse Mellin transform is computed using Cohen's method (Eq. 36).
 
 References
 ----------
@@ -509,9 +523,11 @@ def evolve(
     Faster and less discretization-dependent than the direct integration method.
     
     This method:
-    1. Computes Mellin moments of input PDF
-    2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Cohen method)
+    1. Computes Mellin moments (Eq. 20): M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
+    2. Evolves moments using Eq. (24) with splitting function moments from
+       Eq. (26) for LO and Eq. (27) for NLO
+    3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen's
+       method with accelerated alternating series convergence
     
     Parameters
     ----------

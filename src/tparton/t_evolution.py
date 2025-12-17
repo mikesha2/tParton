@@ -21,11 +21,19 @@ alp2pi : Compute the strong coupling α_s(Q²)/(2π)
 
 Theoretical Background
 ---------------------
-Solves the DGLAP equation:
+Solves the DGLAP equation (Eq. 1 from [1]):
 
-    ∂/∂t Δ_T q^±(x,t) = (α_s(t)/(2π)) Δ_T P_{q^±}(x) ⊗ Δ_T q^±(x,t)
+    ∂/∂t Δ_T q^±(x,t) = (α_s(t)/(2π)) Δ_T P_q^±(x) ⊗ Δ_T q^±(x,t)
 
-where t = ln(Q²) and ⊗ denotes Mellin convolution.
+where t = ln(Q²), Q² is the energy scale, and ⊗ denotes Mellin convolution
+(Eq. 3). The tilde notation f̃(x) = x·f(x) is used throughout (Eq. 2).
+
+The NLO strong coupling is given by Eq. (4):
+
+    α_s^{NLO}(Q²) = (4π)/(β₀ ln(Q²/Λ²)) [1 - (β₁ ln(ln(Q²/Λ²)))/(β₀² ln(Q²/Λ²))]
+
+The splitting function has LO (Eq. 9) and NLO (Eqs. 11-12) contributions,
+with plus distribution regularization (Eq. 10).
 
 References
 ----------
@@ -46,8 +54,12 @@ pi = np.pi
 def alp2pi(t: float, lnlam: float, order: int, beta0: float, beta1: float) -> float:
     """Compute α_s(Q²)/(2π) using the analytical approximation.
     
-    Implements Eq. (4) from the paper, normalized by 2π.
-    This normalization is convenient for the DGLAP evolution equation.
+    Implements Eq. (4) from the paper, normalized by 2π:
+    
+        α_s^{NLO}(Q²)/(2π) = (2)/(β₀ ln(Q²/Λ²)) [1 - (β₁ ln(ln(Q²/Λ²)))/(β₀² ln(Q²/Λ²))]
+    
+    where t = ln(Q²) and lnlam = 2 ln(Λ). This normalization is convenient
+    for the DGLAP evolution equation.
     """
     dlnq2 = t - lnlam
     alpha = 4 * pi / beta0 / dlnq2
@@ -58,23 +70,36 @@ def alp2pi(t: float, lnlam: float, order: int, beta0: float, beta1: float) -> fl
 def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: float):
     """Compute transversity splitting functions at given momentum fraction.
     
-    Evaluates ΔT P_qq(z) including both LO and NLO contributions.
-    Handles plus distributions and delta function contributions separately.
+    Evaluates the full NLO splitting function Eq. (8):
     
-    Returns:
-        tuple: (p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:
+        Δ_T P_q^±(x) = Δ_T P_qq^{(0)}(x) + (α_s(Q²))/(2π) Δ_T P_q^{(1)}(x)
+    
+    The LO term (Eq. 9) is:
+    
+        Δ_T P_qq^{(0)}(x) = C_F [(2x)/((1-x)_+) + (3/2)δ(1-x)]
+    
+    The NLO contribution (Eq. 11) splits into regular (Eq. 12), plus (Eq. 12),
+    and delta function (Eq. 13) parts. Plus distributions are defined by Eq. (10).
+    
+    Returns
+    -------
+    tuple
+        (p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:
         
-            - p0, p1: Regular function parts (LO and NLO)
-            - p0pf, p1pf: Plus function coefficients  
-            - plus0, del0: LO plus and delta function contributions
-            - plus1, del1: NLO plus and delta function contributions
+        - p0, p1: Regular function parts (LO and NLO)
+        - p0pf, p1pf: Plus function coefficients  
+        - plus0, del0: LO plus and delta function contributions
+        - plus1, del1: NLO plus and delta function contributions
     
-    Note:
-        Implements Eqs. (9), (11), and (12) from the paper. Uses Spence function
-        from scipy.special. Regularizes singularities at z=1 with small epsilon (1e-100).
+    Notes
+    -----
+    Uses Spence function S(x) from scipy.special (Eq. 15). The Spence function
+    is related to the dilogarithm Li₂(z) by S(x) = -Li₂(1-x).
+    Regularizes singularities at z=1 with epsilon = 1e-100.
     
-    See Also:
-        integrate: Uses splitting functions for PDF convolution
+    See Also
+    --------
+    integrate : Uses splitting functions for PDF convolution
     """
 
     # p0 and p0pf correspond to the first term in Eq. (9) containing a plus function prescription
@@ -289,12 +314,17 @@ def evolve(
     """Evolve transversity PDF using the direct integration method (Hirai).
     
     This is the main function for PDF evolution using direct numerical integration
-    of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
+    of the DGLAP equation (Eq. 1). More robust for peaked PDFs but slower than
+    Mellin method.
     
     This method:
     1. Discretizes t = ln(Q²) into n_t Euler steps
-    2. At each step, computes convolution integral (Eq. 19) using Simpson's rule
-    3. Updates PDF using forward Euler method (Eq. 1)
+    2. At each step, computes the convolution integral (Eq. 19):
+       
+           f̃(x) ⊗ g(x) = ∫ dx̃ f̃(x/z) g(z)
+       
+       using Simpson's rule with n_z integration points
+    3. Updates PDF using forward Euler: f̃(t + dt) ≈ f̃(t) + dt·f̃'(t)
     
     Parameters
     ----------

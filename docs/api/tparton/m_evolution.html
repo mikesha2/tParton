@@ -47,10 +47,21 @@ and less sensitive to discretization effects compared to direct integration.</p>
 <h2 id="key-functions">Key Functions</h2>
 <p>evolve : Main function to evolve a transversity PDF</p>
 <h2 id="theoretical-background">Theoretical Background</h2>
-<p>The solution uses the convolution theorem for Mellin transforms:</p>
-<pre><code>M[Δ_T q^±](Q²;s) = K(s,Q²,Q₀²) M[Δ_T q^±](Q₀²;s)
+<p>The Mellin transform of a function f is defined as (Eq. 20):</p>
+<pre><code>M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
 </code></pre>
-<p>where K contains the evolution kernel with splitting function moments.</p>
+<p>The inverse Mellin transform (Eq. 21) is:</p>
+<pre><code>f(x) = M^{-1}[f̂](x) = (1)/(2πi) ∫_{c-i∞}^{c+i∞} x^{-s} f̂(s) ds
+</code></pre>
+<p>The convolution theorem (Eq. 23) gives: M[f ⊗ g] = M[f]·M[g]</p>
+<p>The NLO solution (Eq. 24) for the moments is:</p>
+<pre><code>M[Δ_T q^±](Q²;s) = (1 + (α_S(Q₀²) - α_S(Q²))/(π β₀)
+                    [M[Δ_T P_{qq}^{(0)}](s) - (β₁)/(2β₀)M[Δ_T P_{qq}^{(0)}](s)])
+                 × (α_S(Q²)/α_S(Q₀²))^{-2M[Δ_T P_{qq}^{(0)}](s)/β₀}
+                 × M[Δ_T q^±](Q₀²;s)
+</code></pre>
+<p>where the splitting function moments are given by Eq. (26) for LO and Eq. (27)
+for NLO. The inverse Mellin transform is computed using Cohen's method (Eq. 36).</p>
 <h2 id="references">References</h2>
 <ul>
 <li>Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894</li>
@@ -710,9 +721,11 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
     Faster and less discretization-dependent than the direct integration method.
     
     This method:
-    1. Computes Mellin moments of input PDF
-    2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Cohen method)
+    1. Computes Mellin moments (Eq. 20): M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
+    2. Evolves moments using Eq. (24) with splitting function moments from
+       Eq. (26) for LO and Eq. (27) for NLO
+    3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen&#39;s
+       method with accelerated alternating series convergence
     
     Parameters
     ----------
@@ -859,9 +872,11 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
 <p>This is the main function for PDF evolution using Mellin transforms.
 Faster and less discretization-dependent than the direct integration method.</p>
 <p>This method:
-1. Computes Mellin moments of input PDF
-2. Evolves moments using splitting function moments (Eq. 24)
-3. Reconstructs PDF via inverse Mellin transform (Cohen method)</p>
+1. Computes Mellin moments (Eq. 20): M<a href="s">f</a> = ∫₀^∞ x^{s-1} f(x) dx
+2. Evolves moments using Eq. (24) with splitting function moments from
+Eq. (26) for LO and Eq. (27) for NLO
+3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen's
+method with accelerated alternating series convergence</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>

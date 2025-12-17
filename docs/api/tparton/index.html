@@ -127,9 +127,11 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     Faster and less discretization-dependent than the direct integration method.
     
     This method:
-    1. Computes Mellin moments of input PDF
-    2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Cohen method)
+    1. Computes Mellin moments (Eq. 20): M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
+    2. Evolves moments using Eq. (24) with splitting function moments from
+       Eq. (26) for LO and Eq. (27) for NLO
+    3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen&#39;s
+       method with accelerated alternating series convergence
     
     Parameters
     ----------
@@ -276,9 +278,11 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
 <p>This is the main function for PDF evolution using Mellin transforms.
 Faster and less discretization-dependent than the direct integration method.</p>
 <p>This method:
-1. Computes Mellin moments of input PDF
-2. Evolves moments using splitting function moments (Eq. 24)
-3. Reconstructs PDF via inverse Mellin transform (Cohen method)</p>
+1. Computes Mellin moments (Eq. 20): M<a href="s">f</a> = ∫₀^∞ x^{s-1} f(x) dx
+2. Evolves moments using Eq. (24) with splitting function moments from
+Eq. (26) for LO and Eq. (27) for NLO
+3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen's
+method with accelerated alternating series convergence</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>
@@ -382,12 +386,17 @@ due to padding at boundaries.</dd>
     &#34;&#34;&#34;Evolve transversity PDF using the direct integration method (Hirai).
     
     This is the main function for PDF evolution using direct numerical integration
-    of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
+    of the DGLAP equation (Eq. 1). More robust for peaked PDFs but slower than
+    Mellin method.
     
     This method:
     1. Discretizes t = ln(Q²) into n_t Euler steps
-    2. At each step, computes convolution integral (Eq. 19) using Simpson&#39;s rule
-    3. Updates PDF using forward Euler method (Eq. 1)
+    2. At each step, computes the convolution integral (Eq. 19):
+       
+           f̃(x) ⊗ g(x) = ∫ dx̃ f̃(x/z) g(z)
+       
+       using Simpson&#39;s rule with n_z integration points
+    3. Updates PDF using forward Euler: f̃(t + dt) ≈ f̃(t) + dt·f̃&#39;(t)
     
     Parameters
     ----------
@@ -545,11 +554,15 @@ due to padding at boundaries.</dd>
 </details>
 <div class="desc"><p>Evolve transversity PDF using the direct integration method (Hirai).</p>
 <p>This is the main function for PDF evolution using direct numerical integration
-of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.</p>
+of the DGLAP equation (Eq. 1). More robust for peaked PDFs but slower than
+Mellin method.</p>
 <p>This method:
 1. Discretizes t = ln(Q²) into n_t Euler steps
-2. At each step, computes convolution integral (Eq. 19) using Simpson's rule
-3. Updates PDF using forward Euler method (Eq. 1)</p>
+2. At each step, computes the convolution integral (Eq. 19):</p>
+<pre><code>   f̃(x) ⊗ g(x) = ∫ dx̃ f̃(x/z) g(z)
+</code></pre>
+<p>using Simpson's rule with n_z integration points
+3. Updates PDF using forward Euler: f̃(t + dt) ≈ f̃(t) + dt·f̃'(t)</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>

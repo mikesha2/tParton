@@ -51,10 +51,16 @@ parameters is needed.</p>
 splitting : Compute the transversity splitting functions
 alp2pi : Compute the strong coupling α_s(Q²)/(2π)</p>
 <h2 id="theoretical-background">Theoretical Background</h2>
-<p>Solves the DGLAP equation:</p>
-<pre><code>∂/∂t Δ_T q^±(x,t) = (α_s(t)/(2π)) Δ_T P_{q^±}(x) ⊗ Δ_T q^±(x,t)
+<p>Solves the DGLAP equation (Eq. 1 from [1]):</p>
+<pre><code>∂/∂t Δ_T q^±(x,t) = (α_s(t)/(2π)) Δ_T P_q^±(x) ⊗ Δ_T q^±(x,t)
 </code></pre>
-<p>where t = ln(Q²) and ⊗ denotes Mellin convolution.</p>
+<p>where t = ln(Q²), Q² is the energy scale, and ⊗ denotes Mellin convolution
+(Eq. 3). The tilde notation f̃(x) = x·f(x) is used throughout (Eq. 2).</p>
+<p>The NLO strong coupling is given by Eq. (4):</p>
+<pre><code>α_s^{NLO}(Q²) = (4π)/(β₀ ln(Q²/Λ²)) [1 - (β₁ ln(ln(Q²/Λ²)))/(β₀² ln(Q²/Λ²))]
+</code></pre>
+<p>The splitting function has LO (Eq. 9) and NLO (Eqs. 11-12) contributions,
+with plus distribution regularization (Eq. 10).</p>
 <h2 id="references">References</h2>
 <ul>
 <li>Hirai, M., Kumano, S., &amp; Miyama, M. (1998). Comput. Phys. Commun. 111, 150-166</li>
@@ -79,8 +85,12 @@ alp2pi : Compute the strong coupling α_s(Q²)/(2π)</p>
 <pre><code class="python">def alp2pi(t: float, lnlam: float, order: int, beta0: float, beta1: float) -&gt; float:
     &#34;&#34;&#34;Compute α_s(Q²)/(2π) using the analytical approximation.
     
-    Implements Eq. (4) from the paper, normalized by 2π.
-    This normalization is convenient for the DGLAP evolution equation.
+    Implements Eq. (4) from the paper, normalized by 2π:
+    
+        α_s^{NLO}(Q²)/(2π) = (2)/(β₀ ln(Q²/Λ²)) [1 - (β₁ ln(ln(Q²/Λ²)))/(β₀² ln(Q²/Λ²))]
+    
+    where t = ln(Q²) and lnlam = 2 ln(Λ). This normalization is convenient
+    for the DGLAP evolution equation.
     &#34;&#34;&#34;
     dlnq2 = t - lnlam
     alpha = 4 * pi / beta0 / dlnq2
@@ -89,8 +99,11 @@ alp2pi : Compute the strong coupling α_s(Q²)/(2π)</p>
     return alpha_factor * alpha</code></pre>
 </details>
 <div class="desc"><p>Compute α_s(Q²)/(2π) using the analytical approximation.</p>
-<p>Implements Eq. (4) from the paper, normalized by 2π.
-This normalization is convenient for the DGLAP evolution equation.</p></div>
+<p>Implements Eq. (4) from the paper, normalized by 2π:</p>
+<pre><code>α_s^{NLO}(Q²)/(2π) = (2)/(β₀ ln(Q²/Λ²)) [1 - (β₁ ln(ln(Q²/Λ²)))/(β₀² ln(Q²/Λ²))]
+</code></pre>
+<p>where t = ln(Q²) and lnlam = 2 ln(Λ). This normalization is convenient
+for the DGLAP evolution equation.</p></div>
 </dd>
 <dt id="tparton.t_evolution.evolve"><code class="name flex">
 <span>def <span class="ident">evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>n_t: int = 100,<br>n_z: int = 500,<br>morp: str = 'plus',<br>order: int = 2,<br>logScale: bool = False,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = 0.009390141642421825,<br>alpha_num: bool = True) ‑> numpy.ndarray</span>
@@ -120,12 +133,17 @@ This normalization is convenient for the DGLAP evolution equation.</p></div>
     &#34;&#34;&#34;Evolve transversity PDF using the direct integration method (Hirai).
     
     This is the main function for PDF evolution using direct numerical integration
-    of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
+    of the DGLAP equation (Eq. 1). More robust for peaked PDFs but slower than
+    Mellin method.
     
     This method:
     1. Discretizes t = ln(Q²) into n_t Euler steps
-    2. At each step, computes convolution integral (Eq. 19) using Simpson&#39;s rule
-    3. Updates PDF using forward Euler method (Eq. 1)
+    2. At each step, computes the convolution integral (Eq. 19):
+       
+           f̃(x) ⊗ g(x) = ∫ dx̃ f̃(x/z) g(z)
+       
+       using Simpson&#39;s rule with n_z integration points
+    3. Updates PDF using forward Euler: f̃(t + dt) ≈ f̃(t) + dt·f̃&#39;(t)
     
     Parameters
     ----------
@@ -283,11 +301,15 @@ This normalization is convenient for the DGLAP evolution equation.</p></div>
 </details>
 <div class="desc"><p>Evolve transversity PDF using the direct integration method (Hirai).</p>
 <p>This is the main function for PDF evolution using direct numerical integration
-of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.</p>
+of the DGLAP equation (Eq. 1). More robust for peaked PDFs but slower than
+Mellin method.</p>
 <p>This method:
 1. Discretizes t = ln(Q²) into n_t Euler steps
-2. At each step, computes convolution integral (Eq. 19) using Simpson's rule
-3. Updates PDF using forward Euler method (Eq. 1)</p>
+2. At each step, computes the convolution integral (Eq. 19):</p>
+<pre><code>   f̃(x) ⊗ g(x) = ∫ dx̃ f̃(x/z) g(z)
+</code></pre>
+<p>using Simpson's rule with n_z integration points
+3. Updates PDF using forward Euler: f̃(t + dt) ≈ f̃(t) + dt·f̃'(t)</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>
@@ -680,23 +702,36 @@ This function is called when running <code>python -m tparton t</code>.</p>
 <pre><code class="python">def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: float):
     &#34;&#34;&#34;Compute transversity splitting functions at given momentum fraction.
     
-    Evaluates ΔT P_qq(z) including both LO and NLO contributions.
-    Handles plus distributions and delta function contributions separately.
+    Evaluates the full NLO splitting function Eq. (8):
     
-    Returns:
-        tuple: (p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:
+        Δ_T P_q^±(x) = Δ_T P_qq^{(0)}(x) + (α_s(Q²))/(2π) Δ_T P_q^{(1)}(x)
+    
+    The LO term (Eq. 9) is:
+    
+        Δ_T P_qq^{(0)}(x) = C_F [(2x)/((1-x)_+) + (3/2)δ(1-x)]
+    
+    The NLO contribution (Eq. 11) splits into regular (Eq. 12), plus (Eq. 12),
+    and delta function (Eq. 13) parts. Plus distributions are defined by Eq. (10).
+    
+    Returns
+    -------
+    tuple
+        (p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:
         
-            - p0, p1: Regular function parts (LO and NLO)
-            - p0pf, p1pf: Plus function coefficients  
-            - plus0, del0: LO plus and delta function contributions
-            - plus1, del1: NLO plus and delta function contributions
+        - p0, p1: Regular function parts (LO and NLO)
+        - p0pf, p1pf: Plus function coefficients  
+        - plus0, del0: LO plus and delta function contributions
+        - plus1, del1: NLO plus and delta function contributions
     
-    Note:
-        Implements Eqs. (9), (11), and (12) from the paper. Uses Spence function
-        from scipy.special. Regularizes singularities at z=1 with small epsilon (1e-100).
+    Notes
+    -----
+    Uses Spence function S(x) from scipy.special (Eq. 15). The Spence function
+    is related to the dilogarithm Li₂(z) by S(x) = -Li₂(1-x).
+    Regularizes singularities at z=1 with epsilon = 1e-100.
     
-    See Also:
-        integrate: Uses splitting functions for PDF convolution
+    See Also
+    --------
+    integrate : Uses splitting functions for PDF convolution
     &#34;&#34;&#34;
 
     # p0 and p0pf correspond to the first term in Eq. (9) containing a plus function prescription
@@ -752,20 +787,37 @@ This function is called when running <code>python -m tparton t</code>.</p>
     return p0, p1, p0pf, p1pf, plus0, del0, plus1, del1</code></pre>
 </details>
 <div class="desc"><p>Compute transversity splitting functions at given momentum fraction.</p>
-<p>Evaluates ΔT P_qq(z) including both LO and NLO contributions.
-Handles plus distributions and delta function contributions separately.</p>
-<p>Returns:
-tuple: (p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:</p>
-<pre><code>    - p0, p1: Regular function parts (LO and NLO)
-    - p0pf, p1pf: Plus function coefficients  
-    - plus0, del0: LO plus and delta function contributions
-    - plus1, del1: NLO plus and delta function contributions
+<p>Evaluates the full NLO splitting function Eq. (8):</p>
+<pre><code>Δ_T P_q^±(x) = Δ_T P_qq^{(0)}(x) + (α_s(Q²))/(2π) Δ_T P_q^{(1)}(x)
 </code></pre>
-<p>Note:
-Implements Eqs. (9), (11), and (12) from the paper. Uses Spence function
-from scipy.special. Regularizes singularities at z=1 with small epsilon (1e-100).</p>
-<p>See Also:
-integrate: Uses splitting functions for PDF convolution</p></div>
+<p>The LO term (Eq. 9) is:</p>
+<pre><code>Δ_T P_qq^{(0)}(x) = C_F [(2x)/((1-x)_+) + (3/2)δ(1-x)]
+</code></pre>
+<p>The NLO contribution (Eq. 11) splits into regular (Eq. 12), plus (Eq. 12),
+and delta function (Eq. 13) parts. Plus distributions are defined by Eq. (10).</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>
+<p>(p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:</p>
+<ul>
+<li>p0, p1: Regular function parts (LO and NLO)</li>
+<li>p0pf, p1pf: Plus function coefficients
+</li>
+<li>plus0, del0: LO plus and delta function contributions</li>
+<li>plus1, del1: NLO plus and delta function contributions</li>
+</ul>
+</dd>
+</dl>
+<h2 id="notes">Notes</h2>
+<p>Uses Spence function S(x) from scipy.special (Eq. 15). The Spence function
+is related to the dilogarithm Li₂(z) by S(x) = -Li₂(1-x).
+Regularizes singularities at z=1 with epsilon = 1e-100.</p>
+<h2 id="see-also">See Also</h2>
+<dl>
+<dt><code><a title="tparton.t_evolution.integrate" href="#tparton.t_evolution.integrate">integrate()</a></code></dt>
+<dd>Uses splitting functions for PDF convolution</dd>
+</dl></div>
 </dd>
 <dt id="tparton.t_evolution.z_grid"><code class="name flex">
 <span>def <span class="ident">z_grid</span></span>(<span>xi: float, n_z: int, logScale: bool) ‑> numpy.ndarray</span>
