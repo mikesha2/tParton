@@ -225,12 +225,49 @@ def integrate(pdf: np.ndarray, i: int, z: np.ndarray, alp: float, order: int,
         (p0pf + (alp * p1pf if order == 2 else 0)) * pdf[i]
 
     # When handling the plus prescription, there is a common factor of ln(1-x) when integrating Eq. (10)
-    lno = np.log(1 - xs[i])
+    lno = _plus_log_term(xs[i])
     estimate = simpson(func, x=z) + (plus0 * lno + del0) * pdf[i]
     if order == 2:
         estimate += alp * (plus1 * lno + del1) * pdf[i]
 
     return estimate
+
+def _z_grid(xi: float, n_z: int, logScale: bool) -> np.ndarray:
+    """Construct z-grid for convolution integral.
+
+    Parameters
+    ----------
+    xi : float
+        Current x value. Grid spans from `xi` to 1.
+    n_z : int
+        Number of z points (inclusive of endpoints).
+    logScale : bool
+        Use logarithmic spacing near 1 if True; otherwise linear spacing.
+
+    Returns
+    -------
+    ndarray
+        z-grid array of shape `(n_z + 1,)` from `xi` to `1`.
+    """
+    if logScale:
+        # Log-spacing concentrated near 1 for peaked PDFs
+        return np.power(10, np.linspace(np.log10(max(xi, 1e-15)), 0, n_z + 1))
+    return np.linspace(xi, 1, n_z + 1)
+
+def _plus_log_term(x: float) -> float:
+    """Compute the common ln(1-x) factor from plus-prescription integrals.
+
+    Parameters
+    ----------
+    x : float
+        The current `x` value in the convolution.
+
+    Returns
+    -------
+    float
+        `ln(1-x)` stabilized for `x → 1` to avoid `log(0)`.
+    """
+    return np.log(max(1 - x, 1e-100))
 
 def evolve(
     pdf: np.ndarray,
@@ -393,9 +430,21 @@ def evolve(
         if verbose:
             print(i+1, ' of ', len(ts), 'time steps')
         # Perform the convolution at each x using (possibly log-scaled) z integration points
-        inc = np.array([integrate(res, index, \
-            np.power(10, np.linspace(np.log10(xs[index]), 0, n_z + 1)) if logScale else np.linspace(xs[index], 1, n_z + 1), \
-                alp, order, CF, sign, CG, Tf, xs) for index in range(1, len(xs)-1)])
+        inc = np.array([
+            integrate(
+                res,
+                index,
+                _z_grid(xs[index], n_z, logScale),
+                alp,
+                order,
+                CF,
+                sign,
+                CG,
+                Tf,
+                xs,
+            )
+            for index in range(1, len(xs) - 1)
+        ])
         # Ensure that x*pdf(x) = 0 at x = 0 and x = 1
         inc = np.pad(inc, 1)
         res += dt * inc * alp

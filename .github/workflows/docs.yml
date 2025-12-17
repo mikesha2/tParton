@@ -28,8 +28,9 @@ jobs:
       
       - name: Install dependencies
         run: |
-          pip install pdoc
+          pip install -U pdoc
           pip install numpy scipy mpmath gmpy2
+          pip install -e .
       
       - name: Build documentation
         run: |
@@ -39,7 +40,7 @@ jobs:
           # Copy custom index page
           cp docs/index.html _site/index.html
           # Generate API documentation to api/ subdirectory
-          pdoc src/tparton -o _site/api
+          python -m pdoc --html --force --output-dir _site/api tparton
           # Create .nojekyll to bypass Jekyll processing
           touch _site/.nojekyll
       

@@ -261,9 +261,21 @@ This normalization is convenient for the DGLAP evolution equation.</p></div>
         if verbose:
             print(i+1, &#39; of &#39;, len(ts), &#39;time steps&#39;)
         # Perform the convolution at each x using (possibly log-scaled) z integration points
-        inc = np.array([integrate(res, index, \
-            np.power(10, np.linspace(np.log10(xs[index]), 0, n_z + 1)) if logScale else np.linspace(xs[index], 1, n_z + 1), \
-                alp, order, CF, sign, CG, Tf, xs) for index in range(1, len(xs)-1)])
+        inc = np.array([
+            integrate(
+                res,
+                index,
+                _z_grid(xs[index], n_z, logScale),
+                alp,
+                order,
+                CF,
+                sign,
+                CG,
+                Tf,
+                xs,
+            )
+            for index in range(1, len(xs) - 1)
+        ])
         # Ensure that x*pdf(x) = 0 at x = 0 and x = 1
         inc = np.pad(inc, 1)
         res += dt * inc * alp
@@ -375,7 +387,7 @@ where n is the number of input points.</dd>
         (p0pf + (alp * p1pf if order == 2 else 0)) * pdf[i]
 
     # When handling the plus prescription, there is a common factor of ln(1-x) when integrating Eq. (10)
-    lno = np.log(1 - xs[i])
+    lno = _plus_log_term(xs[i])
     estimate = simpson(func, x=z) + (plus0 * lno + del0) * pdf[i]
     if order == 2:
         estimate += alp * (plus1 * lno + del1) * pdf[i]
