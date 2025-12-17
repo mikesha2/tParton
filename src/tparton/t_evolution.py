@@ -32,6 +32,8 @@ References
 - Hirai, M., Kumano, S., & Miyama, M. (1998). Comput. Phys. Commun. 111, 150-166
 - Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
 """
+__docformat__ = "numpy"
+
 from .constants import constants
 import numpy as np
 from scipy.integrate import simpson
@@ -220,41 +222,78 @@ def evolve(
     This is the main function for PDF evolution using direct numerical integration
     of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
     
-    The method discretizes t = ln(Q²) into n_t Euler steps, computes convolution 
-    integrals using Simpson's rule, and updates the PDF using forward Euler method.
+    This method:
+    1. Discretizes t = ln(Q²) into n_t Euler steps
+    2. At each step, computes convolution integral (Eq. 19) using Simpson's rule
+    3. Updates PDF using forward Euler method (Eq. 1)
     
-    Args:
-        pdf: Input PDF as x*f(x). Can be 1D array (values at x evenly spaced on [0, 1]) 
-            or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
-        Q0_2: Initial energy scale squared in GeV².
-        Q2: Final energy scale squared in GeV².
-        l_QCD: QCD scale parameter Λ in GeV. Only used if alpha_num=False.
-        n_f: Number of active quark flavors.
-        CG: Number of colors, NC.
-        n_t: Number of Euler time steps. More steps = better accuracy but slower.
-        n_z: Number of z points for convolution integrals. More points = better accuracy but slower.
-        morp: Distribution type. Options: 'plus' (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
-        order: Perturbative order. Use 1 for LO or 2 for NLO.
-        logScale: Use logarithmic spacing for z points. Recommended for peaked PDFs.
-        verbose: Print progress (time step count).
-        Q0_2_a: Reference scale Q₀² where αs is known, in GeV². Only used if alpha_num=True.
-        a0: Reference coupling αs(Q0_2_a)/(4π). Only used if alpha_num=True.
-        alpha_num: Use numerical ODE evolution for αs. If False, uses analytical approximation.
+    Parameters
+    ----------
+    pdf : ndarray
+        Input PDF as x*f(x). Can be 1D array (values at x evenly
+        spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+    Q0_2 : float, optional
+        Initial energy scale squared in GeV² (default: 0.16).
+    Q2 : float, optional
+        Final energy scale squared in GeV² (default: 5.0).
+    l_QCD : float, optional
+        QCD scale parameter Λ in GeV (default: 0.25).
+        Only used if alpha_num=False.
+    n_f : int, optional
+        Number of active quark flavors (default: 5).
+    CG : float, optional
+        Number of colors, NC (default: 3).
+    n_t : int, optional
+        Number of Euler time steps (default: 100).
+        More steps = better accuracy but slower.
+    n_z : int, optional
+        Number of z points for convolution integrals (default: 500).
+        More points = better accuracy but slower.
+    morp : str, optional
+        Distribution type (default: 'plus'). Options are 'plus'
+        (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
+    order : int, optional
+        Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
+    logScale : bool, optional
+        Use logarithmic spacing for z points (default: False).
+        Recommended for peaked PDFs.
+    verbose : bool, optional
+        Print progress (time step count) if True (default: False).
+    Q0_2_a : float, optional
+        Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+        Only used if alpha_num=True.
+    a0 : float, optional
+        Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+        Only used if alpha_num=True.
+    alpha_num : bool, optional
+        Use numerical ODE evolution for αs if True (default: True).
+        If False, uses analytical approximation.
     
-    Examples:
-        >>> import numpy as np
-        >>> from tparton.t_evolution import evolve
-        >>> x = np.linspace(0, 1, 100)
-        >>> pdf_in = x * (1-x)**3  # x*f(x) format
-        >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
-        >>> x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    Returns
+    -------
+    ndarray
+        Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n+1, 2)
+        where n is the number of input points.
     
-    See Also:
-        m_evolution.evolve: Mellin moment method (Vogelsang)
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from tparton.t_evolution import evolve
+    >>> x = np.linspace(0, 1, 100)
+    >>> pdf_in = x * (1-x)**3  # x*f(x) format
+    >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
+    >>> x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
     
-    References:
-        [1] Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
-        [2] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+    See Also
+    --------
+    m_evolution.evolve : Mellin moment method (Vogelsang)
+    integrate : Performs convolution at a single x value
+    splitting : Evaluates splitting functions
+    
+    References
+    ----------
+    .. [1] Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
+    .. [2] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
     """
     if pdf.shape[-1] == 1:
         # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
