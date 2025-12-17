@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<title>tParton - Examples and Tutorials</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {hljs.configure({languages: ['python']});hljs.highlightAll();});</script>
+</head>
+<body>
+<main>
+<article id="content">
+<nav class="http-server-breadcrumbs">
+<a href="index.html">tParton</a> /
+<a href="api/tparton/index.html">API</a> /
+<strong>Examples</strong>
+</nav>
+<header>
+<h1 class="title">Examples and Tutorials</h1>
+</header>
+
+<section id="quick-start">
+<h2>Quick Start</h2>
+<p>This tutorial demonstrates how to use tParton to evolve transversity PDFs using both the direct integration (Hirai) and Mellin moment (Vogelsang) methods.</p>
+
+<h3>Installation</h3>
+<pre><code class="language-bash">pip install tparton</code></pre>
+
+<h3>Basic Example: Evolving the GS-A Distribution</h3>
+<p>Let's evolve the Gehrmann-Stirling A-type distribution, which is a standard benchmark for transversity PDF evolution.</p>
+
+<h4>Step 1: Import Required Libraries</h4>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import gamma
+from tparton.t_evolution import evolve as t_evolve
+from tparton.m_evolution import evolve as m_evolve
+</code></pre>
+
+<h4>Step 2: Define the Initial PDF</h4>
+<p>We use the GS-A parametrization from <a href="https://arxiv.org/abs/hep-ph/9512406">Gehrmann (1995)</a>:</p>
+<pre><code class="language-python"># Create x grid with logarithmic spacing
+n = 3000
+x = np.power(10, np.linspace(np.log10(1/3000), 0, n))
+x = np.concatenate(([0], x))
+
+def A(a, b, g, rho):
+    """Normalization factor for GS-A parametrization"""
+    return (1 + g * a / (a + b + 1)) \
+        * gamma(a) * gamma(b+1) / gamma(a + b + 1) \
+        + rho * gamma(a + 0.5) * gamma(b + 1) / gamma(a + b + 1.5)
+
+def pdf_u(x, eta_u=0.918, a_u=0.512, b_u=3.96, gamma_u=11.65, rho_u=-4.60):
+    """Up quark transversity PDF"""
+    return eta_u / A(a_u, b_u, gamma_u, rho_u) * \
+           np.power(x, a_u) * np.power(1-x, b_u) * \
+           (1 + gamma_u * x + rho_u * np.sqrt(x))
+
+def pdf_d(x, eta_d=-0.339, a_d=0.780, b_d=4.96, gamma_d=7.81, rho_d=-3.48):
+    """Down quark transversity PDF"""
+    return pdf_u(x, eta_d, a_d, b_d, gamma_d, rho_d)
+
+# Prepare input arrays (x values and x*f(x))
+u = np.stack((x, pdf_u(x))).T
+d = np.stack((x, pdf_d(x))).T
+</code></pre>
+
+<h4>Step 3: Evolve Using the Hirai Method (Direct Integration)</h4>
+<pre><code class="language-python"># Evolve from Q₀² = 4 GeV² to Q² = 200 GeV²
+u_evolved_hirai = t_evolve(
+    u, 
+    Q0_2=4.0,           # Initial scale
+    Q2=200.0,           # Final scale
+    l_QCD=0.231,        # QCD scale parameter
+    n_f=4,              # Number of flavors
+    n_t=100,            # Number of time steps
+    n_z=500,            # Number of integration points
+    morp='minus',       # Evolution type
+    logScale=True,      # Use log spacing for z
+    alpha_num=False     # Use analytical alpha_s
+)
+
+d_evolved_hirai = t_evolve(d, Q0_2=4, Q2=200, l_QCD=0.231, n_f=4, 
+                           n_t=100, morp='minus', logScale=True, alpha_num=False)
+</code></pre>
+
+<h4>Step 4: Evolve Using the Vogelsang Method (Mellin Moments)</h4>
+<pre><code class="language-python"># Evolve using Mellin moment method (typically faster)
+u_evolved_vogel = m_evolve(
+    u,
+    Q0_2=4.0,
+    Q2=200.0,
+    n_x=n,              # Number of output x points
+    l_QCD=0.231,
+    n_f=4,
+    morp='minus',
+    degree=5,           # Convergence acceleration degree
+    alpha_num=False
+)
+
+d_evolved_vogel = m_evolve(d, Q0_2=4, Q2=200, n_x=n, l_QCD=0.231, 
+                           n_f=4, morp='minus', alpha_num=False)
+</code></pre>
+
+<h4>Step 5: Plot and Compare Results</h4>
+<pre><code class="language-python">plt.figure(figsize=(10, 6))
+# Initial distribution
+plt.plot(x, u[:,1] + d[:,1], '--', c='k', alpha=0.3, 
+         label='Initial (Q² = 4 GeV²)', linewidth=2)
+
+# Evolved using Hirai method
+plt.plot(x, u_evolved_hirai[1] + d_evolved_hirai[1], 
+         label='Hirai method', alpha=0.7)
+
+# Evolved using Vogelsang method
+plt.plot(u_evolved_vogel[0], u_evolved_vogel[1] + d_evolved_vogel[1], 
+         label='Vogelsang method', alpha=0.7)
+
+plt.xlabel('x')
+plt.ylabel(r'$x(\Delta_T u + \Delta_T d)$')
+plt.xlim([1e-3, 1])
+plt.ylim([0, 0.21])
+plt.xscale('log')
+plt.legend()
+plt.title('Evolution to Q² = 200 GeV²')
+plt.grid(alpha=0.3)
+plt.show()
+</code></pre>
+</section>
+
+<section id="validation">
+<h2>Method Validation</h2>
+<p>The following figure shows that both tParton methods agree with each other, the original Mathematica implementation, and the APFEL++ code:</p>
+<img src="fig1.svg" alt="Comparison of evolution methods" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 1: Evolution of the GS-A transversity distribution from Q₀² = 4 GeV² to Q² = 200 GeV². Both Python implementations (Hirai and Vogelsang methods) agree with Mathematica and APFEL++ results.</em></p>
+
+<h3>Relative Differences</h3>
+<p>The relative differences between methods are typically below 10⁻⁴ for most of the x range:</p>
+<img src="fig1_relative_diff.svg" alt="Relative differences between methods" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 2: Relative differences |X-H|/H where H is the Hirai result and X is the alternative method. Differences are dominated by discretization effects at small x.</em></p>
+</section>
+
+<section id="command-line">
+<h2>Command-Line Interface</h2>
+<p>tParton can also be used directly from the command line:</p>
+
+<h3>Using the Mellin Method</h3>
+<pre><code class="language-bash"># Prepare input file (two columns: x, x*f(x))
+echo "0.001 0.0001
+0.01 0.005
+0.1 0.05
+0.5 0.1
+0.9 0.01" > input.dat
+
+# Evolve from Q₀² = 3.1 to Q² = 10.6 GeV²
+python -m tparton m input.dat 3.1 10.6 --morp plus -o output.dat
+
+# View results
+cat output.dat
+</code></pre>
+
+<h3>Using the Hirai Method</h3>
+<pre><code class="language-bash"># Same input, using direct integration
+python -m tparton t input.dat 3.1 10.6 --morp plus -o output.dat
+
+# Specify numerical parameters
+python -m tparton t input.dat 3.1 10.6 --morp plus \
+    --n_t 200 --n_z 1000 --logScale -o output.dat
+</code></pre>
+
+<h3>Additional Options</h3>
+<pre><code class="language-bash"># Use NLO evolution (default is NLO)
+python -m tparton m input.dat 3.1 10.6 --order 2 -o output.dat
+
+# Use LO evolution
+python -m tparton m input.dat 3.1 10.6 --order 1 -o output.dat
+
+# Specify number of flavors and QCD scale
+python -m tparton m input.dat 3.1 10.6 --n_f 4 --l_QCD 0.231 -o output.dat
+
+# Get help
+python -m tparton --help
+python -m tparton m --help
+python -m tparton t --help
+</code></pre>
+</section>
+
+<section id="advanced">
+<h2>Advanced Usage</h2>
+
+<h3>Numerical vs Analytical Running Coupling</h3>
+<p>By default, tParton uses numerical ODE integration for the running coupling α_s(Q²). You can switch to the analytical approximation:</p>
+<pre><code class="language-python"># Numerical (default, more accurate)
+result = m_evolve(pdf, Q0_2=4, Q2=200, alpha_num=True)
+
+# Analytical (faster, good approximation)
+result = m_evolve(pdf, Q0_2=4, Q2=200, alpha_num=False, l_QCD=0.231)
+</code></pre>
+
+<h3>Controlling Discretization</h3>
+<p>For the Hirai method, control accuracy via time steps and integration points:</p>
+<pre><code class="language-python"># Higher accuracy (slower)
+result = t_evolve(pdf, Q0_2=4, Q2=200, n_t=500, n_z=2000)
+
+# Faster (lower accuracy)
+result = t_evolve(pdf, Q0_2=4, Q2=200, n_t=50, n_z=200)
+</code></pre>
+
+<p>For the Vogelsang method, control accuracy via the convergence acceleration degree:</p>
+<pre><code class="language-python"># Higher degree = better convergence (slower)
+result = m_evolve(pdf, Q0_2=4, Q2=200, degree=10)
+
+# Lower degree = faster (may need more output points)
+result = m_evolve(pdf, Q0_2=4, Q2=200, degree=3)
+</code></pre>
+
+<h3>Evolution Types</h3>
+<p>The <code>morp</code> parameter selects the quark combination:</p>
+<pre><code class="language-python"># Plus combination: ΔT q⁺ = ΔT u + ΔT d
+result = m_evolve(pdf, Q0_2=4, Q2=200, morp='plus')
+
+# Minus combination: ΔT q⁻ = ΔT u - ΔT d
+result = m_evolve(pdf, Q0_2=4, Q2=200, morp='minus')
+</code></pre>
+</section>
+
+<section id="more-examples">
+<h2>More Examples</h2>
+<p>Additional Jupyter notebooks are available in the <a href="https://github.com/mikesha2/tParton/tree/main/examples">examples directory</a> on GitHub:</p>
+<ul>
+<li><strong>Generate Mathematica initial distributions.ipynb</strong> - How to create GS-A initial PDFs</li>
+<li><strong>Running Hirai.ipynb</strong> - Complete workflow for the direct integration method</li>
+<li><strong>Running Vogelsang.ipynb</strong> - Complete workflow for the Mellin moment method</li>
+<li><strong>Figures.ipynb</strong> - Reproduction of all validation figures including comparisons with APFEL++ and Mathematica</li>
+</ul>
+</section>
+
+<section id="references">
+<h2>References</h2>
+<ul>
+<li><strong>tParton paper:</strong> Sha, C.M. & Ma, B. (2025). <a href="https://arxiv.org/abs/2409.00221">arXiv:2409.00221</a></li>
+<li><strong>Hirai method:</strong> Hirai, M., Kumano, S., & Miyama, M. (1998). <em>Comput. Phys. Commun.</em> 111, 150-166</li>
+<li><strong>Vogelsang method:</strong> Vogelsang, W. (1998). <em>Phys. Rev. D</em> 57, 1886-1894</li>
+<li><strong>GS-A distribution:</strong> Gehrmann, T. & Stirling, W.J. (1996). <a href="https://arxiv.org/abs/hep-ph/9512406">arXiv:hep-ph/9512406</a></li>
+</ul>
+</section>
+
+</article>
+<nav id="sidebar">
+<h1>Navigation</h1>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="api/tparton/index.html">API Documentation</a></li>
+<li><strong>Examples</strong></li>
+<li><a href="https://github.com/mikesha2/tParton">GitHub Repository</a></li>
+<li><a href="https://arxiv.org/abs/2409.00221">Paper (arXiv)</a></li>
+</ul>
+<h2>On This Page</h2>
+<ul>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#validation">Method Validation</a></li>
+<li><a href="#command-line">Command-Line Interface</a></li>
+<li><a href="#advanced">Advanced Usage</a></li>
+<li><a href="#more-examples">More Examples</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</nav>
+</main>
+</body>
+</html>

@@ -34,6 +34,7 @@ Python API::
 
 See Also
 --------
+- Examples and tutorials: https://mikesha2.github.io/tParton/examples.html
 - Full documentation: https://mikesha2.github.io/tParton/
 - GitHub repository: https://github.com/mikesha2/tParton
 - ArXiv preprint: https://arxiv.org/abs/2409.00221
