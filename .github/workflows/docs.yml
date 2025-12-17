@@ -61,8 +61,11 @@ jobs:
           </html>
           HTML
           # Add aliases with capital 'T' to match potential URL casing
-          mkdir -p _site/api/tParton
-          cp -r _site/api/tparton/* _site/api/tParton/
+          # If lowercase folder exists, mirror to uppercase alias
+          if [ -d _site/api/tparton ]; then
+            mkdir -p _site/api/tParton
+            cp -r _site/api/tparton/* _site/api/tParton/
+          fi
           # Redirect /api/tParton.html to folder index
           cat > _site/api/tParton.html <<'HTML'
           <!doctype html>
