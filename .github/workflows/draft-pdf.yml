@@ -23,3 +23,8 @@ jobs:
         with:
           name: paper
           path: paper.pdf
+      - name: Commit PDF to repository
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: '(auto) Update paper PDF preview'
+          add: 'paper.pdf'
