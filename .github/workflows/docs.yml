@@ -43,6 +43,20 @@ jobs:
           python -m pdoc -o _site/api --math tparton
           # Create .nojekyll to bypass Jekyll processing
           touch _site/.nojekyll
+          # Add redirect for /api/tparton.html to folder index
+          cat > _site/api/tparton.html <<'HTML'
+          <!doctype html>
+          <html>
+            <head>
+              <meta charset="utf-8" />
+              <meta http-equiv="refresh" content="0; url=tparton/index.html" />
+              <title>Redirecting…</title>
+            </head>
+            <body>
+              <p>Redirecting to <a href="tparton/index.html">tparton/index.html</a></p>
+            </body>
+          </html>
+          HTML
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
