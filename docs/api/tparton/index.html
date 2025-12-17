@@ -45,7 +45,7 @@ discretized grids in x and Q².</p>
 </li>
 <li>
 <p><strong>Mellin moment method (Vogelsang method)</strong>: Uses Mellin transforms and inverse
-transform via Talbot contour integration for faster, more accurate evolution.</p>
+transform via Cohen contour integration for faster, more accurate evolution.</p>
 </li>
 </ol>
 <h2 id="basic-usage">Basic Usage</h2>
@@ -129,7 +129,7 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     This method:
     1. Computes Mellin moments of input PDF
     2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+    3. Reconstructs PDF via inverse Mellin transform (Cohen method)
     
     Parameters
     ----------
@@ -199,12 +199,12 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     --------
     t_evolution.evolve : Direct integration method (Hirai)
     evolveMoment : Evolves a single Mellin moment
-    inv_mellin : Inverse Mellin transform (Talbot method)
+    inv_mellin : Inverse Mellin transform (Cohen method)
     
     References
     ----------
     .. [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
-    .. [2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221
+    .. [2] Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221
     &#34;&#34;&#34;
 
     if pdf.shape[-1] == 1:
@@ -278,7 +278,7 @@ Faster and less discretization-dependent than the direct integration method.</p>
 <p>This method:
 1. Computes Mellin moments of input PDF
 2. Evolves moments using splitting function moments (Eq. 24)
-3. Reconstructs PDF via inverse Mellin transform (Talbot method)</p>
+3. Reconstructs PDF via inverse Mellin transform (Cohen method)</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>
@@ -346,7 +346,7 @@ due to padding at boundaries.</dd>
 <dt><code>evolveMoment</code></dt>
 <dd>Evolves a single Mellin moment</dd>
 <dt><code>inv_mellin</code></dt>
-<dd>Inverse Mellin transform (Talbot method)</dd>
+<dd>Inverse Mellin transform (Cohen method)</dd>
 </dl>
 <h2 id="references">References</h2>
 <ul>
@@ -456,7 +456,7 @@ due to padding at boundaries.</dd>
     References
     ----------
     .. [1] Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021
-    .. [2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221
+    .. [2] Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221
     &#34;&#34;&#34;
     if pdf.shape[-1] == 1:
         # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1

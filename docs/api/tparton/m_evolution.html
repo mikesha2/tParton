@@ -43,7 +43,7 @@ and less sensitive to discretization effects compared to direct integration.</p>
 <p>The evolution is performed by:
 1. Computing Mellin moments of the input PDF
 2. Evolving the moments using analytic expressions for splitting function moments
-3. Reconstructing the evolved PDF via inverse Mellin transform (Talbot method)</p>
+3. Reconstructing the evolved PDF via inverse Mellin transform (Cohen method)</p>
 <h2 id="key-functions">Key Functions</h2>
 <p>evolve : Main function to evolve a transversity PDF</p>
 <h2 id="theoretical-background">Theoretical Background</h2>
@@ -712,7 +712,7 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
     This method:
     1. Computes Mellin moments of input PDF
     2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+    3. Reconstructs PDF via inverse Mellin transform (Cohen method)
     
     Parameters
     ----------
@@ -782,12 +782,12 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
     --------
     t_evolution.evolve : Direct integration method (Hirai)
     evolveMoment : Evolves a single Mellin moment
-    inv_mellin : Inverse Mellin transform (Talbot method)
+    inv_mellin : Inverse Mellin transform (Cohen method)
     
     References
     ----------
     .. [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
-    .. [2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221
+    .. [2] Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221
     &#34;&#34;&#34;
 
     if pdf.shape[-1] == 1:
@@ -861,7 +861,7 @@ Faster and less discretization-dependent than the direct integration method.</p>
 <p>This method:
 1. Computes Mellin moments of input PDF
 2. Evolves moments using splitting function moments (Eq. 24)
-3. Reconstructs PDF via inverse Mellin transform (Talbot method)</p>
+3. Reconstructs PDF via inverse Mellin transform (Cohen method)</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>
@@ -929,7 +929,7 @@ due to padding at boundaries.</dd>
 <dt><code><a title="tparton.m_evolution.evolveMoment" href="#tparton.m_evolution.evolveMoment">evolveMoment()</a></code></dt>
 <dd>Evolves a single Mellin moment</dd>
 <dt><code><a title="tparton.m_evolution.inv_mellin" href="#tparton.m_evolution.inv_mellin">inv_mellin()</a></code></dt>
-<dd>Inverse Mellin transform (Talbot method)</dd>
+<dd>Inverse Mellin transform (Cohen method)</dd>
 </dl>
 <h2 id="references">References</h2>
 <ul>
@@ -1026,7 +1026,7 @@ Combines LO and NLO splitting function moments with running coupling.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def inv_mellin(f, x, degree=5, verbose=True):
-    &#34;&#34;&#34;Compute the inverse Mellin transform using Talbot contour method.
+    &#34;&#34;&#34;Compute the inverse Mellin transform using Cohen contour method.
     
     Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
     Uses mpmath&#39;s invertlaplace with the &#39;cohen&#39; method for optimal
@@ -1057,7 +1057,7 @@ Combines LO and NLO splitting function moments with running coupling.</p>
         print(x, x*res)
     return res</code></pre>
 </details>
-<div class="desc"><p>Compute the inverse Mellin transform using Talbot contour method.</p>
+<div class="desc"><p>Compute the inverse Mellin transform using Cohen contour method.</p>
 <p>Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
 Uses mpmath's invertlaplace with the 'cohen' method for optimal
 convergence. Higher degree values increase accuracy but slow computation.</p>

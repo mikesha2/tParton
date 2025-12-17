@@ -8,7 +8,7 @@ and less sensitive to discretization effects compared to direct integration.
 The evolution is performed by:
 1. Computing Mellin moments of the input PDF
 2. Evolving the moments using analytic expressions for splitting function moments
-3. Reconstructing the evolved PDF via inverse Mellin transform (Talbot method)
+3. Reconstructing the evolved PDF via inverse Mellin transform (Cohen method)
 
 Key Functions
 -------------
@@ -25,7 +25,7 @@ where K contains the evolution kernel with splitting function moments.
 References
 ----------
 - Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
-- Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+- Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
 """
 __docformat__ = "numpy"
 from .constants import constants
@@ -417,7 +417,7 @@ def mellin(f, s):
     return mp.quad(lambda t: mp.power(t, s-1) * f(t), [0, 1])
 
 def inv_mellin(f, x, degree=5, verbose=True):
-    """Compute the inverse Mellin transform using Talbot contour method.
+    """Compute the inverse Mellin transform using Cohen contour method.
     
     Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
     Uses mpmath's invertlaplace with the 'cohen' method for optimal
@@ -511,7 +511,7 @@ def evolve(
     This method:
     1. Computes Mellin moments of input PDF
     2. Evolves moments using splitting function moments (Eq. 24)
-    3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+    3. Reconstructs PDF via inverse Mellin transform (Cohen method)
     
     Parameters
     ----------
@@ -581,12 +581,12 @@ def evolve(
     --------
     t_evolution.evolve : Direct integration method (Hirai)
     evolveMoment : Evolves a single Mellin moment
-    inv_mellin : Inverse Mellin transform (Talbot method)
+    inv_mellin : Inverse Mellin transform (Cohen method)
     
     References
     ----------
     .. [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
-    .. [2] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+    .. [2] Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
 
     if pdf.shape[-1] == 1:

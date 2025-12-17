@@ -30,7 +30,7 @@ where t = ln(Q²) and ⊗ denotes Mellin convolution.
 References
 ----------
 - Hirai, M., Kumano, S., & Miyama, M. (1998). Comput. Phys. Commun. 111, 150-166
-- Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+- Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
 """
 __docformat__ = "numpy"
 
@@ -362,7 +362,7 @@ def evolve(
     References
     ----------
     .. [1] Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
-    .. [2] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+    .. [2] Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
     if pdf.shape[-1] == 1:
         # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1

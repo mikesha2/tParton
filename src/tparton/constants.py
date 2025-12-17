@@ -5,7 +5,7 @@ coefficients used in the DGLAP evolution equations.
 
 References
 ----------
-.. [1] Sha, C.M. & Ma, B. (2024). arXiv:2409.00221
+- Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
 """
 
 def constants(CG, n_f):

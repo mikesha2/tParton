@@ -6,7 +6,7 @@ tParton is a Python package for evolving transversity PDFs using two complementa
    discretized grids in x and Q².
    
 2. **Mellin moment method (Vogelsang method)**: Uses Mellin transforms and inverse 
-   transform via Talbot contour integration for faster, more accurate evolution.
+   transform via Cohen contour integration for faster, more accurate evolution.
 
 Basic Usage
 -----------
