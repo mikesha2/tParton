@@ -2,7 +2,11 @@
 
 Copyright 2025 Congzhou M Sha
 
-This is an evolution code for the transversity parton distribution functions encountered in hadronic physics. The associated preprint can be found at [https://arxiv.org/abs/2409.00221v2](https://arxiv.org/abs/2409.00221v2). If you found this work helpful, please cite our preprint, and eventually our published paper!
+This is an evolution code for the transversity parton distribution functions encountered in hadronic physics. The associated preprint can be found at [https://arxiv.org/abs/2409.00221](https://arxiv.org/abs/2409.00221v2). If you found this work helpful, please cite our preprint, and eventually our published paper!
+
+## Documentation
+
+The API documentation and project site are published on GitHub Pages: https://mikesha2.github.io/tParton/
 
 ## Installation
 
