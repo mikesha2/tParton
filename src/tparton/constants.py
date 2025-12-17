@@ -3,6 +3,12 @@
 This module defines the color factors, flavor factors, and beta function
 coefficients used in the DGLAP evolution equations.
 
+Navigation
+----------
+- Home: https://mikesha2.github.io/tParton/
+- Examples & Tutorials: https://mikesha2.github.io/tParton/examples.html
+- API Documentation: https://mikesha2.github.io/tParton/api/tparton/
+
 References
 ----------
 - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221

@@ -36,6 +36,12 @@ The NLO solution (Eq. 24) for the moments is:
 where the splitting function moments are given by Eq. (26) for LO and Eq. (27)
 for NLO. The inverse Mellin transform is computed using Cohen's method (Eq. 36).
 
+Navigation
+----------
+- Home: https://mikesha2.github.io/tParton/
+- Examples & Tutorials: https://mikesha2.github.io/tParton/examples.html
+- API Documentation: https://mikesha2.github.io/tParton/api/tparton/
+
 References
 ----------
 - Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894

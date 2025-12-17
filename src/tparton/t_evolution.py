@@ -35,6 +35,12 @@ The NLO strong coupling is given by Eq. (4):
 The splitting function has LO (Eq. 9) and NLO (Eqs. 11-12) contributions,
 with plus distribution regularization (Eq. 10).
 
+Navigation
+----------
+- Home: https://mikesha2.github.io/tParton/
+- Examples & Tutorials: https://mikesha2.github.io/tParton/examples.html
+- API Documentation: https://mikesha2.github.io/tParton/api/tparton/
+
 References
 ----------
 - Hirai, M., Kumano, S., & Miyama, M. (1998). Comput. Phys. Commun. 111, 150-166

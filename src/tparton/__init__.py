@@ -32,12 +32,17 @@ Python API::
     result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
                       morp='plus', order='NLO')
 
+Navigation
+----------
+- Home: https://mikesha2.github.io/tParton/
+- Examples & Tutorials: https://mikesha2.github.io/tParton/examples.html
+- API Documentation: https://mikesha2.github.io/tParton/api/tparton/
+
 See Also
 --------
-- Examples and tutorials: https://mikesha2.github.io/tParton/examples.html
-- Full documentation: https://mikesha2.github.io/tParton/
 - GitHub repository: https://github.com/mikesha2/tParton
-- ArXiv preprint: https://arxiv.org/abs/2409.00221
+- Paper (arXiv): https://arxiv.org/abs/2409.00221
+- Paper (JOSS): https://mikesha2.github.io/tParton/paper.pdf
 """
 __docformat__ = "numpy"
 
