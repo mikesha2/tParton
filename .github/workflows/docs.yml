@@ -20,32 +20,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: Install dependencies
-      
-            - name: Prepare Pages artifact from local docs
-              run: |
-                # Ensure .nojekyll exists to serve raw files
-                touch docs/.nojekyll
-                # Show what will be published for debugging
-                find docs -maxdepth 3 -type f -print
-      
-              <p>Redirecting to <a href="tParton/index.html">tParton/index.html</a></p>
-            </body>
-          </html>
-                path: './docs'
-          # List built files for debugging
-          find _site -maxdepth 3 -type f -print
-      
+
+      - name: Prepare Pages artifact from local docs
+        run: |
+          # Ensure .nojekyll exists to serve raw files
+          touch docs/.nojekyll
+          # Show what will be published for debugging
+          find docs -maxdepth 3 -type f -print
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './_site'
+          path: './docs'
   
   deploy:
     environment:
