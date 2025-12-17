@@ -64,15 +64,17 @@ def S_p1(n, f):
     
     Implements Eq. (28) using the interpolation formula Eq. (31).
     
-    Args:
-        n:
-        Mellin moment number
-        f:
-        Factor η^N where η = ±1 for plus/minus distributions
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
     
-    Returns:
+    Returns
+    -------
     complex
-        Polarized harmonic sum S'_1(N)
+        Polarized harmonic sum S'_1(N).
     """
     return 0.5 * (
         (1 + f) * S_1(n/2) + (1 - f) * S_1((n-1)/2))
@@ -82,15 +84,17 @@ def S_p2(n, f):
     
     Implements Eq. (29) using the interpolation formula Eq. (31).
     
-    Args:
-        n:
-        Mellin moment number
-        f:
-        Factor η^N where η = ±1 for plus/minus distributions
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
     
-    Returns:
+    Returns
+    -------
     complex
-        Polarized harmonic sum S'_2(N)
+        Polarized harmonic sum S'_2(N).
     """
     return 0.5 * (
         (1 + f) * S_2(n/2) + (1 - f) * S_2((n-1)/2))
@@ -100,15 +104,17 @@ def S_p3(n, f):
     
     Implements Eq. (30) using the interpolation formula Eq. (31).
     
-    Args:
-        n:
-        Mellin moment number
-        f:
-        Factor η^N where η = ±1 for plus/minus distributions
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
     
-    Returns:
+    Returns
+    -------
     complex
-        Polarized harmonic sum S'_3(N)
+        Polarized harmonic sum S'_3(N).
     """
     return 0.5 * (
         (1 + f) * S_3(n/2) + (1 - f) * S_3((n-1)/2))
@@ -120,22 +126,20 @@ def Stilde(n, f):
     """Compute the S-tilde harmonic sum function.
     
     Implements Eq. (32) which appears in the NLO splitting function moment.
+    This function involves Riemann zeta function ζ(3), dilogarithm integral,
+    and digamma function ψ_0.
     
-    Args:
-        n:
-        Mellin moment number
-        f:
-        Factor η^N where η = ±1 for plus/minus distributions
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
     
-    Returns:
+    Returns
+    -------
     complex
-        S-tilde value at moment N
-    
-    Note:
-    This function involves:
-    - Riemann zeta function ζ(3)
-    - Dilogarithm integral
-    - Digamma function ψ_0
+        S-tilde value at moment N.
     """
     temp = -5/8 * zeta3
     term = f
@@ -147,19 +151,19 @@ def LO_splitting_function_moment(n, CF):
     """Compute the leading-order splitting function Mellin moment.
     
     Implements Eq. (26) for the LO transversity splitting function moment.
-    
-    Args:
-        n:
-        Mellin moment number
-        CF:
-        Color factor CF = (NC² - 1)/(2NC)
-    
-    Returns:
-    complex
-        LO splitting function moment M[ΔT P_qq^(0)](n)
-    
-    Note:
     Uses harmonic sum S₁(n) defined via polygamma functions.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    CF : float
+        Color factor CF = (NC² - 1)/(2NC).
+    
+    Returns
+    -------
+    complex
+        LO splitting function moment M[ΔT P_qq^(0)](n).
     """
     return CF * (1.5 - 2 * S_1(n))
 
@@ -167,26 +171,26 @@ def NLO_splitting_function_moment(n, eta, CF, NC, Tf):
     """Compute the next-to-leading-order splitting function Mellin moment.
     
     Implements Eq. (27) for the NLO transversity splitting function moment.
-    
-    Args:
-        n:
-        Mellin moment number
-        eta:
-        Distribution type: 1 for plus, -1 for minus
-        CF:
-        Color factor
-        NC:
-        Number of colors
-        Tf:
-        Flavor factor TR × Nf
-    
-    Returns:
-    complex
-        NLO splitting function moment M[ΔT P_qq,η^(1)](n)
-    
-    Note:
     Includes CF², CF×NC, and CF×Tf terms with harmonic sums.
     More complex than LO due to two-loop corrections.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    eta : int
+        Distribution type: 1 for plus, -1 for minus.
+    CF : float
+        Color factor.
+    NC : int
+        Number of colors.
+    Tf : float
+        Flavor factor TR × Nf.
+    
+    Returns
+    -------
+    complex
+        NLO splitting function moment M[ΔT P_qq,η^(1)](n).
     """
     f = etaN(n, eta)
     return \
@@ -217,25 +221,25 @@ def alpha_S(Q2, order, beta0, beta1, l_QCD):
     """Compute the strong coupling constant using the analytical approximation.
     
     Implements Eq. (4) from the paper for α_s(Q²).
-    
-    Args:
-        Q2:
-        Energy scale squared (GeV²)
-        order:
-        Perturbative order: 1 for LO, 2 for NLO
-        beta0:
-        Leading QCD beta function coefficient
-        beta1:
-        Next-to-leading QCD beta function coefficient
-        l_QCD:
-        QCD scale parameter Λ (GeV)
-    
-    Returns:
-    float
-        Strong coupling constant α_s(Q²)
-    
-    Note:
     The NLO approximation includes the β₁ correction term.
+    
+    Parameters
+    ----------
+    Q2 : float
+        Energy scale squared (GeV²).
+    order : int
+        Perturbative order: 1 for LO, 2 for NLO.
+    beta0 : float
+        Leading QCD beta function coefficient.
+    beta1 : float
+        Next-to-leading QCD beta function coefficient.
+    l_QCD : float
+        QCD scale parameter Λ (GeV).
+    
+    Returns
+    -------
+    float
+        Strong coupling constant α_s(Q²).
     """
     ln_Q2_L_QCD = mp.log(Q2) - 2 * mp.log(l_QCD)
     ln_ln_Q2_L_QCD = mp.log(ln_Q2_L_QCD)
@@ -249,27 +253,27 @@ def alpha_S_num(Q2, order, Q0_2_a, a0, beta0, beta1):
     
     Solves the QCD beta function differential equation numerically for α_s(Q²).
     More accurate than the analytical approximation, especially at low scales.
-    
-    Args:
-        Q2:
-        Energy scale squared (GeV²)
-        order:
-        Perturbative order: 1 for LO, 2 for NLO
-        Q0_2_a:
-        Reference energy scale squared where α_s is known (GeV²)
-        a0:
-        Reference coupling α_s(Q0_2_a)/(4π)
-        beta0:
-        Leading QCD beta function coefficient
-        beta1:
-        Next-to-leading QCD beta function coefficient
-    
-    Returns:
-    float
-        Strong coupling constant α_s(Q²)
-    
-    Note:
     Uses mpmath's odefun for high-precision ODE integration.
+    
+    Parameters
+    ----------
+    Q2 : float
+        Energy scale squared (GeV²).
+    order : int
+        Perturbative order: 1 for LO, 2 for NLO.
+    Q0_2_a : float
+        Reference energy scale squared where α_s is known (GeV²).
+    a0 : float
+        Reference coupling α_s(Q0_2_a)/(4π).
+    beta0 : float
+        Leading QCD beta function coefficient.
+    beta1 : float
+        Next-to-leading QCD beta function coefficient.
+    
+    Returns
+    -------
+    float
+        Strong coupling constant α_s(Q²).
     """
     if order == 2:
         ode = lambda x, a: -beta0 * a * a - beta1 * a * a * a
@@ -286,20 +290,20 @@ def alpha_S_num(Q2, order, Q0_2_a, a0, beta0, beta1):
 def mellin(f, s):
     """Compute the Mellin transform of a function.
     
-    Implements Eq. (20): M[f](s) = ∫₀¹ t^(s-1) f(t) dt
-    
-    Args:
-        f:
-        Function to transform, defined on [0, 1]
-        s:
-        Mellin moment number
-    
-    Returns:
-    complex
-        Mellin transform M[f](s)
-    
-    Note:
+    Implements Eq. (20): M[f](s) = ∫₀¹ t^(s-1) f(t) dt.
     Uses mpmath.quad for high-precision integration.
+    
+    Parameters
+    ----------
+    f : callable
+        Function to transform, defined on [0, 1].
+    s : complex
+        Mellin moment number.
+    
+    Returns
+    -------
+    complex
+        Mellin transform M[f](s).
     """
     return mp.quad(lambda t: mp.power(t, s-1) * f(t), [0, 1])
 
@@ -307,26 +311,27 @@ def inv_mellin(f, x, degree=5, verbose=True):
     """Compute the inverse Mellin transform using Talbot contour method.
     
     Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
-    
-    Args:
-        f:
-        Function in Mellin space, f(s)
-        x:
-        Point in x-space where to evaluate the inverse transform
-        degree:
-        Number of terms in Cohen's convergence acceleration (default: 5)
-        verbose:
-        Print intermediate results if True (default: True)
-    
-    Returns:
-    float
-        Inverse Mellin transform value at x
-    
-    Note:
     Uses mpmath's invertlaplace with the 'cohen' method for optimal
     convergence. Higher degree values increase accuracy but slow computation.
     
-    References:
+    Parameters
+    ----------
+    f : callable
+        Function in Mellin space, f(s).
+    x : float
+        Point in x-space where to evaluate the inverse transform.
+    degree : int
+        Number of terms in Cohen's convergence acceleration (default: 5).
+    verbose : bool
+        Print intermediate results if True (default: True).
+    
+    Returns
+    -------
+    float
+        Inverse Mellin transform value at x.
+    
+    References
+    ----------
     Cohen et al. (2000), Experiment. Math. 9(1): 3-12
     """
     res = invertlaplace(f, -mp.log(x), method='cohen', degree=degree)
@@ -338,35 +343,35 @@ def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, 
     """Evolve a single Mellin moment from initial to final energy scale.
     
     Implements Eq. (24) from the paper (Vogelsang's formula).
-    
-    Args:
-        n:
-        Mellin moment number
-        pdf_m:
-        Mellin moment of input PDF at initial scale
-        alpha_S_Q0_2:
-        Strong coupling at initial scale Q₀²
-        alpha_S_Q2:
-        Strong coupling at final scale Q²
-        beta0:
-        Leading QCD beta function coefficient
-        beta1:
-        Next-to-leading QCD beta function coefficient
-        eta:
-        Distribution type: 1 for plus, -1 for minus
-        CF:
-        Color factor
-        NC:
-        Number of colors
-        Tf:
-        Flavor factor
-    
-    Returns:
-    complex
-        Evolved Mellin moment at scale Q²
-    
-    Note:
     Combines LO and NLO splitting function moments with running coupling.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    pdf_m : complex
+        Mellin moment of input PDF at initial scale.
+    alpha_S_Q0_2 : float
+        Strong coupling at initial scale Q₀².
+    alpha_S_Q2 : float
+        Strong coupling at final scale Q².
+    beta0 : float
+        Leading QCD beta function coefficient.
+    beta1 : float
+        Next-to-leading QCD beta function coefficient.
+    eta : int
+        Distribution type: 1 for plus, -1 for minus.
+    CF : float
+        Color factor.
+    NC : int
+        Number of colors.
+    Tf : float
+        Flavor factor.
+    
+    Returns
+    -------
+    complex
+        Evolved Mellin moment at scale Q².
     """
     total = 1
     total += (alpha_S_Q0_2 - alpha_S_Q2) / pi / beta0 * (NLO_splitting_function_moment(n, eta, CF, NC, Tf) - beta1 / 2 / beta0 * LO_splitting_function_moment(n, CF))
@@ -374,21 +379,21 @@ def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, 
     return total
 
 def evolve(
-    pdf,
-    Q0_2=0.16,
-    Q2=5.0,
-    l_QCD=0.25,
-    n_f=5,
-    CG=3,
-    morp='minus',
-    order=2,
-    n_x=200,
-    verbose=False,
-    Q0_2_a=91.1876**2,
-    a0=0.118 / 4 / pi,
-    alpha_num=True,
-    degree=5,
-):
+    pdf: np.ndarray,
+    Q0_2: float = 0.16,
+    Q2: float = 5.0,
+    l_QCD: float = 0.25,
+    n_f: int = 5,
+    CG: float = 3,
+    morp: str = 'minus',
+    order: int = 2,
+    n_x: int = 200,
+    verbose: bool = False,
+    Q0_2_a: float = 91.1876**2,
+    a0: float = 0.118 / 4 / pi,
+    alpha_num: bool = True,
+    degree: int = 5,
+) -> np.ndarray:
     """Evolve transversity PDF using the Mellin moment method (Vogelsang).
     
     This is the main function for PDF evolution using Mellin transforms.
@@ -527,7 +532,7 @@ def evolve(
     # Pad the evolved pdf so that pdf(0) = pdf(1) = 0
     pdf_evolved = np.pad(pdf_evolved, 1)
     # Organize the (x, x*pdf_evolved(x)) pairs into an array
-    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)))
+    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)), axis=1)
     print('Done!')
     return pdf_evolved
 

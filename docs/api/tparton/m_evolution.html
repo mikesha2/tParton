@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tparton.m_evolution API documentation</title>
+<meta name="description" content="Mellin moment method for transversity PDF evolution (Vogelsang method) …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tparton.m_evolution</code></h1>
+</header>
+<section id="section-intro">
+<p>Mellin moment method for transversity PDF evolution (Vogelsang method)</p>
+<p>This module implements the Vogelsang method for evolving transversity parton
+distribution functions using Mellin transforms. The method is typically faster
+and less sensitive to discretization effects compared to direct integration.</p>
+<p>The evolution is performed by:
+1. Computing Mellin moments of the input PDF
+2. Evolving the moments using analytic expressions for splitting function moments
+3. Reconstructing the evolved PDF via inverse Mellin transform (Talbot method)</p>
+<h2 id="key-functions">Key Functions</h2>
+<p>evolve : Main function to evolve a transversity PDF</p>
+<h2 id="theoretical-background">Theoretical Background</h2>
+<p>The solution uses the convolution theorem for Mellin transforms:</p>
+<pre><code>M[Δ_T q^±](Q²;s) = K(s,Q²,Q₀²) M[Δ_T q^±](Q₀²;s)
+</code></pre>
+<p>where K contains the evolution kernel with splitting function moments.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894</li>
+<li>Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221</li>
+</ul>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tparton.m_evolution.G"><code class="name flex">
+<span>def <span class="ident">G</span></span>(<span>n)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">G = lambda n: psi0((n+1)/2) - psi0(n/2)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.LO_splitting_function_moment"><code class="name flex">
+<span>def <span class="ident">LO_splitting_function_moment</span></span>(<span>n, CF)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def LO_splitting_function_moment(n, CF):
+    &#34;&#34;&#34;Compute the leading-order splitting function Mellin moment.
+    
+    Implements Eq. (26) for the LO transversity splitting function moment.
+    Uses harmonic sum S₁(n) defined via polygamma functions.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    CF : float
+        Color factor CF = (NC² - 1)/(2NC).
+    
+    Returns
+    -------
+    complex
+        LO splitting function moment M[ΔT P_qq^(0)](n).
+    &#34;&#34;&#34;
+    return CF * (1.5 - 2 * S_1(n))</code></pre>
+</details>
+<div class="desc"><p>Compute the leading-order splitting function Mellin moment.</p>
+<p>Implements Eq. (26) for the LO transversity splitting function moment.
+Uses harmonic sum S₁(n) defined via polygamma functions.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>CF</code></strong> :&ensp;<code>float</code></dt>
+<dd>Color factor CF = (NC² - 1)/(2NC).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>LO splitting function moment M<a href="n">ΔT P_qq^(0)</a>.</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.NLO_splitting_function_moment"><code class="name flex">
+<span>def <span class="ident">NLO_splitting_function_moment</span></span>(<span>n, eta, CF, NC, Tf)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def NLO_splitting_function_moment(n, eta, CF, NC, Tf):
+    &#34;&#34;&#34;Compute the next-to-leading-order splitting function Mellin moment.
+    
+    Implements Eq. (27) for the NLO transversity splitting function moment.
+    Includes CF², CF×NC, and CF×Tf terms with harmonic sums.
+    More complex than LO due to two-loop corrections.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    eta : int
+        Distribution type: 1 for plus, -1 for minus.
+    CF : float
+        Color factor.
+    NC : int
+        Number of colors.
+    Tf : float
+        Flavor factor TR × Nf.
+    
+    Returns
+    -------
+    complex
+        NLO splitting function moment M[ΔT P_qq,η^(1)](n).
+    &#34;&#34;&#34;
+    f = etaN(n, eta)
+    return \
+        CF * CF * (
+            3 / 8
+            + (1-eta) / (n * (n + 1))
+            - 3 * S_2(n)
+            - 4 * S_1(n) * (S_2(n) - S_p2(n, f))
+            - 8 * Stilde(n, f)
+            + S_p3(n, f)
+        ) + \
+        0.5 * CF * NC * (
+            17 / 12
+            - (1 - eta) / (n * (n + 1))
+            - 134 / 9 * S_1(n)
+            + 22 / 3 * S_2(n)
+            + 4 * S_1(n) * (2 * S_2(n) - S_p2(n, f))
+            + 8 * Stilde(n, f)
+            - S_p3(n, f)
+        ) + \
+        2 / 3 * CF * Tf * (
+            -1 / 4
+            + 10 / 3 * S_1(n)
+            - 2 * S_2(n)
+        )</code></pre>
+</details>
+<div class="desc"><p>Compute the next-to-leading-order splitting function Mellin moment.</p>
+<p>Implements Eq. (27) for the NLO transversity splitting function moment.
+Includes CF², CF×NC, and CF×Tf terms with harmonic sums.
+More complex than LO due to two-loop corrections.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Distribution type: 1 for plus, -1 for minus.</dd>
+<dt><strong><code>CF</code></strong> :&ensp;<code>float</code></dt>
+<dd>Color factor.</dd>
+<dt><strong><code>NC</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of colors.</dd>
+<dt><strong><code>Tf</code></strong> :&ensp;<code>float</code></dt>
+<dd>Flavor factor TR × Nf.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>NLO splitting function moment M<a href="n">ΔT P_qq,η^(1)</a>.</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.S_1"><code class="name flex">
+<span>def <span class="ident">S_1</span></span>(<span>n)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">S_1 = lambda n: euler_gamma + psi0(n+1)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.S_2"><code class="name flex">
+<span>def <span class="ident">S_2</span></span>(<span>n)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">S_2 = lambda n: zeta2 - psi_p(n+1)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.S_3"><code class="name flex">
+<span>def <span class="ident">S_3</span></span>(<span>n)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">S_3 = lambda n: zeta3 + 0.5 * psi_pp(n+1)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.S_p1"><code class="name flex">
+<span>def <span class="ident">S_p1</span></span>(<span>n, f)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def S_p1(n, f):
+    &#34;&#34;&#34;Compute first-order polarized harmonic sum S&#39;_1.
+    
+    Implements Eq. (28) using the interpolation formula Eq. (31).
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
+    
+    Returns
+    -------
+    complex
+        Polarized harmonic sum S&#39;_1(N).
+    &#34;&#34;&#34;
+    return 0.5 * (
+        (1 + f) * S_1(n/2) + (1 - f) * S_1((n-1)/2))</code></pre>
+</details>
+<div class="desc"><p>Compute first-order polarized harmonic sum S'_1.</p>
+<p>Implements Eq. (28) using the interpolation formula Eq. (31).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Polarized harmonic sum S'_1(N).</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.S_p2"><code class="name flex">
+<span>def <span class="ident">S_p2</span></span>(<span>n, f)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def S_p2(n, f):
+    &#34;&#34;&#34;Compute second-order polarized harmonic sum S&#39;_2.
+    
+    Implements Eq. (29) using the interpolation formula Eq. (31).
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
+    
+    Returns
+    -------
+    complex
+        Polarized harmonic sum S&#39;_2(N).
+    &#34;&#34;&#34;
+    return 0.5 * (
+        (1 + f) * S_2(n/2) + (1 - f) * S_2((n-1)/2))</code></pre>
+</details>
+<div class="desc"><p>Compute second-order polarized harmonic sum S'_2.</p>
+<p>Implements Eq. (29) using the interpolation formula Eq. (31).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Polarized harmonic sum S'_2(N).</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.S_p3"><code class="name flex">
+<span>def <span class="ident">S_p3</span></span>(<span>n, f)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def S_p3(n, f):
+    &#34;&#34;&#34;Compute third-order polarized harmonic sum S&#39;_3.
+    
+    Implements Eq. (30) using the interpolation formula Eq. (31).
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
+    
+    Returns
+    -------
+    complex
+        Polarized harmonic sum S&#39;_3(N).
+    &#34;&#34;&#34;
+    return 0.5 * (
+        (1 + f) * S_3(n/2) + (1 - f) * S_3((n-1)/2))</code></pre>
+</details>
+<div class="desc"><p>Compute third-order polarized harmonic sum S'_3.</p>
+<p>Implements Eq. (30) using the interpolation formula Eq. (31).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Polarized harmonic sum S'_3(N).</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.Stilde"><code class="name flex">
+<span>def <span class="ident">Stilde</span></span>(<span>n, f)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def Stilde(n, f):
+    &#34;&#34;&#34;Compute the S-tilde harmonic sum function.
+    
+    Implements Eq. (32) which appears in the NLO splitting function moment.
+    This function involves Riemann zeta function ζ(3), dilogarithm integral,
+    and digamma function ψ_0.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    f : complex
+        Factor η^N where η = ±1 for plus/minus distributions.
+    
+    Returns
+    -------
+    complex
+        S-tilde value at moment N.
+    &#34;&#34;&#34;
+    temp = -5/8 * zeta3
+    term = f
+    term *= S_1(n) / n / n - zeta2/2 * G(n) + \
+        mp.quad(lambda t: mp.power(t, n-1) * mp.polylog(2, t) / (1 + t), [0, 1])
+    return temp + term</code></pre>
+</details>
+<div class="desc"><p>Compute the S-tilde harmonic sum function.</p>
+<p>Implements Eq. (32) which appears in the NLO splitting function moment.
+This function involves Riemann zeta function ζ(3), dilogarithm integral,
+and digamma function ψ_0.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>S-tilde value at moment N.</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.alpha_S"><code class="name flex">
+<span>def <span class="ident">alpha_S</span></span>(<span>Q2, order, beta0, beta1, l_QCD)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def alpha_S(Q2, order, beta0, beta1, l_QCD):
+    &#34;&#34;&#34;Compute the strong coupling constant using the analytical approximation.
+    
+    Implements Eq. (4) from the paper for α_s(Q²).
+    The NLO approximation includes the β₁ correction term.
+    
+    Parameters
+    ----------
+    Q2 : float
+        Energy scale squared (GeV²).
+    order : int
+        Perturbative order: 1 for LO, 2 for NLO.
+    beta0 : float
+        Leading QCD beta function coefficient.
+    beta1 : float
+        Next-to-leading QCD beta function coefficient.
+    l_QCD : float
+        QCD scale parameter Λ (GeV).
+    
+    Returns
+    -------
+    float
+        Strong coupling constant α_s(Q²).
+    &#34;&#34;&#34;
+    ln_Q2_L_QCD = mp.log(Q2) - 2 * mp.log(l_QCD)
+    ln_ln_Q2_L_QCD = mp.log(ln_Q2_L_QCD)
+    alpha_S = 4 * pi / beta0 / ln_Q2_L_QCD
+    if order == 2:
+        alpha_S -= 4 * pi * beta1 / mp.power(beta0, 3) * ln_ln_Q2_L_QCD / ln_Q2_L_QCD / ln_Q2_L_QCD
+    return alpha_S</code></pre>
+</details>
+<div class="desc"><p>Compute the strong coupling constant using the analytical approximation.</p>
+<p>Implements Eq. (4) from the paper for α_s(Q²).
+The NLO approximation includes the β₁ correction term.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>Q2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Energy scale squared (GeV²).</dd>
+<dt><strong><code>order</code></strong> :&ensp;<code>int</code></dt>
+<dd>Perturbative order: 1 for LO, 2 for NLO.</dd>
+<dt><strong><code>beta0</code></strong> :&ensp;<code>float</code></dt>
+<dd>Leading QCD beta function coefficient.</dd>
+<dt><strong><code>beta1</code></strong> :&ensp;<code>float</code></dt>
+<dd>Next-to-leading QCD beta function coefficient.</dd>
+<dt><strong><code>l_QCD</code></strong> :&ensp;<code>float</code></dt>
+<dd>QCD scale parameter Λ (GeV).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Strong coupling constant α_s(Q²).</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.alpha_S_num"><code class="name flex">
+<span>def <span class="ident">alpha_S_num</span></span>(<span>Q2, order, Q0_2_a, a0, beta0, beta1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def alpha_S_num(Q2, order, Q0_2_a, a0, beta0, beta1):
+    &#34;&#34;&#34;Compute the strong coupling constant via numerical ODE evolution.
+    
+    Solves the QCD beta function differential equation numerically for α_s(Q²).
+    More accurate than the analytical approximation, especially at low scales.
+    Uses mpmath&#39;s odefun for high-precision ODE integration.
+    
+    Parameters
+    ----------
+    Q2 : float
+        Energy scale squared (GeV²).
+    order : int
+        Perturbative order: 1 for LO, 2 for NLO.
+    Q0_2_a : float
+        Reference energy scale squared where α_s is known (GeV²).
+    a0 : float
+        Reference coupling α_s(Q0_2_a)/(4π).
+    beta0 : float
+        Leading QCD beta function coefficient.
+    beta1 : float
+        Next-to-leading QCD beta function coefficient.
+    
+    Returns
+    -------
+    float
+        Strong coupling constant α_s(Q²).
+    &#34;&#34;&#34;
+    if order == 2:
+        ode = lambda x, a: -beta0 * a * a - beta1 * a * a * a
+    else:
+        ode = lambda x, a: -beta0 * a * a
+    if Q2 &lt; Q0_2_a:
+        ode_fixed = lambda x, a: -ode(x, a)
+        f = mp.odefun(ode_fixed, -mp.log(Q0_2_a), a0)
+        return f(-np.log(Q2)) * 4 * pi
+    else:
+        f = mp.odefun(ode, mp.log(Q0_2_a), a0)
+        return f(np.log(Q2)) * 4 * pi</code></pre>
+</details>
+<div class="desc"><p>Compute the strong coupling constant via numerical ODE evolution.</p>
+<p>Solves the QCD beta function differential equation numerically for α_s(Q²).
+More accurate than the analytical approximation, especially at low scales.
+Uses mpmath's odefun for high-precision ODE integration.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>Q2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Energy scale squared (GeV²).</dd>
+<dt><strong><code>order</code></strong> :&ensp;<code>int</code></dt>
+<dd>Perturbative order: 1 for LO, 2 for NLO.</dd>
+<dt><strong><code>Q0_2_a</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference energy scale squared where α_s is known (GeV²).</dd>
+<dt><strong><code>a0</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference coupling α_s(Q0_2_a)/(4π).</dd>
+<dt><strong><code>beta0</code></strong> :&ensp;<code>float</code></dt>
+<dd>Leading QCD beta function coefficient.</dd>
+<dt><strong><code>beta1</code></strong> :&ensp;<code>float</code></dt>
+<dd>Next-to-leading QCD beta function coefficient.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Strong coupling constant α_s(Q²).</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.etaN"><code class="name flex">
+<span>def <span class="ident">etaN</span></span>(<span>n, eta)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">etaN = lambda n, eta: 1 if eta == 1 else mp.power(eta, n)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.evolve"><code class="name flex">
+<span>def <span class="ident">evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>morp: str = 'minus',<br>order: int = 2,<br>n_x: int = 200,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = mpf('0.0093901416424218252'),<br>alpha_num: bool = True,<br>degree: int = 5) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evolve(
+    pdf: np.ndarray,
+    Q0_2: float = 0.16,
+    Q2: float = 5.0,
+    l_QCD: float = 0.25,
+    n_f: int = 5,
+    CG: float = 3,
+    morp: str = &#39;minus&#39;,
+    order: int = 2,
+    n_x: int = 200,
+    verbose: bool = False,
+    Q0_2_a: float = 91.1876**2,
+    a0: float = 0.118 / 4 / pi,
+    alpha_num: bool = True,
+    degree: int = 5,
+) -&gt; np.ndarray:
+    &#34;&#34;&#34;Evolve transversity PDF using the Mellin moment method (Vogelsang).
+    
+    This is the main function for PDF evolution using Mellin transforms.
+    Faster and less discretization-dependent than the direct integration method.
+    
+    Args:
+        pdf (array_like): Input PDF as x*f(x). Can be 1D array (values at x evenly
+            spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        
+        Q0_2 (float): Initial energy scale squared in GeV² (default: 0.16).
+        
+        Q2 (float): Final energy scale squared in GeV² (default: 5.0).
+        
+        l_QCD (float): QCD scale parameter Λ in GeV (default: 0.25).
+            Only used if alpha_num=False.
+        
+        n_f (int): Number of active quark flavors (default: 5).
+        
+        CG (float): Number of colors, NC (default: 3).
+        
+        morp (str): Distribution type (default: &#39;minus&#39;). Options are &#39;plus&#39;
+            (ΔT q⁺ = ΔT u + ΔT d) or &#39;minus&#39; (ΔT q⁻ = ΔT u - ΔT d).
+        
+        order (int): Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
+        
+        n_x (int): Number of x grid points minus 1 for output (default: 200).
+        
+        verbose (bool): Print (x, x*pdf(x)) during evolution if True (default: False).
+        
+        Q0_2_a (float): Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+            Only used if alpha_num=True (default is Z boson mass).
+        
+        a0 (float): Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+            Only used if alpha_num=True.
+        
+        alpha_num (bool): Use numerical ODE evolution for αs if True (default: True).
+            If False, uses analytical approximation from Eq. (4).
+        
+        degree (int): Convergence acceleration degree for inverse Mellin (default: 5).
+            Higher values increase accuracy but slow computation.
+    
+    Returns:
+        ndarray: Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n_x+1, 2)
+    
+    Note:
+        This method:
+        
+        1. Computes Mellin moments of input PDF
+        2. Evolves moments using splitting function moments (Eq. 24)
+        3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+        
+        Advantages over direct integration (t_evolve):
+        - Typically 10-100x faster
+        - Less sensitive to discretization
+        - Better for smooth PDFs
+        
+        Disadvantages:
+        - Less direct control over integration
+        - May have issues with very peaked PDFs
+    
+    Example:
+        &gt;&gt;&gt; import numpy as np
+        &gt;&gt;&gt; from tparton.m_evolution import evolve
+        &gt;&gt;&gt; # Simple power-law PDF
+        &gt;&gt;&gt; x = np.linspace(0, 1, 100)
+        &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
+        &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
+        &gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    
+    See Also:
+        t_evolution.evolve: Direct integration method (Hirai)
+    
+    References:
+        [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+        [2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221
+    &#34;&#34;&#34;
+
+    if pdf.shape[-1] == 1:
+        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
+        xs = np.linspace(0, 1, len(pdf))
+    else:
+        # Otherwise split the input array
+        xs, pdf = pdf[:, 0], pdf[:, 1]
+    
+    # Divide x*pdf(x) by x. 
+    # In the Hirai method, the evolution of x*pdf(x) and pdf(x) are numerically identical and do not require this extra step.
+    pdf = pdf / (xs + 1e-100)
+    # We assume that pdf(0) = 0
+    pdf[0] = 0
+
+    # Interpolate the resulting (x, pdf(x)) pairs as a function
+    pdf_fun = interp(xs, pdf, fill_value=0, assume_sorted=True)
+    
+    # Convert the pdf into one compatible with mpmath&#39;s internal floating point representation
+    pdf = lambda x: mp.mpf(pdf_fun(float(x)).item())
+
+    # The type of distribution determines eta in Eq. (31)
+    eta = 1 if morp == &#39;plus&#39; else -1
+
+    # Calculate the color constants
+    NC, CF, Tf, beta0, beta1 = constants(CG, n_f)
+
+    if order == 1:
+        # If the desired order of accuracy is LO, we simply set beta1 to 0, which reproduces the relevant LO equations
+        beta1 = 0
+        # For the sake of efficiency, we also redefine the NLO splitting function moment to be the zero function
+        NLO_splitting_function_moment = lambda n, eta, CF, NC, Tf: 0
+    
+    if alpha_num:
+        # Use the numerically evolved alpha_S
+        alpha_S_Q0_2 = alpha_S_num(Q0_2, order, Q0_2_a, a0, beta0, beta1)
+        alpha_S_Q2 = alpha_S_num(Q2, order, Q0_2_a, a0, beta0, beta1)
+    else:
+        # Use the approximate analytical expression for alpha_S in Eq. (4)
+        alpha_S_Q0_2 = alpha_S(Q0_2, order, beta0, beta1, l_QCD)
+        alpha_S_Q2 = alpha_S(Q2, order, beta0, beta1, l_QCD)
+
+    # Choose the values of x at which the evolved pdf(x) will be evaluated
+    if n_x &gt; 0:
+        xs = np.linspace(0, 1, n_x+2)
+    # In all cases, we assume that xs[0] = 0 and xs[1] = 1, pdf(0) = pdf(1) = 0, so no evolution is necessary at these points.
+    # Even if pdf(0) != 0, this slight change will not significantly affect the final numerical result.
+    xs = xs[1:-1]
+
+    # A function representing the Mellin transform of pdf(x), Eq. (20)
+    pdf_m = lambda s: mellin(pdf, s)
+    # A function representing the resulting evolved moments, Eq. (24)
+    pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf))
+    # Perform Mellin inversion on the evolved moments, Eq. (36)
+    pdf_evolved = np.array([inv_mellin(pdf_evolved_m, x, degree=degree, verbose=verbose).__complex__().real for x in xs])
+
+    # Reinstate the endpoints x = 0 and x = 1
+    xs = np.pad(xs, 1)
+    xs[-1] = 1
+
+    # Pad the evolved pdf so that pdf(0) = pdf(1) = 0
+    pdf_evolved = np.pad(pdf_evolved, 1)
+    # Organize the (x, x*pdf_evolved(x)) pairs into an array
+    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)), axis=1)
+    print(&#39;Done!&#39;)
+    return pdf_evolved</code></pre>
+</details>
+<div class="desc"><p>Evolve transversity PDF using the Mellin moment method (Vogelsang).</p>
+<p>This is the main function for PDF evolution using Mellin transforms.
+Faster and less discretization-dependent than the direct integration method.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pdf</code></strong> :&ensp;<code>array_like</code></dt>
+<dd>Input PDF as x<em>f(x). Can be 1D array (values at x evenly
+spaced on [0, 1]) or 2D array ([[x0, x0</em>f(x0)], [x1, x1*f(x1)], &hellip;]).</dd>
+<dt><strong><code>Q0_2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Initial energy scale squared in GeV² (default: 0.16).</dd>
+<dt><strong><code>Q2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Final energy scale squared in GeV² (default: 5.0).</dd>
+<dt><strong><code>l_QCD</code></strong> :&ensp;<code>float</code></dt>
+<dd>QCD scale parameter Λ in GeV (default: 0.25).
+Only used if alpha_num=False.</dd>
+<dt><strong><code>n_f</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of active quark flavors (default: 5).</dd>
+<dt><strong><code>CG</code></strong> :&ensp;<code>float</code></dt>
+<dd>Number of colors, NC (default: 3).</dd>
+<dt><strong><code>morp</code></strong> :&ensp;<code>str</code></dt>
+<dd>Distribution type (default: 'minus'). Options are 'plus'
+(ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).</dd>
+<dt><strong><code>order</code></strong> :&ensp;<code>int</code></dt>
+<dd>Perturbative order (default: 2). Use 1 for LO or 2 for NLO.</dd>
+<dt><strong><code>n_x</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of x grid points minus 1 for output (default: 200).</dd>
+<dt><strong><code>verbose</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Print (x, x*pdf(x)) during evolution if True (default: False).</dd>
+<dt><strong><code>Q0_2_a</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+Only used if alpha_num=True (default is Z boson mass).</dd>
+<dt><strong><code>a0</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+Only used if alpha_num=True.</dd>
+<dt><strong><code>alpha_num</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use numerical ODE evolution for αs if True (default: True).
+If False, uses analytical approximation from Eq. (4).</dd>
+<dt><strong><code>degree</code></strong> :&ensp;<code>int</code></dt>
+<dd>Convergence acceleration degree for inverse Mellin (default: 5).
+Higher values increase accuracy but slow computation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ndarray</code></dt>
+<dd>Evolved PDF as 2D array [[x, x*f_evolved(x)], &hellip;]. Shape: (n_x+1, 2)</dd>
+</dl>
+<h2 id="note">Note</h2>
+<p>This method:</p>
+<ol>
+<li>Computes Mellin moments of input PDF</li>
+<li>Evolves moments using splitting function moments (Eq. 24)</li>
+<li>Reconstructs PDF via inverse Mellin transform (Talbot method)</li>
+</ol>
+<p>Advantages over direct integration (t_evolve):
+- Typically 10-100x faster
+- Less sensitive to discretization
+- Better for smooth PDFs</p>
+<p>Disadvantages:
+- Less direct control over integration
+- May have issues with very peaked PDFs</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from tparton.m_evolution import evolve
+&gt;&gt;&gt; # Simple power-law PDF
+&gt;&gt;&gt; x = np.linspace(0, 1, 100)
+&gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
+&gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
+&gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+</code></pre>
+<p>See Also:
+t_evolution.evolve: Direct integration method (Hirai)</p>
+<h2 id="references">References</h2>
+<p>[1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+[2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221</p></div>
+</dd>
+<dt id="tparton.m_evolution.evolveMoment"><code class="name flex">
+<span>def <span class="ident">evolveMoment</span></span>(<span>n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf):
+    &#34;&#34;&#34;Evolve a single Mellin moment from initial to final energy scale.
+    
+    Implements Eq. (24) from the paper (Vogelsang&#39;s formula).
+    Combines LO and NLO splitting function moments with running coupling.
+    
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+    pdf_m : complex
+        Mellin moment of input PDF at initial scale.
+    alpha_S_Q0_2 : float
+        Strong coupling at initial scale Q₀².
+    alpha_S_Q2 : float
+        Strong coupling at final scale Q².
+    beta0 : float
+        Leading QCD beta function coefficient.
+    beta1 : float
+        Next-to-leading QCD beta function coefficient.
+    eta : int
+        Distribution type: 1 for plus, -1 for minus.
+    CF : float
+        Color factor.
+    NC : int
+        Number of colors.
+    Tf : float
+        Flavor factor.
+    
+    Returns
+    -------
+    complex
+        Evolved Mellin moment at scale Q².
+    &#34;&#34;&#34;
+    total = 1
+    total += (alpha_S_Q0_2 - alpha_S_Q2) / pi / beta0 * (NLO_splitting_function_moment(n, eta, CF, NC, Tf) - beta1 / 2 / beta0 * LO_splitting_function_moment(n, CF))
+    total *= mp.power(alpha_S_Q2 / alpha_S_Q0_2, -2 / beta0 * LO_splitting_function_moment(n, CF)) * pdf_m
+    return total</code></pre>
+</details>
+<div class="desc"><p>Evolve a single Mellin moment from initial to final energy scale.</p>
+<p>Implements Eq. (24) from the paper (Vogelsang's formula).
+Combines LO and NLO splitting function moments with running coupling.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+<dt><strong><code>pdf_m</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment of input PDF at initial scale.</dd>
+<dt><strong><code>alpha_S_Q0_2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Strong coupling at initial scale Q₀².</dd>
+<dt><strong><code>alpha_S_Q2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Strong coupling at final scale Q².</dd>
+<dt><strong><code>beta0</code></strong> :&ensp;<code>float</code></dt>
+<dd>Leading QCD beta function coefficient.</dd>
+<dt><strong><code>beta1</code></strong> :&ensp;<code>float</code></dt>
+<dd>Next-to-leading QCD beta function coefficient.</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Distribution type: 1 for plus, -1 for minus.</dd>
+<dt><strong><code>CF</code></strong> :&ensp;<code>float</code></dt>
+<dd>Color factor.</dd>
+<dt><strong><code>NC</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of colors.</dd>
+<dt><strong><code>Tf</code></strong> :&ensp;<code>float</code></dt>
+<dd>Flavor factor.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Evolved Mellin moment at scale Q².</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.inv_mellin"><code class="name flex">
+<span>def <span class="ident">inv_mellin</span></span>(<span>f, x, degree=5, verbose=True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def inv_mellin(f, x, degree=5, verbose=True):
+    &#34;&#34;&#34;Compute the inverse Mellin transform using Talbot contour method.
+    
+    Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
+    Uses mpmath&#39;s invertlaplace with the &#39;cohen&#39; method for optimal
+    convergence. Higher degree values increase accuracy but slow computation.
+    
+    Parameters
+    ----------
+    f : callable
+        Function in Mellin space, f(s).
+    x : float
+        Point in x-space where to evaluate the inverse transform.
+    degree : int
+        Number of terms in Cohen&#39;s convergence acceleration (default: 5).
+    verbose : bool
+        Print intermediate results if True (default: True).
+    
+    Returns
+    -------
+    float
+        Inverse Mellin transform value at x.
+    
+    References
+    ----------
+    Cohen et al. (2000), Experiment. Math. 9(1): 3-12
+    &#34;&#34;&#34;
+    res = invertlaplace(f, -mp.log(x), method=&#39;cohen&#39;, degree=degree)
+    if verbose:
+        print(x, x*res)
+    return res</code></pre>
+</details>
+<div class="desc"><p>Compute the inverse Mellin transform using Talbot contour method.</p>
+<p>Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
+Uses mpmath's invertlaplace with the 'cohen' method for optimal
+convergence. Higher degree values increase accuracy but slow computation.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>f</code></strong> :&ensp;<code>callable</code></dt>
+<dd>Function in Mellin space, f(s).</dd>
+<dt><strong><code>x</code></strong> :&ensp;<code>float</code></dt>
+<dd>Point in x-space where to evaluate the inverse transform.</dd>
+<dt><strong><code>degree</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of terms in Cohen's convergence acceleration (default: 5).</dd>
+<dt><strong><code>verbose</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Print intermediate results if True (default: True).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>Inverse Mellin transform value at x.</dd>
+</dl>
+<h2 id="references">References</h2>
+<p>Cohen et al. (2000), Experiment. Math. 9(1): 3-12</p></div>
+</dd>
+<dt id="tparton.m_evolution.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main():
+    &#34;&#34;&#34;Command-line interface for Mellin moment evolution method.
+    
+    Parses command-line arguments and runs PDF evolution using Vogelsang&#39;s method.
+    This function is called when running `python -m tparton m`.
+    
+    See Also:
+        evolve:
+    &#34;&#34;&#34;
+    import argparse
+    parser = argparse.ArgumentParser(description=&#39;Evolution of the nonsinglet transversity PDF, using Vogelsang\&#39;s moment method.&#39;)
+    parser.add_argument(&#39;type&#39;,action=&#39;store&#39;,type=str,help=&#39;The method you chose&#39;)
+    parser.add_argument(&#39;input&#39;, action=&#39;store&#39;, type=str,
+                    help=&#39;The CSV file containing (x,x*PDF(x)) pairs on each line. If only a single number on each line, we assume a linear spacing for x between 0 and 1 inclusive&#39;)
+    parser.add_argument(&#39;Q0sq&#39;, action=&#39;store&#39;, type=float, help=&#39;The starting energy scale in units of GeV^2&#39;)
+    parser.add_argument(&#39;Qsq&#39;, action=&#39;store&#39;, type=float, help=&#39;The ending energy scale in units of GeV^2&#39;)
+    parser.add_argument(&#39;--morp&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=str, default=&#39;plus&#39;, help=&#39;The plus vs minus type PDF (default is \&#39;plus\&#39;)&#39;)
+    parser.add_argument(&#39;-o&#39;, action=&#39;store&#39;, nargs=&#39;?&#39;, type=str, default=&#39;out.dat&#39;, help=&#39;Output file for the PDF, stored as (x,x*PDF(x)) pairs.&#39;)
+    parser.add_argument(&#39;-l&#39;, metavar=&#39;l_QCD&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=float, default=0.25, help=&#39;The QCD scale parameter (default 0.25 GeV^2). Only used when --alpha_num is False.&#39;)
+    parser.add_argument(&#39;--n_f&#39;, metavar=&#39;n_f&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=5, help=&#39;The number of flavors (default 5)&#39;)
+    parser.add_argument(&#39;--nc&#39;, metavar=&#39;n_c&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=3, help=&#39;The number of colors (default 3)&#39;)
+    parser.add_argument(&#39;--order&#39;, metavar=&#39;order&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=2, help=&#39;1: leading order, 2: NLO DGLAP (default 2)&#39;)
+    parser.add_argument(&#39;--nx&#39;, metavar=&#39;n_x&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=-1, help=&#39;The number of x values to sample the evolved PDF (default -1). If left at -1, will sample at input xs.&#39;)
+    parser.add_argument(&#39;--alpha_num&#39;, metavar=&#39;alpha_num&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=bool, default=True, help=&#39;Set to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter.&#39;)
+    parser.add_argument(&#39;--Q0sqalpha&#39;, metavar=&#39;Q0sqalpha&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=float, default=91.1876**2, help=&#39;The reference energy squared at which the strong coupling constant is known. Default is the squared Z boson mass. Use in conjunction with --a0. Only used when --alpha_num is True.&#39;)
+    parser.add_argument(&#39;--a0&#39;, metavar=&#39;a0&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=float, default=0.118 / 4 / np.pi, help=&#39;The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = Z boson mass squared. Only used when --alpha_num is True.&#39;)
+    parser.add_argument(&#39;--delim&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=str, default=&#39; &#39;, help=&#39;Delimiter for the output (default \&#39; \&#39;). If given without an argument, then the delimiter is whitespace (i.e. Mathematica output.)&#39;)
+    parser.add_argument(&#39;-v&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=bool, default=False, help=&#39;Verbose output (default False)&#39;)
+
+
+    args = parser.parse_args()
+    f = args.input
+    if args.delim is None:
+        pdf = np.genfromtxt(f)
+        args.delim = &#39; &#39;
+    else:
+        pdf = np.genfromtxt(f, delimiter=args.delim)
+    Q0sq = args.Q0sq
+    Qsq = args.Qsq
+    morp = args.morp
+    l = args.l
+    n_f = args.n_f
+    nc = args.nc
+    order = args.order
+    nx = args.nx
+    alpha_num = args.alpha_num
+    Q0sqalpha = args.Q0sqalpha
+    a0 = args.a0
+    verbose = args.v
+
+    res = evolve(pdf,
+        Q0_2=Q0sq,
+        Q2=Qsq,
+        l_QCD=l,
+        n_f=n_f,
+        CG=nc,
+        morp=morp,
+        order=order,
+        n_x=nx,
+        verbose=verbose,
+        alpha_num=alpha_num,
+        Q0_2_a=Q0sqalpha,
+        a0=a0
+    )
+
+    np.savetxt(args.o, res.T, delimiter=args.delim)</code></pre>
+</details>
+<div class="desc"><p>Command-line interface for Mellin moment evolution method.</p>
+<p>Parses command-line arguments and runs PDF evolution using Vogelsang's method.
+This function is called when running <code>python -m tparton m</code>.</p>
+<p>See Also:
+evolve:</p></div>
+</dd>
+<dt id="tparton.m_evolution.mellin"><code class="name flex">
+<span>def <span class="ident">mellin</span></span>(<span>f, s)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mellin(f, s):
+    &#34;&#34;&#34;Compute the Mellin transform of a function.
+    
+    Implements Eq. (20): M[f](s) = ∫₀¹ t^(s-1) f(t) dt.
+    Uses mpmath.quad for high-precision integration.
+    
+    Parameters
+    ----------
+    f : callable
+        Function to transform, defined on [0, 1].
+    s : complex
+        Mellin moment number.
+    
+    Returns
+    -------
+    complex
+        Mellin transform M[f](s).
+    &#34;&#34;&#34;
+    return mp.quad(lambda t: mp.power(t, s-1) * f(t), [0, 1])</code></pre>
+</details>
+<div class="desc"><p>Compute the Mellin transform of a function.</p>
+<p>Implements Eq. (20): M<a href="s">f</a> = ∫₀¹ t^(s-1) f(t) dt.
+Uses mpmath.quad for high-precision integration.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>f</code></strong> :&ensp;<code>callable</code></dt>
+<dd>Function to transform, defined on [0, 1].</dd>
+<dt><strong><code>s</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Mellin transform M<a href="s">f</a>.</dd>
+</dl></div>
+</dd>
+<dt id="tparton.m_evolution.psi0"><code class="name flex">
+<span>def <span class="ident">psi0</span></span>(<span>s)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">psi0 = lambda s: psi(0,s)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.psi_p"><code class="name flex">
+<span>def <span class="ident">psi_p</span></span>(<span>s)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">psi_p = lambda s: psi(1,s)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="tparton.m_evolution.psi_pp"><code class="name flex">
+<span>def <span class="ident">psi_pp</span></span>(<span>s)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">psi_pp = lambda s: psi(2,s)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#key-functions">Key Functions</a></li>
+<li><a href="#theoretical-background">Theoretical Background</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tparton" href="index.html">tparton</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tparton.m_evolution.G" href="#tparton.m_evolution.G">G</a></code></li>
+<li><code><a title="tparton.m_evolution.LO_splitting_function_moment" href="#tparton.m_evolution.LO_splitting_function_moment">LO_splitting_function_moment</a></code></li>
+<li><code><a title="tparton.m_evolution.NLO_splitting_function_moment" href="#tparton.m_evolution.NLO_splitting_function_moment">NLO_splitting_function_moment</a></code></li>
+<li><code><a title="tparton.m_evolution.S_1" href="#tparton.m_evolution.S_1">S_1</a></code></li>
+<li><code><a title="tparton.m_evolution.S_2" href="#tparton.m_evolution.S_2">S_2</a></code></li>
+<li><code><a title="tparton.m_evolution.S_3" href="#tparton.m_evolution.S_3">S_3</a></code></li>
+<li><code><a title="tparton.m_evolution.S_p1" href="#tparton.m_evolution.S_p1">S_p1</a></code></li>
+<li><code><a title="tparton.m_evolution.S_p2" href="#tparton.m_evolution.S_p2">S_p2</a></code></li>
+<li><code><a title="tparton.m_evolution.S_p3" href="#tparton.m_evolution.S_p3">S_p3</a></code></li>
+<li><code><a title="tparton.m_evolution.Stilde" href="#tparton.m_evolution.Stilde">Stilde</a></code></li>
+<li><code><a title="tparton.m_evolution.alpha_S" href="#tparton.m_evolution.alpha_S">alpha_S</a></code></li>
+<li><code><a title="tparton.m_evolution.alpha_S_num" href="#tparton.m_evolution.alpha_S_num">alpha_S_num</a></code></li>
+<li><code><a title="tparton.m_evolution.etaN" href="#tparton.m_evolution.etaN">etaN</a></code></li>
+<li><code><a title="tparton.m_evolution.evolve" href="#tparton.m_evolution.evolve">evolve</a></code></li>
+<li><code><a title="tparton.m_evolution.evolveMoment" href="#tparton.m_evolution.evolveMoment">evolveMoment</a></code></li>
+<li><code><a title="tparton.m_evolution.inv_mellin" href="#tparton.m_evolution.inv_mellin">inv_mellin</a></code></li>
+<li><code><a title="tparton.m_evolution.main" href="#tparton.m_evolution.main">main</a></code></li>
+<li><code><a title="tparton.m_evolution.mellin" href="#tparton.m_evolution.mellin">mellin</a></code></li>
+<li><code><a title="tparton.m_evolution.psi0" href="#tparton.m_evolution.psi0">psi0</a></code></li>
+<li><code><a title="tparton.m_evolution.psi_p" href="#tparton.m_evolution.psi_p">psi_p</a></code></li>
+<li><code><a title="tparton.m_evolution.psi_pp" href="#tparton.m_evolution.psi_pp">psi_pp</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

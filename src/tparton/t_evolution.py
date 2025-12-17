@@ -41,23 +41,11 @@ from scipy.special import spence
 
 pi = np.pi
 
-def alp2pi(t, lnlam, order, beta0, beta1):
+def alp2pi(t: float, lnlam: float, order: int, beta0: float, beta1: float) -> float:
     """Compute α_s(Q²)/(2π) using the analytical approximation.
     
     Implements Eq. (4) from the paper, normalized by 2π.
-    
-    Args:
-        t: Logarithm of energy scale, t = ln(Q²).
-        lnlam: Logarithm of QCD scale, ln(Λ²).
-        order: Perturbative order (1 for LO, 2 for NLO).
-        beta0: Leading QCD beta function coefficient.
-        beta1: Next-to-leading QCD beta function coefficient.
-    
-    Returns:
-        float: Normalized strong coupling α_s(Q²)/(2π).
-    
-    Note:
-        This normalization is convenient for the DGLAP evolution equation.
+    This normalization is convenient for the DGLAP evolution equation.
     """
     dlnq2 = t - lnlam
     alpha = 4 * pi / beta0 / dlnq2
@@ -65,19 +53,11 @@ def alp2pi(t, lnlam, order, beta0, beta1):
     alpha_factor /= (2 * pi)
     return alpha_factor * alpha
 
-def splitting(z, CF, order, sign, CG, Tf):
+def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: float):
     """Compute transversity splitting functions at given momentum fraction.
     
     Evaluates ΔT P_qq(z) including both LO and NLO contributions.
     Handles plus distributions and delta function contributions separately.
-    
-    Args:
-        z: Array of momentum fraction values where to evaluate splitting function.
-        CF: Color factor CF = (NC² - 1)/(2NC).
-        order: Perturbative order (1 for LO, 2 for NLO).
-        sign: Distribution type (1 for plus, -1 for minus).
-        CG: Number of colors (typically 3).
-        Tf: Flavor factor TR × Nf.
     
     Returns:
         tuple: (p0, p1, p0pf, p1pf, plus0, del0, plus1, del1) where:
@@ -189,30 +169,14 @@ def splitting(z, CF, order, sign, CG, Tf):
     return p0, p1, p0pf, p1pf, plus0, del0, plus1, del1
 
 # Define the integration step required here
-def integrate(pdf, i, z, alp, order, CF, sign, CG, Tf, xs):
+def integrate(pdf: np.ndarray, i: int, z: np.ndarray, alp: float, order: int, 
+              CF: float, sign: int, CG: int, Tf: float, xs: np.ndarray) -> float:
     """Perform convolution of PDF with splitting function at a given x value.
     
     Implements the Mellin convolution integral from Eq. (19).
-    
-    Args:
-        pdf: Input PDF values at grid points.
-        i: Index of x value where to evaluate convolution.
-        z: Integration variable grid points.
-        alp: Normalized coupling α_s/(2π).
-        order: Perturbative order (1 for LO, 2 for NLO).
-        CF: Color factor.
-        sign: Distribution type (1 for plus, -1 for minus).
-        CG: Number of colors.
-        Tf: Flavor factor.
-        xs: Grid of x values for the PDF.
-    
-    Returns:
-        float: Convolution result [ΔT P ⊗ ΔT q](xs[i]).
-    
-    Note:
-        Uses Simpson's rule for numerical integration. Handles plus distribution
-        prescriptions via ln(1-x) terms. Interpolates PDF between grid points
-        for smooth convolution.
+    Uses Simpson's rule for numerical integration. Handles plus distribution
+    prescriptions via ln(1-x) terms. Interpolates PDF between grid points
+    for smooth convolution.
     """
 
     # Handle the base case of an empty array
@@ -235,91 +199,51 @@ def integrate(pdf, i, z, alp, order, CF, sign, CG, Tf, xs):
     return estimate
 
 def evolve(
-    pdf,
-    Q0_2=0.16,
-    Q2=5.0,
-    l_QCD=0.25,
-    n_f=5,
-    CG=3,
-    n_t=100,
-    n_z=500,
-    morp='plus',
-    order=2,
-    logScale=False,
-    verbose=False,
-    Q0_2_a=91.1876 ** 2,
-    a0=0.118 / 4 / np.pi,
-    alpha_num=True
-):
+    pdf: np.ndarray,
+    Q0_2: float = 0.16,
+    Q2: float = 5.0,
+    l_QCD: float = 0.25,
+    n_f: int = 5,
+    CG: float = 3,
+    n_t: int = 100,
+    n_z: int = 500,
+    morp: str = 'plus',
+    order: int = 2,
+    logScale: bool = False,
+    verbose: bool = False,
+    Q0_2_a: float = 91.1876 ** 2,
+    a0: float = 0.118 / 4 / np.pi,
+    alpha_num: bool = True
+) -> np.ndarray:
     """Evolve transversity PDF using the direct integration method (Hirai).
     
     This is the main function for PDF evolution using direct numerical integration
     of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
     
+    The method discretizes t = ln(Q²) into n_t Euler steps, computes convolution 
+    integrals using Simpson's rule, and updates the PDF using forward Euler method.
+    
     Args:
-        pdf (array_like): Input PDF as x*f(x). Can be 1D array (values at x evenly
-            spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
-        
-        Q0_2 (float): Initial energy scale squared in GeV² (default: 0.16).
-        
-        Q2 (float): Final energy scale squared in GeV² (default: 5.0).
-        
-        l_QCD (float): QCD scale parameter Λ in GeV (default: 0.25).
-            Only used if alpha_num=False.
-        
-        n_f (int): Number of active quark flavors (default: 5).
-        
-        CG (float): Number of colors, NC (default: 3).
-        
-        n_t (int): Number of Euler time steps for integrating Eq. (1) (default: 100).
-            More steps = better accuracy but slower.
-        
-        n_z (int): Number of z points for convolution integrals (Eq. 3) (default: 500).
-            More points = better accuracy but slower.
-        
-        morp (str): Distribution type (default: 'plus'). Options are 'plus'
-            (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
-        
-        order (int): Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
-        
-        logScale (bool): Use logarithmic spacing for z points if True (default: False).
-            Log spacing recommended for peaked PDFs.
-        
-        verbose (bool): Print progress (time step count) if True (default: False).
-        
-        Q0_2_a (float): Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
-            Only used if alpha_num=True (default is Z boson mass).
-        
-        a0 (float): Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
-            Only used if alpha_num=True.
-        
-        alpha_num (bool): Use numerical ODE evolution for αs if True (default: True).
-            If False, uses analytical approximation from Eq. (4).
+        pdf: Input PDF as x*f(x). Can be 1D array (values at x evenly spaced on [0, 1]) 
+            or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        Q0_2: Initial energy scale squared in GeV².
+        Q2: Final energy scale squared in GeV².
+        l_QCD: QCD scale parameter Λ in GeV. Only used if alpha_num=False.
+        n_f: Number of active quark flavors.
+        CG: Number of colors, NC.
+        n_t: Number of Euler time steps. More steps = better accuracy but slower.
+        n_z: Number of z points for convolution integrals. More points = better accuracy but slower.
+        morp: Distribution type. Options: 'plus' (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
+        order: Perturbative order. Use 1 for LO or 2 for NLO.
+        logScale: Use logarithmic spacing for z points. Recommended for peaked PDFs.
+        verbose: Print progress (time step count).
+        Q0_2_a: Reference scale Q₀² where αs is known, in GeV². Only used if alpha_num=True.
+        a0: Reference coupling αs(Q0_2_a)/(4π). Only used if alpha_num=True.
+        alpha_num: Use numerical ODE evolution for αs. If False, uses analytical approximation.
     
-    Returns:
-        ndarray: Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape matches input pdf shape.
-    
-    Note:
-        This method:
-        
-        1. Discretizes t = ln(Q²) into n_t Euler steps
-        2. At each step, computes convolution integral (Eq. 19) using Simpson's rule
-        3. Updates PDF using forward Euler method (Eq. 1)
-        
-        Advantages over Mellin method (m_evolve):
-        - More direct control over integration parameters
-        - Better for very peaked or irregular PDFs
-        - Easier to debug
-        
-        Disadvantages:
-        - Typically 10-100x slower
-        - More sensitive to grid discretization
-        - Requires careful tuning of n_t and n_z
-    
-    Example:
+    Examples:
         >>> import numpy as np
         >>> from tparton.t_evolution import evolve
-        >>> # Simple power-law PDF
         >>> x = np.linspace(0, 1, 100)
         >>> pdf_in = x * (1-x)**3  # x*f(x) format
         >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
@@ -327,8 +251,6 @@ def evolve(
     
     See Also:
         m_evolution.evolve: Mellin moment method (Vogelsang)
-        integrate: Performs convolution at a single x value
-        splitting: Evaluates splitting functions
     
     References:
         [1] Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
@@ -393,7 +315,7 @@ def evolve(
         # Ensure that x*pdf(x) = 0 at x = 0 and x = 1
         inc = np.pad(inc, 1)
         res += dt * inc * alp
-    return np.stack((xs, res))
+    return np.stack((xs, res), axis=1)
 
 
 def main():
@@ -402,8 +324,9 @@ def main():
     Parses command-line arguments and runs PDF evolution using Hirai's method.
     This function is called when running `python -m tparton t`.
     
-    See Also:
-        evolve:
+    See Also
+    --------
+    evolve : Main function for PDF evolution
     """
     import argparse, sys
     parser = argparse.ArgumentParser(description='Evolution of the nonsinglet transversity PDF, according to the DGLAP equation.')

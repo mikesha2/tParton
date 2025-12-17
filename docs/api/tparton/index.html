@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>tparton API documentation</title>
+<meta name="description" content="tParton: Evolution of transversity parton distribution functions …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>tparton</code></h1>
+</header>
+<section id="section-intro">
+<p>tParton: Evolution of transversity parton distribution functions</p>
+<p>tParton is a Python package for evolving transversity PDFs using two complementary methods:</p>
+<ol>
+<li>
+<p><strong>Direct integration (Hirai method)</strong>: Numerically solves the DGLAP equations using
+discretized grids in x and Q².</p>
+</li>
+<li>
+<p><strong>Mellin moment method (Vogelsang method)</strong>: Uses Mellin transforms and inverse
+transform via Talbot contour integration for faster, more accurate evolution.</p>
+</li>
+</ol>
+<h2 id="basic-usage">Basic Usage</h2>
+<p>Command-line interface::</p>
+<pre><code># Using Mellin moment method
+python -m tparton m input.dat 3.1 10.6 --morp plus -o output.dat
+
+# Using direct integration method  
+python -m tparton t input.dat 3.1 10.6 --morp plus -o output.dat
+</code></pre>
+<p>Python API::</p>
+<pre><code>from tparton.m_evolution import evolve as m_evolve
+from tparton.t_evolution import evolve as t_evolve
+
+# Evolve using Mellin method (faster)
+result = m_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6, 
+                  morp='plus', order='NLO')
+
+# Evolve using direct integration (more control over discretization)
+result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
+                  morp='plus', order='NLO')
+</code></pre>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li>Full documentation: <a href="https://mikesha2.github.io/tParton/">https://mikesha2.github.io/tParton/</a></li>
+<li>GitHub repository: <a href="https://github.com/mikesha2/tParton">https://github.com/mikesha2/tParton</a></li>
+<li>ArXiv preprint: <a href="https://arxiv.org/abs/2409.00221">https://arxiv.org/abs/2409.00221</a></li>
+</ul>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="tparton.constants" href="constants.html">tparton.constants</a></code></dt>
+<dd>
+<div class="desc"><p>QCD constants and parameters used in PDF evolution …</p></div>
+</dd>
+<dt><code class="name"><a title="tparton.m_evolution" href="m_evolution.html">tparton.m_evolution</a></code></dt>
+<dd>
+<div class="desc"><p>Mellin moment method for transversity PDF evolution (Vogelsang method) …</p></div>
+</dd>
+<dt><code class="name"><a title="tparton.t_evolution" href="t_evolution.html">tparton.t_evolution</a></code></dt>
+<dd>
+<div class="desc"><p>Direct integration method for transversity PDF evolution (Hirai method) …</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="tparton.m_evolve"><code class="name flex">
+<span>def <span class="ident">m_evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>morp: str = 'minus',<br>order: int = 2,<br>n_x: int = 200,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = mpf('0.0093901416424218252'),<br>alpha_num: bool = True,<br>degree: int = 5) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evolve(
+    pdf: np.ndarray,
+    Q0_2: float = 0.16,
+    Q2: float = 5.0,
+    l_QCD: float = 0.25,
+    n_f: int = 5,
+    CG: float = 3,
+    morp: str = &#39;minus&#39;,
+    order: int = 2,
+    n_x: int = 200,
+    verbose: bool = False,
+    Q0_2_a: float = 91.1876**2,
+    a0: float = 0.118 / 4 / pi,
+    alpha_num: bool = True,
+    degree: int = 5,
+) -&gt; np.ndarray:
+    &#34;&#34;&#34;Evolve transversity PDF using the Mellin moment method (Vogelsang).
+    
+    This is the main function for PDF evolution using Mellin transforms.
+    Faster and less discretization-dependent than the direct integration method.
+    
+    Args:
+        pdf (array_like): Input PDF as x*f(x). Can be 1D array (values at x evenly
+            spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        
+        Q0_2 (float): Initial energy scale squared in GeV² (default: 0.16).
+        
+        Q2 (float): Final energy scale squared in GeV² (default: 5.0).
+        
+        l_QCD (float): QCD scale parameter Λ in GeV (default: 0.25).
+            Only used if alpha_num=False.
+        
+        n_f (int): Number of active quark flavors (default: 5).
+        
+        CG (float): Number of colors, NC (default: 3).
+        
+        morp (str): Distribution type (default: &#39;minus&#39;). Options are &#39;plus&#39;
+            (ΔT q⁺ = ΔT u + ΔT d) or &#39;minus&#39; (ΔT q⁻ = ΔT u - ΔT d).
+        
+        order (int): Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
+        
+        n_x (int): Number of x grid points minus 1 for output (default: 200).
+        
+        verbose (bool): Print (x, x*pdf(x)) during evolution if True (default: False).
+        
+        Q0_2_a (float): Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+            Only used if alpha_num=True (default is Z boson mass).
+        
+        a0 (float): Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+            Only used if alpha_num=True.
+        
+        alpha_num (bool): Use numerical ODE evolution for αs if True (default: True).
+            If False, uses analytical approximation from Eq. (4).
+        
+        degree (int): Convergence acceleration degree for inverse Mellin (default: 5).
+            Higher values increase accuracy but slow computation.
+    
+    Returns:
+        ndarray: Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n_x+1, 2)
+    
+    Note:
+        This method:
+        
+        1. Computes Mellin moments of input PDF
+        2. Evolves moments using splitting function moments (Eq. 24)
+        3. Reconstructs PDF via inverse Mellin transform (Talbot method)
+        
+        Advantages over direct integration (t_evolve):
+        - Typically 10-100x faster
+        - Less sensitive to discretization
+        - Better for smooth PDFs
+        
+        Disadvantages:
+        - Less direct control over integration
+        - May have issues with very peaked PDFs
+    
+    Example:
+        &gt;&gt;&gt; import numpy as np
+        &gt;&gt;&gt; from tparton.m_evolution import evolve
+        &gt;&gt;&gt; # Simple power-law PDF
+        &gt;&gt;&gt; x = np.linspace(0, 1, 100)
+        &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
+        &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
+        &gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    
+    See Also:
+        t_evolution.evolve: Direct integration method (Hirai)
+    
+    References:
+        [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+        [2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221
+    &#34;&#34;&#34;
+
+    if pdf.shape[-1] == 1:
+        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
+        xs = np.linspace(0, 1, len(pdf))
+    else:
+        # Otherwise split the input array
+        xs, pdf = pdf[:, 0], pdf[:, 1]
+    
+    # Divide x*pdf(x) by x. 
+    # In the Hirai method, the evolution of x*pdf(x) and pdf(x) are numerically identical and do not require this extra step.
+    pdf = pdf / (xs + 1e-100)
+    # We assume that pdf(0) = 0
+    pdf[0] = 0
+
+    # Interpolate the resulting (x, pdf(x)) pairs as a function
+    pdf_fun = interp(xs, pdf, fill_value=0, assume_sorted=True)
+    
+    # Convert the pdf into one compatible with mpmath&#39;s internal floating point representation
+    pdf = lambda x: mp.mpf(pdf_fun(float(x)).item())
+
+    # The type of distribution determines eta in Eq. (31)
+    eta = 1 if morp == &#39;plus&#39; else -1
+
+    # Calculate the color constants
+    NC, CF, Tf, beta0, beta1 = constants(CG, n_f)
+
+    if order == 1:
+        # If the desired order of accuracy is LO, we simply set beta1 to 0, which reproduces the relevant LO equations
+        beta1 = 0
+        # For the sake of efficiency, we also redefine the NLO splitting function moment to be the zero function
+        NLO_splitting_function_moment = lambda n, eta, CF, NC, Tf: 0
+    
+    if alpha_num:
+        # Use the numerically evolved alpha_S
+        alpha_S_Q0_2 = alpha_S_num(Q0_2, order, Q0_2_a, a0, beta0, beta1)
+        alpha_S_Q2 = alpha_S_num(Q2, order, Q0_2_a, a0, beta0, beta1)
+    else:
+        # Use the approximate analytical expression for alpha_S in Eq. (4)
+        alpha_S_Q0_2 = alpha_S(Q0_2, order, beta0, beta1, l_QCD)
+        alpha_S_Q2 = alpha_S(Q2, order, beta0, beta1, l_QCD)
+
+    # Choose the values of x at which the evolved pdf(x) will be evaluated
+    if n_x &gt; 0:
+        xs = np.linspace(0, 1, n_x+2)
+    # In all cases, we assume that xs[0] = 0 and xs[1] = 1, pdf(0) = pdf(1) = 0, so no evolution is necessary at these points.
+    # Even if pdf(0) != 0, this slight change will not significantly affect the final numerical result.
+    xs = xs[1:-1]
+
+    # A function representing the Mellin transform of pdf(x), Eq. (20)
+    pdf_m = lambda s: mellin(pdf, s)
+    # A function representing the resulting evolved moments, Eq. (24)
+    pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf))
+    # Perform Mellin inversion on the evolved moments, Eq. (36)
+    pdf_evolved = np.array([inv_mellin(pdf_evolved_m, x, degree=degree, verbose=verbose).__complex__().real for x in xs])
+
+    # Reinstate the endpoints x = 0 and x = 1
+    xs = np.pad(xs, 1)
+    xs[-1] = 1
+
+    # Pad the evolved pdf so that pdf(0) = pdf(1) = 0
+    pdf_evolved = np.pad(pdf_evolved, 1)
+    # Organize the (x, x*pdf_evolved(x)) pairs into an array
+    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)), axis=1)
+    print(&#39;Done!&#39;)
+    return pdf_evolved</code></pre>
+</details>
+<div class="desc"><p>Evolve transversity PDF using the Mellin moment method (Vogelsang).</p>
+<p>This is the main function for PDF evolution using Mellin transforms.
+Faster and less discretization-dependent than the direct integration method.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pdf</code></strong> :&ensp;<code>array_like</code></dt>
+<dd>Input PDF as x<em>f(x). Can be 1D array (values at x evenly
+spaced on [0, 1]) or 2D array ([[x0, x0</em>f(x0)], [x1, x1*f(x1)], &hellip;]).</dd>
+<dt><strong><code>Q0_2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Initial energy scale squared in GeV² (default: 0.16).</dd>
+<dt><strong><code>Q2</code></strong> :&ensp;<code>float</code></dt>
+<dd>Final energy scale squared in GeV² (default: 5.0).</dd>
+<dt><strong><code>l_QCD</code></strong> :&ensp;<code>float</code></dt>
+<dd>QCD scale parameter Λ in GeV (default: 0.25).
+Only used if alpha_num=False.</dd>
+<dt><strong><code>n_f</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of active quark flavors (default: 5).</dd>
+<dt><strong><code>CG</code></strong> :&ensp;<code>float</code></dt>
+<dd>Number of colors, NC (default: 3).</dd>
+<dt><strong><code>morp</code></strong> :&ensp;<code>str</code></dt>
+<dd>Distribution type (default: 'minus'). Options are 'plus'
+(ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).</dd>
+<dt><strong><code>order</code></strong> :&ensp;<code>int</code></dt>
+<dd>Perturbative order (default: 2). Use 1 for LO or 2 for NLO.</dd>
+<dt><strong><code>n_x</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of x grid points minus 1 for output (default: 200).</dd>
+<dt><strong><code>verbose</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Print (x, x*pdf(x)) during evolution if True (default: False).</dd>
+<dt><strong><code>Q0_2_a</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference scale Q₀² where αs is known, in GeV² (default: 91.1876²).
+Only used if alpha_num=True (default is Z boson mass).</dd>
+<dt><strong><code>a0</code></strong> :&ensp;<code>float</code></dt>
+<dd>Reference coupling αs(Q0_2_a)/(4π) (default: 0.118/(4π)).
+Only used if alpha_num=True.</dd>
+<dt><strong><code>alpha_num</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use numerical ODE evolution for αs if True (default: True).
+If False, uses analytical approximation from Eq. (4).</dd>
+<dt><strong><code>degree</code></strong> :&ensp;<code>int</code></dt>
+<dd>Convergence acceleration degree for inverse Mellin (default: 5).
+Higher values increase accuracy but slow computation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ndarray</code></dt>
+<dd>Evolved PDF as 2D array [[x, x*f_evolved(x)], &hellip;]. Shape: (n_x+1, 2)</dd>
+</dl>
+<h2 id="note">Note</h2>
+<p>This method:</p>
+<ol>
+<li>Computes Mellin moments of input PDF</li>
+<li>Evolves moments using splitting function moments (Eq. 24)</li>
+<li>Reconstructs PDF via inverse Mellin transform (Talbot method)</li>
+</ol>
+<p>Advantages over direct integration (t_evolve):
+- Typically 10-100x faster
+- Less sensitive to discretization
+- Better for smooth PDFs</p>
+<p>Disadvantages:
+- Less direct control over integration
+- May have issues with very peaked PDFs</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from tparton.m_evolution import evolve
+&gt;&gt;&gt; # Simple power-law PDF
+&gt;&gt;&gt; x = np.linspace(0, 1, 100)
+&gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
+&gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
+&gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+</code></pre>
+<p>See Also:
+t_evolution.evolve: Direct integration method (Hirai)</p>
+<h2 id="references">References</h2>
+<p>[1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+[2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221</p></div>
+</dd>
+<dt id="tparton.t_evolve"><code class="name flex">
+<span>def <span class="ident">t_evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>n_t: int = 100,<br>n_z: int = 500,<br>morp: str = 'plus',<br>order: int = 2,<br>logScale: bool = False,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = 0.009390141642421825,<br>alpha_num: bool = True) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def evolve(
+    pdf: np.ndarray,
+    Q0_2: float = 0.16,
+    Q2: float = 5.0,
+    l_QCD: float = 0.25,
+    n_f: int = 5,
+    CG: float = 3,
+    n_t: int = 100,
+    n_z: int = 500,
+    morp: str = &#39;plus&#39;,
+    order: int = 2,
+    logScale: bool = False,
+    verbose: bool = False,
+    Q0_2_a: float = 91.1876 ** 2,
+    a0: float = 0.118 / 4 / np.pi,
+    alpha_num: bool = True
+) -&gt; np.ndarray:
+    &#34;&#34;&#34;Evolve transversity PDF using the direct integration method (Hirai).
+    
+    This is the main function for PDF evolution using direct numerical integration
+    of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.
+    
+    The method discretizes t = ln(Q²) into n_t Euler steps, computes convolution 
+    integrals using Simpson&#39;s rule, and updates the PDF using forward Euler method.
+    
+    Args:
+        pdf: Input PDF as x*f(x). Can be 1D array (values at x evenly spaced on [0, 1]) 
+            or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        Q0_2: Initial energy scale squared in GeV².
+        Q2: Final energy scale squared in GeV².
+        l_QCD: QCD scale parameter Λ in GeV. Only used if alpha_num=False.
+        n_f: Number of active quark flavors.
+        CG: Number of colors, NC.
+        n_t: Number of Euler time steps. More steps = better accuracy but slower.
+        n_z: Number of z points for convolution integrals. More points = better accuracy but slower.
+        morp: Distribution type. Options: &#39;plus&#39; (ΔT q⁺ = ΔT u + ΔT d) or &#39;minus&#39; (ΔT q⁻ = ΔT u - ΔT d).
+        order: Perturbative order. Use 1 for LO or 2 for NLO.
+        logScale: Use logarithmic spacing for z points. Recommended for peaked PDFs.
+        verbose: Print progress (time step count).
+        Q0_2_a: Reference scale Q₀² where αs is known, in GeV². Only used if alpha_num=True.
+        a0: Reference coupling αs(Q0_2_a)/(4π). Only used if alpha_num=True.
+        alpha_num: Use numerical ODE evolution for αs. If False, uses analytical approximation.
+    
+    Examples:
+        &gt;&gt;&gt; import numpy as np
+        &gt;&gt;&gt; from tparton.t_evolution import evolve
+        &gt;&gt;&gt; x = np.linspace(0, 1, 100)
+        &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
+        &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
+        &gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    
+    See Also:
+        m_evolution.evolve: Mellin moment method (Vogelsang)
+    
+    References:
+        [1] Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021
+        [2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221
+    &#34;&#34;&#34;
+    if pdf.shape[-1] == 1:
+        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
+        xs = np.linspace(0, 1, len(pdf))
+    else:
+        # Otherwise split the input array
+        xs, pdf = pdf[:, 0], pdf[:, 1]
+
+    sign = 1 if morp == &#39;plus&#39; else -1
+    lnlam = 2 * np.log(l_QCD)
+
+    # Calculate the color constants
+    _, CF, Tf, beta0, beta1 = constants(CG, n_f)
+
+    # Define the (log) starting and ending energy scales squared
+    tmin = np.log(Q0_2)
+    tmax = np.log(Q2)
+
+    # Define the timepoints between those energy scales at which Eq. (1) will be integrated
+    ts = np.linspace(tmin, tmax, n_t)
+    
+    if order == 2:
+        ode = lambda x, a: -beta0 * a * a - beta1 * a * a * a
+    else:
+        ode = lambda x, a: -beta0 * a * a
+
+    # SciPy requires that the times be monotonically increasing or decreasing
+    less = ts &lt; np.log(Q0_2_a)
+    ts_less = ts[less]
+    ts_greater =ts[~less]
+
+    # For energies strictly below the reference energy, evolve toward lower t
+    alp2pi_num_less = odeint(ode, a0, [np.log(Q0_2_a)] + list(ts_less[::-1]), tfirst=True).flatten() * 2
+    alp2pi_num_less = alp2pi_num_less[-1:0:-1]
+    # For energies strictly above the reference energy, evolve toward higher t
+    alp2pi_num_greater = odeint(ode, a0, [np.log(Q0_2_a)] + list(ts_greater), tfirst=True).flatten() * 2
+    # Combine the alpha / 2 pi in increasing order of energy scale
+    alp2pi_num_greater = alp2pi_num_greater[1:]
+    alp2pi_num = list(alp2pi_num_less) + list(alp2pi_num_greater)
+    if alpha_num:
+        # Use the numerically evolved alpha_S / 2 pi
+        alp2pi_use = alp2pi_num
+    else:
+        # Use the approximate analytical expression for alpha_S in Eq. (4)
+        alp2pi_use = alp2pi(ts, lnlam, order, beta0, beta1)
+
+    # Euler integration of Eq. (1) by a small timestep dt
+    dt = (tmax - tmin) / n_t
+    res = np.copy(pdf)
+
+    for i, alp in enumerate(alp2pi_use):
+        if verbose:
+            print(i+1, &#39; of &#39;, len(ts), &#39;time steps&#39;)
+        # Perform the convolution at each x using (possibly log-scaled) z integration points
+        inc = np.array([integrate(res, index, \
+            np.power(10, np.linspace(np.log10(xs[index]), 0, n_z + 1)) if logScale else np.linspace(xs[index], 1, n_z + 1), \
+                alp, order, CF, sign, CG, Tf, xs) for index in range(1, len(xs)-1)])
+        # Ensure that x*pdf(x) = 0 at x = 0 and x = 1
+        inc = np.pad(inc, 1)
+        res += dt * inc * alp
+    return np.stack((xs, res), axis=1)</code></pre>
+</details>
+<div class="desc"><p>Evolve transversity PDF using the direct integration method (Hirai).</p>
+<p>This is the main function for PDF evolution using direct numerical integration
+of the DGLAP equation. More robust for peaked PDFs but slower than Mellin method.</p>
+<p>The method discretizes t = ln(Q²) into n_t Euler steps, computes convolution
+integrals using Simpson's rule, and updates the PDF using forward Euler method.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pdf</code></strong></dt>
+<dd>Input PDF as x<em>f(x). Can be 1D array (values at x evenly spaced on [0, 1])
+or 2D array ([[x0, x0</em>f(x0)], [x1, x1*f(x1)], &hellip;]).</dd>
+<dt><strong><code>Q0_2</code></strong></dt>
+<dd>Initial energy scale squared in GeV².</dd>
+<dt><strong><code>Q2</code></strong></dt>
+<dd>Final energy scale squared in GeV².</dd>
+<dt><strong><code>l_QCD</code></strong></dt>
+<dd>QCD scale parameter Λ in GeV. Only used if alpha_num=False.</dd>
+<dt><strong><code>n_f</code></strong></dt>
+<dd>Number of active quark flavors.</dd>
+<dt><strong><code>CG</code></strong></dt>
+<dd>Number of colors, NC.</dd>
+<dt><strong><code>n_t</code></strong></dt>
+<dd>Number of Euler time steps. More steps = better accuracy but slower.</dd>
+<dt><strong><code>n_z</code></strong></dt>
+<dd>Number of z points for convolution integrals. More points = better accuracy but slower.</dd>
+<dt><strong><code>morp</code></strong></dt>
+<dd>Distribution type. Options: 'plus' (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).</dd>
+<dt><strong><code>order</code></strong></dt>
+<dd>Perturbative order. Use 1 for LO or 2 for NLO.</dd>
+<dt><strong><code>logScale</code></strong></dt>
+<dd>Use logarithmic spacing for z points. Recommended for peaked PDFs.</dd>
+<dt><strong><code>verbose</code></strong></dt>
+<dd>Print progress (time step count).</dd>
+<dt><strong><code>Q0_2_a</code></strong></dt>
+<dd>Reference scale Q₀² where αs is known, in GeV². Only used if alpha_num=True.</dd>
+<dt><strong><code>a0</code></strong></dt>
+<dd>Reference coupling αs(Q0_2_a)/(4π). Only used if alpha_num=True.</dd>
+<dt><strong><code>alpha_num</code></strong></dt>
+<dd>Use numerical ODE evolution for αs. If False, uses analytical approximation.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from tparton.t_evolution import evolve
+&gt;&gt;&gt; x = np.linspace(0, 1, 100)
+&gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
+&gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
+&gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+</code></pre>
+<p>See Also:
+m_evolution.evolve: Mellin moment method (Vogelsang)</p>
+<h2 id="references">References</h2>
+<p>[1] Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021
+[2] Sha, C.M. &amp; Ma, B. (2024). arXiv:2409.00221</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul>
+<li><a href="#basic-usage">Basic Usage</a></li>
+<li><a href="#see-also">See Also</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="tparton.constants" href="constants.html">tparton.constants</a></code></li>
+<li><code><a title="tparton.m_evolution" href="m_evolution.html">tparton.m_evolution</a></code></li>
+<li><code><a title="tparton.t_evolution" href="t_evolution.html">tparton.t_evolution</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="tparton.m_evolve" href="#tparton.m_evolve">m_evolve</a></code></li>
+<li><code><a title="tparton.t_evolve" href="#tparton.t_evolve">t_evolve</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
