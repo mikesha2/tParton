@@ -46,7 +46,7 @@ PDFs must be evolved from one energy scale to another to enable comparisons betw
 
 4. **Dual interface**: Both command-line tools for standalone use and importable modules for integration into larger projects.
 
-The package is aimed at researchers in hadronic physics, particularly those analyzing semi-inclusive deep inelastic scattering experiments and studying nucleon spin structure. It has been validated and documented in a detailed preprint [@sha2024tparton].
+The package is aimed at researchers in hadronic physics, particularly those analyzing semi-inclusive deep inelastic scattering experiments and studying nucleon spin structure. It has been validated and documented in a detailed preprint [@sha2025tparton].
 
 # Implementation
 
