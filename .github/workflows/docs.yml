@@ -27,59 +27,18 @@ jobs:
           python-version: '3.11'
       
       - name: Install dependencies
-        run: |
-          pip install "pdoc>=14"
-          pip install numpy scipy mpmath gmpy2
-          pip install -e .
       
-      - name: Build documentation
-        run: |
-          # Create fresh docs directory
-          rm -rf _site
-          mkdir -p _site
-          # Copy custom index page
-          cp docs/index.html _site/index.html
-          # Generate API documentation to api/ subdirectory
-          # Generate by importable package name (preferred)
-          python -m pdoc -o _site/api --math tparton
-          # Also generate by source path to cover both URL patterns
-          python -m pdoc -o _site/api --math src/tparton
-          # Create .nojekyll to bypass Jekyll processing
-          touch _site/.nojekyll
-          # Add redirect for /api/tparton.html to folder index
-          cat > _site/api/tparton.html <<'HTML'
-          <!doctype html>
-          <html>
-            <head>
-              <meta charset="utf-8" />
-              <meta http-equiv="refresh" content="0; url=tparton/index.html" />
-              <title>Redirecting…</title>
-            </head>
-            <body>
-              <p>Redirecting to <a href="tparton/index.html">tparton/index.html</a></p>
-            </body>
-          </html>
-          HTML
-          # Add aliases with capital 'T' to match potential URL casing
-          # If lowercase folder exists, mirror to uppercase alias
-          if [ -d _site/api/tparton ]; then
-            mkdir -p _site/api/tParton
-            cp -r _site/api/tparton/* _site/api/tParton/
-          fi
-          # Redirect /api/tParton.html to folder index
-          cat > _site/api/tParton.html <<'HTML'
-          <!doctype html>
-          <html>
-            <head>
-              <meta charset="utf-8" />
-              <meta http-equiv="refresh" content="0; url=tParton/index.html" />
-              <title>Redirecting…</title>
-            </head>
-            <body>
+            - name: Prepare Pages artifact from local docs
+              run: |
+                # Ensure .nojekyll exists to serve raw files
+                touch docs/.nojekyll
+                # Show what will be published for debugging
+                find docs -maxdepth 3 -type f -print
+      
               <p>Redirecting to <a href="tParton/index.html">tParton/index.html</a></p>
             </body>
           </html>
-          HTML
+                path: './docs'
           # List built files for debugging
           find _site -maxdepth 3 -type f -print
       
