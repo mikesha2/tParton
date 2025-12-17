@@ -54,7 +54,9 @@ The package is aimed at researchers in hadronic physics, particularly those anal
 
 $$\frac{\partial}{\partial t}\Delta_T q^{\pm}(x,t)=\frac{\alpha_s(t)}{2\pi}\Delta_T P_{q^{\pm}}(x)\otimes\Delta_T q^{\pm}(x,t)$$
 
-where $t=\ln Q^2$, $Q^2$ is the energy scale, $\Delta_T P_{q^{\pm}}$ is the transversity splitting function, and $\otimes$ denotes Mellin convolution.
+where $t=\ln Q^2$, $Q^2$ is the energy scale, $\Delta_T P_{q^{\pm}}$ is the transversity splitting function, and $\otimes$ denotes Mellin convolution defined by:
+
+$$f(x)\otimes g(x):=\int_x^1\frac{dy}{y}f\left(\frac{x}{y}\right)g(y)$$
 
 ## Method 1: Direct integration (Hirai method)
 
