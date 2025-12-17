@@ -8,7 +8,7 @@ This is an evolution code for the transversity parton distribution functions enc
 
 The API documentation and project site are published on GitHub Pages: https://mikesha2.github.io/tParton/
 
-## Installation
+## Quick Start Installation
 
 First, ensure that you have a Python package system installed. We recommend Miniconda [https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website).
 
