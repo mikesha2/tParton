@@ -135,14 +135,30 @@ plt.show()
 
 <section id="validation">
 <h2>Method Validation</h2>
-<p>The following figure shows that both tParton methods agree with each other, the original Mathematica implementation, and the APFEL++ code:</p>
-<img src="fig1.svg" alt="Comparison of evolution methods" style="width:100%; max-width:800px; margin:20px 0;">
-<p><em>Figure 1: Evolution of the GS-A transversity distribution from Q₀² = 4 GeV² to Q² = 200 GeV². Both Python implementations (Hirai and Vogelsang methods) agree with Mathematica and APFEL++ results.</em></p>
 
-<h3>Relative Differences</h3>
+<h3>Analytical Running Coupling</h3>
+<p>Using the analytical approximation for α_s(Q²) (Eq. 4 from the paper), both tParton methods agree with each other, the original Mathematica implementation, and the APFEL++ code:</p>
+<img src="fig1.svg" alt="Comparison of evolution methods" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 1a: Evolution of the GS-A transversity distribution from Q₀² = 4 GeV² to Q² = 200 GeV² using analytical α_s. Both Python implementations (Hirai and Vogelsang methods) agree with Mathematica and APFEL++ results.</em></p>
+
+<h3>Relative Differences (Analytical α_s)</h3>
 <p>The relative differences between methods are typically below 10⁻⁴ for most of the x range:</p>
 <img src="fig1_relative_diff.svg" alt="Relative differences between methods" style="width:100%; max-width:800px; margin:20px 0;">
-<p><em>Figure 2: Relative differences |X-H|/H where H is the Hirai result and X is the alternative method. Differences are dominated by discretization effects at small x.</em></p>
+<p><em>Figure 1b: Relative differences |X-H|/H where H is the Hirai result and X is the alternative method (analytical α_s). Differences are dominated by discretization effects at small x.</em></p>
+
+<h3>Numerical Running Coupling</h3>
+<p>Using the numerically evolved α_s(Q²) via ODE integration provides more accurate results:</p>
+<img src="fig1_exact_alpha.svg" alt="Evolution with numerical alpha_s" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 1c: Evolution using numerical α_s. The numerical approach eliminates approximation errors from the analytical formula and provides the most accurate evolution.</em></p>
+
+<h3>Relative Differences (Numerical α_s)</h3>
+<img src="fig1_exact_alpha_relative_diff.svg" alt="Relative differences with numerical alpha_s" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 1d: Relative differences with numerically evolved α_s. The agreement between methods remains excellent, with differences primarily from discretization rather than the coupling evolution.</em></p>
+
+<h3>Convergence with Degree Parameter</h3>
+<p>For the Vogelsang method, the convergence acceleration degree affects accuracy:</p>
+<img src="fig1_relative_diff_degree.svg" alt="Effect of convergence degree" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 1e: Relative difference as a function of convergence degree. Higher degrees improve accuracy but increase computation time. Degree 5-7 provides a good balance for most applications.</em></p>
 </section>
 
 <section id="command-line">
@@ -232,11 +248,16 @@ result = m_evolve(pdf, Q0_2=4, Q2=200, morp='minus')
 <section id="parameter-studies">
 <h2>Parameter Studies and Optimization</h2>
 
+<h3>Convergence vs Computational Cost</h3>
+<p>The trade-off between accuracy and speed can be visualized by examining convergence as a function of the degree parameter:</p>
+<img src="fig3_optimal_degree.svg" alt="Convergence vs degree" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 3a: Convergence as a function of acceleration degree. Relative error decreases with higher degrees but with diminishing returns above degree 7-10.</em></p>
+
 <h3>Optimal Convergence Degree for Mellin Method</h3>
 <p>The Vogelsang method uses Cohen's accelerated alternating series for the inverse Mellin transform. The <code>degree</code> parameter controls convergence accuracy. Higher degrees improve accuracy but increase computation time:</p>
 
-<img src="fig3_optimal_degree_heatmap.svg" alt="Optimal degree analysis" style="width:100%; max-width:800px; margin:20px 0;">
-<p><em>Figure 3: Relative error as a function of degree and number of x points. The optimal degree depends on the desired accuracy and available computational resources. For most applications, degree=5 provides a good balance.</em></p>
+<img src="fig3_optimal_degree_heatmap.svg" alt="Optimal degree analysis heatmap" style="width:100%; max-width:800px; margin:20px 0;">
+<p><em>Figure 3b: Relative error heatmap as a function of degree and number of x points. The optimal degree depends on the desired accuracy and available computational resources. For most applications, degree=5 provides a good balance.</em></p>
 
 <h3>Discretization Analysis for Hirai Method</h3>
 <p>The direct integration method requires careful selection of time steps (<code>n_t</code>) and integration points (<code>n_z</code>). Both parameters affect accuracy and computation time:</p>
