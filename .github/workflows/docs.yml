@@ -25,9 +25,9 @@ jobs:
         run: |
           # Ensure .nojekyll exists to serve raw files
           touch docs/.nojekyll
-          # Include root-level paper.pdf in docs if present
+          # Copy repo-root paper.pdf into docs for homepage link
           if [ -f paper.pdf ]; then
-            cp paper.pdf docs/paper.pdf
+            cp -f paper.pdf docs/paper.pdf
           fi
           # Show what will be published for debugging
           find docs -maxdepth 3 -type f -print
