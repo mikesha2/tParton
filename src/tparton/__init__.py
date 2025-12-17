@@ -38,6 +38,7 @@ See Also
 - GitHub repository: https://github.com/mikesha2/tParton
 - ArXiv preprint: https://arxiv.org/abs/2409.00221
 """
+__docformat__ = "numpy"
 
 from .t_evolution import evolve as t_evolve
 from .m_evolution import evolve as m_evolve
