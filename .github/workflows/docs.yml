@@ -60,6 +60,23 @@ jobs:
             </body>
           </html>
           HTML
+          # Add aliases with capital 'T' to match potential URL casing
+          mkdir -p _site/api/tParton
+          cp -r _site/api/tparton/* _site/api/tParton/
+          # Redirect /api/tParton.html to folder index
+          cat > _site/api/tParton.html <<'HTML'
+          <!doctype html>
+          <html>
+            <head>
+              <meta charset="utf-8" />
+              <meta http-equiv="refresh" content="0; url=tParton/index.html" />
+              <title>Redirecting…</title>
+            </head>
+            <body>
+              <p>Redirecting to <a href="tParton/index.html">tParton/index.html</a></p>
+            </body>
+          </html>
+          HTML
           # List built files for debugging
           find _site -maxdepth 3 -type f -print
       
