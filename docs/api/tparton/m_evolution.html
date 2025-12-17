@@ -72,9 +72,32 @@ and less sensitive to discretization effects compared to direct integration.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">G = lambda n: psi0((n+1)/2) - psi0(n/2)</code></pre>
+<pre><code class="python">def G(n):
+    &#34;&#34;&#34;Auxiliary function G(n) = ψ₀((n+1)/2) − ψ₀(n/2).
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of G(n).
+    &#34;&#34;&#34;
+    return psi0((n + 1) / 2) - psi0(n / 2)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Auxiliary function G(n) = ψ₀((n+1)/2) − ψ₀(n/2).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of G(n).</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.LO_splitting_function_moment"><code class="name flex">
 <span>def <span class="ident">LO_splitting_function_moment</span></span>(<span>n, CF)</span>
@@ -209,9 +232,32 @@ More complex than LO due to two-loop corrections.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">S_1 = lambda n: euler_gamma + psi0(n+1)</code></pre>
+<pre><code class="python">def S_1(n):
+    &#34;&#34;&#34;Harmonic sum S₁(n) analytically continued.
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of S₁(n).
+    &#34;&#34;&#34;
+    return euler_gamma + psi0(n + 1)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Harmonic sum S₁(n) analytically continued.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of S₁(n).</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.S_2"><code class="name flex">
 <span>def <span class="ident">S_2</span></span>(<span>n)</span>
@@ -221,9 +267,32 @@ More complex than LO due to two-loop corrections.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">S_2 = lambda n: zeta2 - psi_p(n+1)</code></pre>
+<pre><code class="python">def S_2(n):
+    &#34;&#34;&#34;Harmonic sum S₂(n) analytically continued.
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of S₂(n).
+    &#34;&#34;&#34;
+    return zeta2 - psi_p(n + 1)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Harmonic sum S₂(n) analytically continued.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of S₂(n).</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.S_3"><code class="name flex">
 <span>def <span class="ident">S_3</span></span>(<span>n)</span>
@@ -233,9 +302,32 @@ More complex than LO due to two-loop corrections.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">S_3 = lambda n: zeta3 + 0.5 * psi_pp(n+1)</code></pre>
+<pre><code class="python">def S_3(n):
+    &#34;&#34;&#34;Harmonic sum S₃(n) analytically continued.
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of S₃(n).
+    &#34;&#34;&#34;
+    return zeta3 + 0.5 * psi_pp(n + 1)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Harmonic sum S₃(n) analytically continued.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Mellin moment number.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of S₃(n).</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.S_p1"><code class="name flex">
 <span>def <span class="ident">S_p1</span></span>(<span>n, f)</span>
@@ -557,9 +649,36 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">etaN = lambda n, eta: 1 if eta == 1 else mp.power(eta, n)</code></pre>
+<pre><code class="python">def etaN(n, eta):
+    &#34;&#34;&#34;Compute η^n efficiently.
+
+    Parameters
+    ----------
+    n : int or complex
+        Exponent (Mellin moment index).
+    eta : int
+        Base, typically ±1 for plus/minus distributions.
+
+    Returns
+    -------
+    complex
+        η raised to the n-th power.
+    &#34;&#34;&#34;
+    return 1 if eta == 1 else mp.power(eta, n)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Compute η^n efficiently.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>int</code> or <code>complex</code></dt>
+<dd>Exponent (Mellin moment index).</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Base, typically ±1 for plus/minus distributions.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>η raised to the n-th power.</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.evolve"><code class="name flex">
 <span>def <span class="ident">evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>morp: str = 'minus',<br>order: int = 2,<br>n_x: int = 200,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = mpf('0.0093901416424218252'),<br>alpha_num: bool = True,<br>degree: int = 5) ‑> numpy.ndarray</span>
@@ -1091,9 +1210,32 @@ Uses mpmath.quad for high-precision integration.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">psi0 = lambda s: psi(0,s)</code></pre>
+<pre><code class="python">def psi0(s):
+    &#34;&#34;&#34;Digamma function ψ₀(s).
+
+    Parameters
+    ----------
+    s : complex
+        Complex argument.
+
+    Returns
+    -------
+    complex
+        Value of ψ₀(s).
+    &#34;&#34;&#34;
+    return psi(0, s)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Digamma function ψ₀(s).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>s</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Complex argument.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of ψ₀(s).</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.psi_p"><code class="name flex">
 <span>def <span class="ident">psi_p</span></span>(<span>s)</span>
@@ -1103,9 +1245,32 @@ Uses mpmath.quad for high-precision integration.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">psi_p = lambda s: psi(1,s)</code></pre>
+<pre><code class="python">def psi_p(s):
+    &#34;&#34;&#34;Polygamma ψ′(s) (first derivative of digamma).
+
+    Parameters
+    ----------
+    s : complex
+        Complex argument.
+
+    Returns
+    -------
+    complex
+        Value of ψ′(s).
+    &#34;&#34;&#34;
+    return psi(1, s)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Polygamma ψ′(s) (first derivative of digamma).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>s</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Complex argument.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of ψ′(s).</dd>
+</dl></div>
 </dd>
 <dt id="tparton.m_evolution.psi_pp"><code class="name flex">
 <span>def <span class="ident">psi_pp</span></span>(<span>s)</span>
@@ -1115,9 +1280,32 @@ Uses mpmath.quad for high-precision integration.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">psi_pp = lambda s: psi(2,s)</code></pre>
+<pre><code class="python">def psi_pp(s):
+    &#34;&#34;&#34;Polygamma ψ″(s) (second derivative of digamma).
+
+    Parameters
+    ----------
+    s : complex
+        Complex argument.
+
+    Returns
+    -------
+    complex
+        Value of ψ″(s).
+    &#34;&#34;&#34;
+    return psi(2, s)</code></pre>
 </details>
-<div class="desc"></div>
+<div class="desc"><p>Polygamma ψ″(s) (second derivative of digamma).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>s</code></strong> :&ensp;<code>complex</code></dt>
+<dd>Complex argument.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>complex</code></dt>
+<dd>Value of ψ″(s).</dd>
+</dl></div>
 </dd>
 </dl>
 </section>

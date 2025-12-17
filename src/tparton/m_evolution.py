@@ -44,20 +44,115 @@ zeta3 = zeta(3)
 
 
 # Define the first few derivatives of the polygamma function
-psi0 = lambda s: psi(0,s)
-psi_p = lambda s: psi(1,s)
-psi_pp = lambda s: psi(2,s)
+def psi0(s):
+    """Digamma function ψ₀(s).
+
+    Parameters
+    ----------
+    s : complex
+        Complex argument.
+
+    Returns
+    -------
+    complex
+        Value of ψ₀(s).
+    """
+    return psi(0, s)
+
+def psi_p(s):
+    """Polygamma ψ′(s) (first derivative of digamma).
+
+    Parameters
+    ----------
+    s : complex
+        Complex argument.
+
+    Returns
+    -------
+    complex
+        Value of ψ′(s).
+    """
+    return psi(1, s)
+
+def psi_pp(s):
+    """Polygamma ψ″(s) (second derivative of digamma).
+
+    Parameters
+    ----------
+    s : complex
+        Complex argument.
+
+    Returns
+    -------
+    complex
+        Value of ψ″(s).
+    """
+    return psi(2, s)
 
 # Define special functions which analytically continue the zeta function
 # Eq. (28)
-S_1 = lambda n: euler_gamma + psi0(n+1)
+def S_1(n):
+    """Harmonic sum S₁(n) analytically continued.
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of S₁(n).
+    """
+    return euler_gamma + psi0(n + 1)
 # Eq. (29)
-S_2 = lambda n: zeta2 - psi_p(n+1)
+def S_2(n):
+    """Harmonic sum S₂(n) analytically continued.
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of S₂(n).
+    """
+    return zeta2 - psi_p(n + 1)
 # Eq. (30)
-S_3 = lambda n: zeta3 + 0.5 * psi_pp(n+1)
+def S_3(n):
+    """Harmonic sum S₃(n) analytically continued.
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of S₃(n).
+    """
+    return zeta3 + 0.5 * psi_pp(n + 1)
 
 # Define eta ^ N as efficiently as possible, since the power function calls transcendental functions
-etaN = lambda n, eta: 1 if eta == 1 else mp.power(eta, n)
+def etaN(n, eta):
+    """Compute η^n efficiently.
+
+    Parameters
+    ----------
+    n : int or complex
+        Exponent (Mellin moment index).
+    eta : int
+        Base, typically ±1 for plus/minus distributions.
+
+    Returns
+    -------
+    complex
+        η raised to the n-th power.
+    """
+    return 1 if eta == 1 else mp.power(eta, n)
 
 
 def S_p1(n, f):
@@ -121,7 +216,20 @@ def S_p3(n, f):
         (1 + f) * S_3(n/2) + (1 - f) * S_3((n-1)/2))
 
 # Define the part of Eq. (32) which depends on psi0
-G = lambda n: psi0((n+1)/2) - psi0(n/2)
+def G(n):
+    """Auxiliary function G(n) = ψ₀((n+1)/2) − ψ₀(n/2).
+
+    Parameters
+    ----------
+    n : complex
+        Mellin moment number.
+
+    Returns
+    -------
+    complex
+        Value of G(n).
+    """
+    return psi0((n + 1) / 2) - psi0(n / 2)
 
 def Stilde(n, f):
     """Compute the S-tilde harmonic sum function.
