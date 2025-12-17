@@ -1,0 +1,49 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare Pages artifact from local docs
+        run: |
+          # Ensure .nojekyll exists to serve raw files
+          touch docs/.nojekyll
+          # Copy repo-root paper.pdf into docs for homepage link
+          if [ -f paper.pdf ]; then
+            cp -f paper.pdf docs/paper.pdf
+          fi
+          # Show what will be published for debugging
+          find docs -maxdepth 3 -type f -print
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs'
+  
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
