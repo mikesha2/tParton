@@ -77,7 +77,7 @@ The package includes extensive Jupyter notebooks in the `examples/` directory th
 - Generate initial transversity distributions based on literature models [@hirai]
 - Compare both evolution methods against each other and against APFEL++
 - Demonstrate sensitivity to numerical parameters (grid resolution, timesteps)
-- Reproduce figures from the associated preprint
+- Reproduce figures from the associated preprint [@sha2025tparton]
 
 A separate Mathematica notebook validates the analytical expressions for the Mellin moments of the splitting functions, providing an independent check of the theoretical framework.
 
