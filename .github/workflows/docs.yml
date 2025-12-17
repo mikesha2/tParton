@@ -40,7 +40,10 @@ jobs:
           # Copy custom index page
           cp docs/index.html _site/index.html
           # Generate API documentation to api/ subdirectory
+          # Generate by importable package name (preferred)
           python -m pdoc -o _site/api --math tparton
+          # Also generate by source path to cover both URL patterns
+          python -m pdoc -o _site/api --math src/tparton
           # Create .nojekyll to bypass Jekyll processing
           touch _site/.nojekyll
           # Add redirect for /api/tparton.html to folder index
@@ -57,6 +60,8 @@ jobs:
             </body>
           </html>
           HTML
+          # List built files for debugging
+          find _site -maxdepth 3 -type f -print
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
