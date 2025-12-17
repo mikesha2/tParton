@@ -361,8 +361,8 @@ def evolve(
     
     References
     ----------
-    .. [1] Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
-    .. [2] Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
+    - Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
+    - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
     if pdf.shape[-1] == 1:
         # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1

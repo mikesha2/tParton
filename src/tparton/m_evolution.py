@@ -585,8 +585,8 @@ def evolve(
     
     References
     ----------
-    .. [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
-    .. [2] Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
+    - Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+    - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
 
     if pdf.shape[-1] == 1:
