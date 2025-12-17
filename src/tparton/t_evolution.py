@@ -361,7 +361,7 @@ def evolve(
     
     References
     ----------
-    - Hirai, M., Kumano, S., & Saito, N. (2004). Phys. Rev. D 69, 054021
+    - Hirai, M., Kumano, S., & Saito, N. (1998). Comput. Phys. Commun. 111, 150-160
     - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
     if pdf.shape[-1] == 1:
