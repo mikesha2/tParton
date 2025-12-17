@@ -66,7 +66,7 @@ The second method exploits the convolution theorem for Mellin transforms. The so
 
 $$\mathcal{M}[\Delta_T q^{\pm}](Q^2;s)=K(s,Q^2,Q_0^2)\mathcal{M}[\Delta_T q^{\pm}](Q_0^2;s)$$
 
-where $K$ contains the evolution kernel depending on the splitting function moments. The evolved PDF is reconstructed via inverse Mellin transform using the Talbot contour integration method. This approach is typically faster and less sensitive to discretization for smooth PDFs.
+where $K$ contains the evolution kernel depending on the splitting function moments. The evolved PDF is reconstructed via inverse Mellin transform using the Cohen contour method. This approach is typically faster and less sensitive to discretization for smooth PDFs.
 
 Both methods support LO and NLO evolution with exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$.
 
