@@ -315,10 +315,23 @@ def evolve(
     # Define the timepoints between those energy scales at which Eq. (1) will be integrated
     ts = np.linspace(tmin, tmax, n_t)
     
-    if order == 2:
-        ode = lambda x, a: -beta0 * a * a - beta1 * a * a * a
-    else:
-        ode = lambda x, a: -beta0 * a * a
+    def _beta_ode(x, a):
+        """QCD beta-function ODE for running coupling.
+
+        Parameters
+        ----------
+        x : float
+            Log-energy variable (t = ln Q²). Not used explicitly.
+        a : float
+            Coupling `a = α_s/(4π)` at scale `x`.
+
+        Returns
+        -------
+        float
+            Time derivative da/dt according to LO/NLO beta function.
+        """
+        return -beta0 * a * a - (beta1 * a * a * a if order == 2 else 0)
+    ode = _beta_ode
 
     # SciPy requires that the times be monotonically increasing or decreasing
     less = ts < np.log(Q0_2_a)
