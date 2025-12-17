@@ -265,7 +265,7 @@ This normalization is convenient for the DGLAP evolution equation.</p></div>
             integrate(
                 res,
                 index,
-                _z_grid(xs[index], n_z, logScale),
+                z_grid(xs[index], n_z, logScale),
                 alp,
                 order,
                 CF,
@@ -354,11 +354,8 @@ where n is the number of input points.</dd>
 <dd>Evaluates splitting functions</dd>
 </dl>
 <h2 id="references">References</h2>
-<ul>
-<li>Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021</li>
-<li>Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221</li>
-</ul>
-</div>
+<p>.. [1] Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021
+.. [2] Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221</p></div>
 </dd>
 <dt id="tparton.t_evolution.integrate"><code class="name flex">
 <span>def <span class="ident">integrate</span></span>(<span>pdf: numpy.ndarray,<br>i: int,<br>z: numpy.ndarray,<br>alp: float,<br>order: int,<br>CF: float,<br>sign: int,<br>CG: int,<br>Tf: float,<br>xs: numpy.ndarray) ‑> float</span>
@@ -390,7 +387,7 @@ where n is the number of input points.</dd>
         (p0pf + (alp * p1pf if order == 2 else 0)) * pdf[i]
 
     # When handling the plus prescription, there is a common factor of ln(1-x) when integrating Eq. (10)
-    lno = _plus_log_term(xs[i])
+    lno = plus_log_term(xs[i])
     estimate = simpson(func, x=z) + (plus0 * lno + del0) * pdf[i]
     if order == 2:
         estimate += alp * (plus1 * lno + del1) * pdf[i]
@@ -496,6 +493,180 @@ This function is called when running <code>python -m tparton t</code>.</p>
 <dd>Main function for PDF evolution</dd>
 </dl></div>
 </dd>
+<dt id="tparton.t_evolution.nlo_plus_delta_constants"><code class="name flex">
+<span>def <span class="ident">nlo_plus_delta_constants</span></span>(<span>CF: float, CG: int, Tf: float) ‑> tuple[float, float]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nlo_plus_delta_constants(CF: float, CG: int, Tf: float) -&gt; tuple[float, float]:
+    &#34;&#34;&#34;NLO plus and delta-function constants evaluated at z → 1.
+
+    Returns
+    -------
+    tuple
+        (plus1, del1) constants in Eq. (12).
+    &#34;&#34;&#34;
+    zta = 1.2020569031595943
+    del1 = CF * CF * (3 / 8 - pi**2 / 2 + 6 * zta) + \
+        CF * CG / 2 * (17 / 12 + 11 * pi**2 / 9 - 6 * zta) - \
+        2 / 3 * CF * Tf * (1 / 4 + pi**2 / 3)
+    p2pl = (67 / 9 - pi**2/3) * 2
+    p3pl = -5 / 3 * 2
+    plus1 = CF * CG / 2 * p2pl + 2 / 3 * CF * Tf * p3pl
+    return plus1, del1</code></pre>
+</details>
+<div class="desc"><p>NLO plus and delta-function constants evaluated at z → 1.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>(plus1, del1) constants in Eq. (12).</dd>
+</dl></div>
+</dd>
+<dt id="tparton.t_evolution.nlo_plus_terms"><code class="name flex">
+<span>def <span class="ident">nlo_plus_terms</span></span>(<span>omz: numpy.ndarray, CF: float, CG: int, Tf: float) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nlo_plus_terms(omz: np.ndarray, CF: float, CG: int, Tf: float) -&gt; np.ndarray:
+    &#34;&#34;&#34;NLO plus-prescription function coefficients.
+
+    Parameters
+    ----------
+    omz : ndarray
+        1 - z values.
+    CF, CG, Tf : float
+        Color and flavor factors.
+
+    Returns
+    -------
+    ndarray
+        Plus-function coefficients p1pf.
+    &#34;&#34;&#34;
+    p2plus = -(67/9 - pi**2/3) * 2 / (omz+1e-100)
+    p3plus = 5 / 3 * 2 / (omz+1e-100)
+    return CF * CG / 2 * p2plus + 2 / 3 * CF * Tf * p3plus</code></pre>
+</details>
+<div class="desc"><p>NLO plus-prescription function coefficients.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>omz</code></strong> :&ensp;<code>ndarray</code></dt>
+<dd>1 - z values.</dd>
+<dt><strong><code>CF</code></strong>, <strong><code>CG</code></strong>, <strong><code>Tf</code></strong> :&ensp;<code>float</code></dt>
+<dd>Color and flavor factors.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ndarray</code></dt>
+<dd>Plus-function coefficients p1pf.</dd>
+</dl></div>
+</dd>
+<dt id="tparton.t_evolution.nlo_regular_terms"><code class="name flex">
+<span>def <span class="ident">nlo_regular_terms</span></span>(<span>z: numpy.ndarray,<br>omz: numpy.ndarray,<br>s2: numpy.ndarray,<br>CF: float,<br>CG: int,<br>Tf: float,<br>sign: int) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nlo_regular_terms(z: np.ndarray, omz: np.ndarray, s2: np.ndarray,
+                       CF: float, CG: int, Tf: float, sign: int) -&gt; np.ndarray:
+    &#34;&#34;&#34;NLO non-plus, non-delta contributions to ΔT P_qq(z).
+
+    Implements the regular parts of Eq. (12) and the additional term Eq. (13).
+
+    Parameters
+    ----------
+    z : ndarray
+        Momentum fraction grid.
+    omz : ndarray
+        1 - z values.
+    s2 : ndarray
+        Dilogarithm combination from Eq. (16).
+    CF, CG, Tf : float
+        Color and flavor factors.
+    sign : int
+        +1 for plus, -1 for minus distribution.
+
+    Returns
+    -------
+    ndarray
+        Regular NLO contribution array.
+    &#34;&#34;&#34;
+    lnz = np.log(z)
+    lno = np.log(omz+1e-100)
+    dP0 = 2 * z / (omz+1e-100)
+    pp1 = omz - (3 / 2 + 2 * lno) * lnz * dP0
+    pp2 = -omz + (67/9 + 11/3 * lnz + lnz**2 - pi**2 / 3) * dP0
+    pp3 = (-lnz - 5/3) * dP0
+    dpqq = CF * CF * pp1 + CF * CG * 0.5 * pp2 + 2 / 3 * CF * Tf * pp3
+    pp4 = -omz + 2 * s2 * 2 * -z / (1 + z)
+    dpqqb = CF * (CF - CG / 2) * pp4
+    p1 = dpqq + sign * dpqqb
+    p1[0] = 0
+    return p1</code></pre>
+</details>
+<div class="desc"><p>NLO non-plus, non-delta contributions to ΔT P_qq(z).</p>
+<p>Implements the regular parts of Eq. (12) and the additional term Eq. (13).</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>z</code></strong> :&ensp;<code>ndarray</code></dt>
+<dd>Momentum fraction grid.</dd>
+<dt><strong><code>omz</code></strong> :&ensp;<code>ndarray</code></dt>
+<dd>1 - z values.</dd>
+<dt><strong><code>s2</code></strong> :&ensp;<code>ndarray</code></dt>
+<dd>Dilogarithm combination from Eq. (16).</dd>
+<dt><strong><code>CF</code></strong>, <strong><code>CG</code></strong>, <strong><code>Tf</code></strong> :&ensp;<code>float</code></dt>
+<dd>Color and flavor factors.</dd>
+<dt><strong><code>sign</code></strong> :&ensp;<code>int</code></dt>
+<dd>+1 for plus, -1 for minus distribution.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ndarray</code></dt>
+<dd>Regular NLO contribution array.</dd>
+</dl></div>
+</dd>
+<dt id="tparton.t_evolution.plus_log_term"><code class="name flex">
+<span>def <span class="ident">plus_log_term</span></span>(<span>x: float) ‑> float</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plus_log_term(x: float) -&gt; float:
+    &#34;&#34;&#34;Compute the common ln(1-x) factor from plus-prescription integrals.
+
+    Parameters
+    ----------
+    x : float
+        The current `x` value in the convolution.
+
+    Returns
+    -------
+    float
+        `ln(1-x)` stabilized for `x → 1` to avoid `log(0)`.
+    &#34;&#34;&#34;
+    return np.log(max(1 - x, 1e-100))</code></pre>
+</details>
+<div class="desc"><p>Compute the common ln(1-x) factor from plus-prescription integrals.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>float</code></dt>
+<dd>The current <code>x</code> value in the convolution.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd><code>ln(1-x)</code> stabilized for <code>x → 1</code> to avoid <code>log(0)</code>.</dd>
+</dl></div>
+</dd>
 <dt id="tparton.t_evolution.splitting"><code class="name flex">
 <span>def <span class="ident">splitting</span></span>(<span>z: numpy.ndarray, CF: float, order: int, sign: int, CG: int, Tf: float)</span>
 </code></dt>
@@ -545,7 +716,7 @@ This function is called when running <code>python -m tparton t</code>.</p>
     #######################################################################################################
     # First, we evaluate the plus function contributions
     if order == 2:
-        p1 = _nlo_regular_terms(z, omz, s2, CF, CG, Tf, sign)
+        p1 = nlo_regular_terms(z, omz, s2, CF, CG, Tf, sign)
     else:
         p1 = 0
     
@@ -555,7 +726,7 @@ This function is called when running <code>python -m tparton t</code>.</p>
     # Enforcing the plus prescriptions for the relevant terms in Eq. (12)
     # The plus prescription in line 0 of Eq. (12) results in 0, so it is ignored
     # Line 2 plus prescription in Eq. (12)
-    p1pf = _nlo_plus_terms(omz, CF, CG, Tf)
+    p1pf = nlo_plus_terms(omz, CF, CG, Tf)
 
     # Necessary to avoid numerical singularities
     p0[-1] = 0
@@ -572,7 +743,7 @@ This function is called when running <code>python -m tparton t</code>.</p>
     # Plus function, -f(1) g(x)_+ in Eq. (10), and delta function contributions to the splitting function
     #######################################################################################################
     if order == 2:
-        plus1, del1 = _nlo_plus_delta_constants(CF, CG, Tf)
+        plus1, del1 = nlo_plus_delta_constants(CF, CG, Tf)
     else:
         plus1, del1 = 0, 0
 
@@ -593,6 +764,52 @@ Implements Eqs. (9), (11), and (12) from the paper. Uses Spence function
 from scipy.special. Regularizes singularities at z=1 with small epsilon (1e-100).</p>
 <p>See Also:
 integrate: Uses splitting functions for PDF convolution</p></div>
+</dd>
+<dt id="tparton.t_evolution.z_grid"><code class="name flex">
+<span>def <span class="ident">z_grid</span></span>(<span>xi: float, n_z: int, logScale: bool) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def z_grid(xi: float, n_z: int, logScale: bool) -&gt; np.ndarray:
+    &#34;&#34;&#34;Construct z-grid for convolution integral.
+
+    Parameters
+    ----------
+    xi : float
+        Current x value. Grid spans from `xi` to 1.
+    n_z : int
+        Number of z points (inclusive of endpoints).
+    logScale : bool
+        Use logarithmic spacing near 1 if True; otherwise linear spacing.
+
+    Returns
+    -------
+    ndarray
+        z-grid array of shape `(n_z + 1,)` from `xi` to `1`.
+    &#34;&#34;&#34;
+    if logScale:
+        # Log-spacing concentrated near 1 for peaked PDFs
+        return np.power(10, np.linspace(np.log10(max(xi, 1e-15)), 0, n_z + 1))
+    return np.linspace(xi, 1, n_z + 1)</code></pre>
+</details>
+<div class="desc"><p>Construct z-grid for convolution integral.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>xi</code></strong> :&ensp;<code>float</code></dt>
+<dd>Current x value. Grid spans from <code>xi</code> to 1.</dd>
+<dt><strong><code>n_z</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of z points (inclusive of endpoints).</dd>
+<dt><strong><code>logScale</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Use logarithmic spacing near 1 if True; otherwise linear spacing.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ndarray</code></dt>
+<dd>z-grid array of shape <code>(n_z + 1,)</code> from <code>xi</code> to <code>1</code>.</dd>
+</dl></div>
 </dd>
 </dl>
 </section>
@@ -619,7 +836,12 @@ integrate: Uses splitting functions for PDF convolution</p></div>
 <li><code><a title="tparton.t_evolution.evolve" href="#tparton.t_evolution.evolve">evolve</a></code></li>
 <li><code><a title="tparton.t_evolution.integrate" href="#tparton.t_evolution.integrate">integrate</a></code></li>
 <li><code><a title="tparton.t_evolution.main" href="#tparton.t_evolution.main">main</a></code></li>
+<li><code><a title="tparton.t_evolution.nlo_plus_delta_constants" href="#tparton.t_evolution.nlo_plus_delta_constants">nlo_plus_delta_constants</a></code></li>
+<li><code><a title="tparton.t_evolution.nlo_plus_terms" href="#tparton.t_evolution.nlo_plus_terms">nlo_plus_terms</a></code></li>
+<li><code><a title="tparton.t_evolution.nlo_regular_terms" href="#tparton.t_evolution.nlo_regular_terms">nlo_regular_terms</a></code></li>
+<li><code><a title="tparton.t_evolution.plus_log_term" href="#tparton.t_evolution.plus_log_term">plus_log_term</a></code></li>
 <li><code><a title="tparton.t_evolution.splitting" href="#tparton.t_evolution.splitting">splitting</a></code></li>
+<li><code><a title="tparton.t_evolution.z_grid" href="#tparton.t_evolution.z_grid">z_grid</a></code></li>
 </ul>
 </li>
 </ul>

@@ -96,7 +96,7 @@ def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: floa
     #######################################################################################################
     # First, we evaluate the plus function contributions
     if order == 2:
-        p1 = _nlo_regular_terms(z, omz, s2, CF, CG, Tf, sign)
+        p1 = nlo_regular_terms(z, omz, s2, CF, CG, Tf, sign)
     else:
         p1 = 0
     
@@ -106,7 +106,7 @@ def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: floa
     # Enforcing the plus prescriptions for the relevant terms in Eq. (12)
     # The plus prescription in line 0 of Eq. (12) results in 0, so it is ignored
     # Line 2 plus prescription in Eq. (12)
-    p1pf = _nlo_plus_terms(omz, CF, CG, Tf)
+    p1pf = nlo_plus_terms(omz, CF, CG, Tf)
 
     # Necessary to avoid numerical singularities
     p0[-1] = 0
@@ -123,13 +123,13 @@ def splitting(z: np.ndarray, CF: float, order: int, sign: int, CG: int, Tf: floa
     # Plus function, -f(1) g(x)_+ in Eq. (10), and delta function contributions to the splitting function
     #######################################################################################################
     if order == 2:
-        plus1, del1 = _nlo_plus_delta_constants(CF, CG, Tf)
+        plus1, del1 = nlo_plus_delta_constants(CF, CG, Tf)
     else:
         plus1, del1 = 0, 0
 
     return p0, p1, p0pf, p1pf, plus0, del0, plus1, del1
 
-def _nlo_regular_terms(z: np.ndarray, omz: np.ndarray, s2: np.ndarray,
+def nlo_regular_terms(z: np.ndarray, omz: np.ndarray, s2: np.ndarray,
                        CF: float, CG: int, Tf: float, sign: int) -> np.ndarray:
     """NLO non-plus, non-delta contributions to ΔT P_qq(z).
 
@@ -166,7 +166,7 @@ def _nlo_regular_terms(z: np.ndarray, omz: np.ndarray, s2: np.ndarray,
     p1[0] = 0
     return p1
 
-def _nlo_plus_terms(omz: np.ndarray, CF: float, CG: int, Tf: float) -> np.ndarray:
+def nlo_plus_terms(omz: np.ndarray, CF: float, CG: int, Tf: float) -> np.ndarray:
     """NLO plus-prescription function coefficients.
 
     Parameters
@@ -185,7 +185,7 @@ def _nlo_plus_terms(omz: np.ndarray, CF: float, CG: int, Tf: float) -> np.ndarra
     p3plus = 5 / 3 * 2 / (omz+1e-100)
     return CF * CG / 2 * p2plus + 2 / 3 * CF * Tf * p3plus
 
-def _nlo_plus_delta_constants(CF: float, CG: int, Tf: float) -> tuple[float, float]:
+def nlo_plus_delta_constants(CF: float, CG: int, Tf: float) -> tuple[float, float]:
     """NLO plus and delta-function constants evaluated at z → 1.
 
     Returns
@@ -225,14 +225,14 @@ def integrate(pdf: np.ndarray, i: int, z: np.ndarray, alp: float, order: int,
         (p0pf + (alp * p1pf if order == 2 else 0)) * pdf[i]
 
     # When handling the plus prescription, there is a common factor of ln(1-x) when integrating Eq. (10)
-    lno = _plus_log_term(xs[i])
+    lno = plus_log_term(xs[i])
     estimate = simpson(func, x=z) + (plus0 * lno + del0) * pdf[i]
     if order == 2:
         estimate += alp * (plus1 * lno + del1) * pdf[i]
 
     return estimate
 
-def _z_grid(xi: float, n_z: int, logScale: bool) -> np.ndarray:
+def z_grid(xi: float, n_z: int, logScale: bool) -> np.ndarray:
     """Construct z-grid for convolution integral.
 
     Parameters
@@ -254,7 +254,7 @@ def _z_grid(xi: float, n_z: int, logScale: bool) -> np.ndarray:
         return np.power(10, np.linspace(np.log10(max(xi, 1e-15)), 0, n_z + 1))
     return np.linspace(xi, 1, n_z + 1)
 
-def _plus_log_term(x: float) -> float:
+def plus_log_term(x: float) -> float:
     """Compute the common ln(1-x) factor from plus-prescription integrals.
 
     Parameters
@@ -434,7 +434,7 @@ def evolve(
             integrate(
                 res,
                 index,
-                _z_grid(xs[index], n_z, logScale),
+                z_grid(xs[index], n_z, logScale),
                 alp,
                 order,
                 CF,

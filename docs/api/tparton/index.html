@@ -349,11 +349,8 @@ due to padding at boundaries.</dd>
 <dd>Inverse Mellin transform (Cohen method)</dd>
 </dl>
 <h2 id="references">References</h2>
-<ul>
-<li>Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894</li>
-<li>Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221</li>
-</ul>
-</div>
+<p>.. [1] Vogelsang, W. (1998). Phys. Rev. D 57, 1886-1894
+.. [2] Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221</p></div>
 </dd>
 <dt id="tparton.t_evolve"><code class="name flex">
 <span>def <span class="ident">t_evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>n_t: int = 100,<br>n_z: int = 500,<br>morp: str = 'plus',<br>order: int = 2,<br>logScale: bool = False,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = 0.009390141642421825,<br>alpha_num: bool = True) ‑> numpy.ndarray</span>
@@ -528,7 +525,7 @@ due to padding at boundaries.</dd>
             integrate(
                 res,
                 index,
-                _z_grid(xs[index], n_z, logScale),
+                z_grid(xs[index], n_z, logScale),
                 alp,
                 order,
                 CF,
@@ -617,11 +614,8 @@ where n is the number of input points.</dd>
 <dd>Evaluates splitting functions</dd>
 </dl>
 <h2 id="references">References</h2>
-<ul>
-<li>Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021</li>
-<li>Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221</li>
-</ul>
-</div>
+<p>.. [1] Hirai, M., Kumano, S., &amp; Saito, N. (2004). Phys. Rev. D 69, 054021
+.. [2] Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221</p></div>
 </dd>
 </dl>
 </section>
