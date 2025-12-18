@@ -28,7 +28,7 @@ pixi add jupyterlab pip
 pixi add --pypi tparton
 ```
 
-To run scripts in a terminal, ensure you are in the directory where you initialized the pixi environment and execute `pixi run python SCRIPT.PY`.
+To run scripts in a terminal, ensure you are in the directory where you initialized the pixi environment and execute `pixi run python SCRIPT.py`. Alternatively, download the `pixi.toml` file (for linux-64 platforms) in this repository to your desired directory and immediately execute `pixi run python SCRIPT.py`. `pixi` will automatically install the dependencies prior to running `SCRIPT.py`.
 
 ## Running tParton as a standalone script
 
