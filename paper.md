@@ -72,6 +72,8 @@ where $K$ contains the evolution kernel depending on the splitting function mome
 
 Both methods support LO and NLO evolution with numerically exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$. See our arXiv preprint for detailed computational complexity analysis [@sha2025tparton].
 
+Our primary future goal is to implement NNLO evolution, for which analytic Mellin moment expressions have been recently calculated [@blumlein2021].
+
 # Examples and validation
 
 The package includes extensive Jupyter notebooks in the `examples/` directory that:
