@@ -81,7 +81,7 @@ The package includes extensive Jupyter notebooks in the `examples/` directory th
 - Demonstrate sensitivity to numerical parameters (grid resolution, timesteps)
 - Reproduce figures from the associated preprint [@sha2025tparton]
 
-A separate Mathematica notebook validates the analytical expressions for the Mellin moments of the splitting functions, providing an independent check of the theoretical framework. The key validation figures are shown below:
+A separate Mathematica notebook validates the analytical expressions for the Mellin moments of the splitting functions, providing an independent check of the theoretical framework. The key validation figures from our preprint are shown below:
 
 ![Evolution of the initial GS-A type PDF with numerically evolved $\alpha_s(Q^2)$, comparing the Hirai method (Python), the Vogelsang method (Python), Mathematica validation, and APFEL++ evolution. APFEL++ evolution data was provided by V Bertone.](examples/fig1_exact_alpha.svg)
 
