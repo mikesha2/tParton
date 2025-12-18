@@ -68,9 +68,9 @@ The second method exploits the convolution theorem for Mellin transforms. The so
 
 $$\mathcal{M}[\Delta_T q^{\pm}](Q^2;s)=K(s,Q^2,Q_0^2)\mathcal{M}[\Delta_T q^{\pm}](Q_0^2;s)$$
 
-where $K$ contains the evolution kernel depending on the splitting function moments. The evolved PDF is reconstructed via inverse Mellin transform using the Cohen contour method. This approach is typically faster and less sensitive to discretization for smooth PDFs.
+where $K$ contains the evolution kernel depending on the splitting function moments. Since analytic expressions for the evolution kernel are available, this method obviates the need to solve the ODE. The evolved PDF is reconstructed via inverse Mellin transform using the Cohen contour method. This approach is typically faster for evaluation of the transversity PDF at single points, and less sensitive to discretization for smooth PDFs.
 
-Both methods support LO and NLO evolution with exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$.
+Both methods support LO and NLO evolution with exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$. See our arXiv preprint for detailed computational complexity analysis [@sha2025tparton].
 
 # Examples and validation
 
@@ -96,6 +96,8 @@ from tparton.m_evolution import evolve
 result = evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6, 
                 morp='plus', order='NLO')
 ```
+
+Complete online documentation of the API and detailed examples are available on the [GitHub Pages](https://mikesha2.github.io/tParton/) associated with the repository.
 
 # Acknowledgements
 
