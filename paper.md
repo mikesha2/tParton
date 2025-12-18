@@ -34,7 +34,7 @@ Parton distribution functions (PDFs) describe the probability of finding quarks 
 
 # Statement of need
 
-PDFs must be evolved from one energy scale to another to enable comparisons between different experiments and theoretical predictions. While numerous codes exist for evolving unpolarized and helicity PDFs (such as QCDNUM [@qcdnum], EKO [@EKO], HOPPET [@Salam:2008qg], and APFEL++ [@Bertone:2013vaa; @Bertone:2017gds]), options for transversity PDF evolution are limited. The original Fortran implementation by Hirai et al. [@hirai] is nearly 30 years old and no longer accessible. APFEL++ [@Bertone:2017gds] provides an implementation using direct numerical integration, but no publicly available code has implemented the alternative Mellin moment method proposed by Vogelsang [@Vogelsang97].
+PDFs must be evolved from one energy scale to another to enable comparisons between different experiments and theoretical predictions. While numerous codes exist for evolving unpolarized and helicity PDFs (such as QCDNUM [@qcdnum], EKO [@EKO], HOPPET [@Salam:2008qg], and APFEL++ [@Bertone:2013vaa; @Bertone:2017gds]), options for transversity PDF evolution are limited. The original Fortran implementation by Hirai et al. [@hirai] is nearly 30 years old and no longer easily accessible. APFEL++ [@Bertone:2017gds] provides an implementation using direct numerical integration, but no publicly available code has implemented the alternative Mellin moment method proposed by Vogelsang [@Vogelsang97].
 
 `tParton` fills this gap by providing:
 
