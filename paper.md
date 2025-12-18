@@ -30,7 +30,7 @@ bibliography: paper.bib
 
 Parton distribution functions (PDFs) describe the probability of finding quarks and gluons (collectively called partons) within hadrons such as protons and neutrons. These functions are fundamental to our understanding of quantum chromodynamics (QCD) and are essential for interpreting high-energy physics experiments. The transversity PDF, which encodes information about the transverse spin structure of hadrons, is particularly challenging to measure experimentally and has been less studied computationally compared to unpolarized and helicity PDFs.
 
-`tParton` is a Python package that implements two distinct methods for solving the Dokshitzer–Gribov–Lipatov–Altarelli–Parisi (DGLAP) evolution equations for transversity PDFs at leading order (LO) and next-to-leading order (NLO) in perturbative QCD. The package provides both a command-line interface and a Python API, making it accessible for both quick calculations and integration into larger analysis workflows.
+`tParton` is a Python package that implements two distinct methods for solving the Dokshitzer–Gribov–Lipatov–Altarelli–Parisi (DGLAP) evolution equations for transversity PDFs at leading order (LO) and next-to-leading order (NLO) in perturbative QCD. The package provides both a command-line interface and a Python API, making it accessible for both quick calculations and integration into larger analysis workflows. Our primary future goal is to implement NNLO evolution, for which analytic Mellin moment expressions have been recently calculated [@blumlein2021].
 
 # Statement of need
 
@@ -71,8 +71,6 @@ $$\mathcal{M}[\Delta_T q^{\pm}](Q^2;s)=K(s,Q^2,Q_0^2)\mathcal{M}[\Delta_T q^{\pm
 where $K$ contains the evolution kernel depending on the splitting function moments. Since analytic expressions for the evolution kernel are available, this method obviates the need to solve the ODE. The evolved PDF is reconstructed via inverse Mellin transform using the Cohen contour method. This approach is typically faster for evaluation of the transversity PDF at single points, and less sensitive to discretization for smooth PDFs.
 
 Both methods support LO and NLO evolution with numerically exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$. See our arXiv preprint for detailed computational complexity analysis [@sha2025tparton].
-
-Our primary future goal is to implement NNLO evolution, for which analytic Mellin moment expressions have been recently calculated [@blumlein2021].
 
 # Examples and validation
 
