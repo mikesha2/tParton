@@ -21,5 +21,3 @@ Suggested run order is as follows:
 5. The "hirai_exact_alpha_nx_nt" folder varies the number of interpolation points and timesteps in Hirai evolution (Figure 5).
 
 6. "Figures.ipynb" reproduces our figures.
-
-The tParton folder contains all the ingredients necessary to package our program and upload it to the Python Package Index. It can be built into a wheel by navigating into "tParton", `pip install build` (if that package is not already installed), and finally running `python -m build`, or it can be directly installed into the current environment without a wheel using `pip install ./tParton`.
