@@ -10,7 +10,7 @@ The API documentation and project site are published on GitHub Pages: https://mi
 
 ## Quick Start Installation
 
-First, ensure that you have a Python package system installed. We recommend [pixi](https://pixi.sh/l) over [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website).
+First, ensure that you have a Python package system installed. We recommend [pixi](https://pixi.sh/) over [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website).
 
 ### pixi
 `pixi` installs directly in the current directory.
