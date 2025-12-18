@@ -85,7 +85,7 @@ A separate Mathematica notebook validates the analytical expressions for the Mel
 
 ![Evolution of the initial GS-A type PDF with numerically evolved $\alpha_s(Q^2)$, comparing the Hirai method (Python), the Vogelsang method (Python), Mathematica validation, and APFEL++ evolution. APFEL++ evolution data was provided by V Bertone.](examples/fig1_exact_alpha.svg)
 
-![Relative error of the various methods, with the Hirai method (Python) as control](examples/fig1_exact_alpha_relative_diff.svg)
+![Relative error of the various methods, with the Hirai method (Python) as control.](examples/fig1_exact_alpha_relative_diff.svg)
 
 Users can evolve a PDF with a single command:
 
