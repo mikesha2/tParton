@@ -13,7 +13,7 @@ The API documentation and project site are published on GitHub Pages: https://mi
 First, ensure that you have a Python package system installed. We recommend [pixi](https://pixi.sh/l) over [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website).
 
 ### pixi
-Alternatively, `pixi` installs directly in the current directory.
+`pixi` installs directly in the current directory.
 ```
 pixi init --channel conda-forge
 pixi add jupyterlab pip
