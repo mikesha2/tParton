@@ -70,7 +70,7 @@ $$\mathcal{M}[\Delta_T q^{\pm}](Q^2;s)=K(s,Q^2,Q_0^2)\mathcal{M}[\Delta_T q^{\pm
 
 where $K$ contains the evolution kernel depending on the splitting function moments. Since analytic expressions for the evolution kernel are available, this method obviates the need to solve the ODE. The evolved PDF is reconstructed via inverse Mellin transform using the Cohen contour method. This approach is typically faster for evaluation of the transversity PDF at single points, and less sensitive to discretization for smooth PDFs.
 
-Both methods support LO and NLO evolution with exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$. See our arXiv preprint for detailed computational complexity analysis [@sha2025tparton].
+Both methods support LO and NLO evolution with numerically exact or analytical forms of the running coupling constant $\alpha_s(Q^2)$. See our arXiv preprint for detailed computational complexity analysis [@sha2025tparton].
 
 # Examples and validation
 
@@ -81,7 +81,11 @@ The package includes extensive Jupyter notebooks in the `examples/` directory th
 - Demonstrate sensitivity to numerical parameters (grid resolution, timesteps)
 - Reproduce figures from the associated preprint [@sha2025tparton]
 
-A separate Mathematica notebook validates the analytical expressions for the Mellin moments of the splitting functions, providing an independent check of the theoretical framework.
+A separate Mathematica notebook validates the analytical expressions for the Mellin moments of the splitting functions, providing an independent check of the theoretical framework. The key validation figures are shown below:
+
+![Evolution of the initial GS-A type PDF with numerically evolved $\alpha_s(Q^2)$, comparing the Hirai method (Python), the Vogelsang method (Python), Mathematica validation, and APFEL++ evolution. APFEL++ evolution data was provided by V Bertone.](examples/fig1_exact_alpha.svg)
+
+![Relative error of the various methods, with the Hirai method (Python) as control](examples/fig1_exact_alpha_relative_diff.svg)
 
 Users can evolve a PDF with a single command:
 
