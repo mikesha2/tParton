@@ -10,8 +10,21 @@ The API documentation and project site are published on GitHub Pages: https://mi
 
 ## Quick Start Installation
 
-First, ensure that you have a Python package system installed. We recommend [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website), or [pixi](https://pixi.sh/l).
+First, ensure that you have a Python package system installed. We recommend [pixi](https://pixi.sh/l) over [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install#anaconda-website).
 
+### pixi
+Alternatively, `pixi` installs directly in the current directory.
+```
+pixi init --channel conda-forge
+pixi add jupyterlab pip
+pixi add --pypi tparton
+```
+
+To run scripts in a terminal, ensure you are in the directory where you initialized the pixi environment and execute `pixi run python SCRIPT.py`.
+
+Alternatively, download the `pixi.toml` file (for linux-64 platforms) in this repository to your desired directory and immediately execute `pixi run python SCRIPT.py`. `pixi` will automatically install the dependencies prior to running `SCRIPT.py`.
+
+### conda
 For `conda`, in your terminal, run:
 ```
 conda create -n NAME -c conda-forge jupyterlab pip -y
@@ -20,15 +33,6 @@ pip install tparton
 ```
 
 `NAME` is your choice of label for the conda environment you are creating. The above commands only need to be executed once. To use this environment again after a terminal or computer restart, execute `conda activate NAME` again.
-
-Alternatively, `pixi` installs directly in the current directory.
-```
-pixi init --channel conda-forge
-pixi add jupyterlab pip
-pixi add --pypi tparton
-```
-
-To run scripts in a terminal, ensure you are in the directory where you initialized the pixi environment and execute `pixi run python SCRIPT.py`. Alternatively, download the `pixi.toml` file (for linux-64 platforms) in this repository to your desired directory and immediately execute `pixi run python SCRIPT.py`. `pixi` will automatically install the dependencies prior to running `SCRIPT.py`.
 
 ## Running tParton as a standalone script
 
