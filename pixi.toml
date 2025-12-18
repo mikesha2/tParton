@@ -1,0 +1,14 @@
+[workspace]
+channels = ["conda-forge"]
+name = "test"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+jupyterlab = ">=4.5.1,<5"
+pip = ">=25.3,<26"
+
+[pypi-dependencies]
+tparton = ">=2.0.0, <3"
