@@ -60,7 +60,7 @@ and less sensitive to discretization effects compared to direct integration.</p>
                  × (α_S(Q²)/α_S(Q₀²))^{-2M[Δ_T P_{qq}^{(0)}](s)/β₀}
                  × M[Δ_T q^±](Q₀²;s)
 </code></pre>
-<p>where the splitting function moments are given by Eq. (26) for LO and Eq. (27)
+<p>where the splitting function moments are given by Eq. (27) for LO and Eq. (28)
 for NLO. The inverse Mellin transform is computed using Cohen's method (Eq. 36).</p>
 <h2 id="navigation">Navigation</h2>
 <ul>
@@ -127,7 +127,7 @@ for NLO. The inverse Mellin transform is computed using Cohen's method (Eq. 36).
 <pre><code class="python">def LO_splitting_function_moment(n, CF):
     &#34;&#34;&#34;Compute the leading-order splitting function Mellin moment.
     
-    Implements Eq. (26) for the LO transversity splitting function moment.
+    Implements Eq. (27) for the LO transversity splitting function moment.
     Uses harmonic sum S₁(n) defined via polygamma functions.
     
     Parameters
@@ -145,7 +145,7 @@ for NLO. The inverse Mellin transform is computed using Cohen's method (Eq. 36).
     return CF * (1.5 - 2 * S_1(n))</code></pre>
 </details>
 <div class="desc"><p>Compute the leading-order splitting function Mellin moment.</p>
-<p>Implements Eq. (26) for the LO transversity splitting function moment.
+<p>Implements Eq. (27) for the LO transversity splitting function moment.
 Uses harmonic sum S₁(n) defined via polygamma functions.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -171,7 +171,7 @@ Uses harmonic sum S₁(n) defined via polygamma functions.</p>
 <pre><code class="python">def NLO_splitting_function_moment(n, eta, CF, NC, Tf):
     &#34;&#34;&#34;Compute the next-to-leading-order splitting function Mellin moment.
     
-    Implements Eq. (27) for the NLO transversity splitting function moment.
+    Implements Eq. (28) for the NLO transversity splitting function moment.
     Includes CF², CF×NC, and CF×Tf terms with harmonic sums.
     More complex than LO due to two-loop corrections.
     
@@ -193,24 +193,23 @@ Uses harmonic sum S₁(n) defined via polygamma functions.</p>
     complex
         NLO splitting function moment M[ΔT P_qq,η^(1)](n).
     &#34;&#34;&#34;
-    f = etaN(n, eta)
     return \
         CF * CF * (
             3 / 8
             + (1-eta) / (n * (n + 1))
             - 3 * S_2(n)
-            - 4 * S_1(n) * (S_2(n) - S_p2(n, f))
-            - 8 * Stilde(n, f)
-            + S_p3(n, f)
+            - 4 * S_1(n) * (S_2(n) - S_p2(n, eta))
+            - 8 * Stilde(n, eta)
+            + S_p3(n, eta)
         ) + \
         0.5 * CF * NC * (
             17 / 12
             - (1 - eta) / (n * (n + 1))
             - 134 / 9 * S_1(n)
             + 22 / 3 * S_2(n)
-            + 4 * S_1(n) * (2 * S_2(n) - S_p2(n, f))
-            + 8 * Stilde(n, f)
-            - S_p3(n, f)
+            + 4 * S_1(n) * (2 * S_2(n) - S_p2(n, eta))
+            + 8 * Stilde(n, eta)
+            - S_p3(n, eta)
         ) + \
         2 / 3 * CF * Tf * (
             -1 / 4
@@ -219,7 +218,7 @@ Uses harmonic sum S₁(n) defined via polygamma functions.</p>
         )</code></pre>
 </details>
 <div class="desc"><p>Compute the next-to-leading-order splitting function Mellin moment.</p>
-<p>Implements Eq. (27) for the NLO transversity splitting function moment.
+<p>Implements Eq. (28) for the NLO transversity splitting function moment.
 Includes CF², CF×NC, and CF×Tf terms with harmonic sums.
 More complex than LO due to two-loop corrections.</p>
 <h2 id="parameters">Parameters</h2>
@@ -347,24 +346,26 @@ More complex than LO due to two-loop corrections.</p>
 </dl></div>
 </dd>
 <dt id="tparton.m_evolution.S_p1"><code class="name flex">
-<span>def <span class="ident">S_p1</span></span>(<span>n, f)</span>
+<span>def <span class="ident">S_p1</span></span>(<span>n, eta)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def S_p1(n, f):
+<pre><code class="python">def S_p1(n, eta):
     &#34;&#34;&#34;Compute first-order polarized harmonic sum S&#39;_1.
     
-    Implements Eq. (28) using the interpolation formula Eq. (31).
+    Implements Eq. (29) using the interpolation formula Eq. (32).
     
     Parameters
     ----------
     n : complex
         Mellin moment number.
-    f : complex
-        Factor η^N where η = ±1 for plus/minus distributions.
+    eta : int
+        Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+        sign, not η raised to the power n: the even- and odd-integer moment
+        sequences are continued separately and η selects the branch.
     
     Returns
     -------
@@ -372,16 +373,18 @@ More complex than LO due to two-loop corrections.</p>
         Polarized harmonic sum S&#39;_1(N).
     &#34;&#34;&#34;
     return 0.5 * (
-        (1 + f) * S_1(n/2) + (1 - f) * S_1((n-1)/2))</code></pre>
+        (1 + eta) * S_1(n/2) + (1 - eta) * S_1((n-1)/2))</code></pre>
 </details>
 <div class="desc"><p>Compute first-order polarized harmonic sum S'_1.</p>
-<p>Implements Eq. (28) using the interpolation formula Eq. (31).</p>
+<p>Implements Eq. (29) using the interpolation formula Eq. (32).</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
 <dd>Mellin moment number.</dd>
-<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
-<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+sign, not η raised to the power n: the even- and odd-integer moment
+sequences are continued separately and η selects the branch.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -390,24 +393,26 @@ More complex than LO due to two-loop corrections.</p>
 </dl></div>
 </dd>
 <dt id="tparton.m_evolution.S_p2"><code class="name flex">
-<span>def <span class="ident">S_p2</span></span>(<span>n, f)</span>
+<span>def <span class="ident">S_p2</span></span>(<span>n, eta)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def S_p2(n, f):
+<pre><code class="python">def S_p2(n, eta):
     &#34;&#34;&#34;Compute second-order polarized harmonic sum S&#39;_2.
     
-    Implements Eq. (29) using the interpolation formula Eq. (31).
+    Implements Eq. (30) using the interpolation formula Eq. (32).
     
     Parameters
     ----------
     n : complex
         Mellin moment number.
-    f : complex
-        Factor η^N where η = ±1 for plus/minus distributions.
+    eta : int
+        Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+        sign, not η raised to the power n: the even- and odd-integer moment
+        sequences are continued separately and η selects the branch.
     
     Returns
     -------
@@ -415,16 +420,18 @@ More complex than LO due to two-loop corrections.</p>
         Polarized harmonic sum S&#39;_2(N).
     &#34;&#34;&#34;
     return 0.5 * (
-        (1 + f) * S_2(n/2) + (1 - f) * S_2((n-1)/2))</code></pre>
+        (1 + eta) * S_2(n/2) + (1 - eta) * S_2((n-1)/2))</code></pre>
 </details>
 <div class="desc"><p>Compute second-order polarized harmonic sum S'_2.</p>
-<p>Implements Eq. (29) using the interpolation formula Eq. (31).</p>
+<p>Implements Eq. (30) using the interpolation formula Eq. (32).</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
 <dd>Mellin moment number.</dd>
-<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
-<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+sign, not η raised to the power n: the even- and odd-integer moment
+sequences are continued separately and η selects the branch.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -433,24 +440,26 @@ More complex than LO due to two-loop corrections.</p>
 </dl></div>
 </dd>
 <dt id="tparton.m_evolution.S_p3"><code class="name flex">
-<span>def <span class="ident">S_p3</span></span>(<span>n, f)</span>
+<span>def <span class="ident">S_p3</span></span>(<span>n, eta)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def S_p3(n, f):
+<pre><code class="python">def S_p3(n, eta):
     &#34;&#34;&#34;Compute third-order polarized harmonic sum S&#39;_3.
     
-    Implements Eq. (30) using the interpolation formula Eq. (31).
+    Implements Eq. (31) using the interpolation formula Eq. (32).
     
     Parameters
     ----------
     n : complex
         Mellin moment number.
-    f : complex
-        Factor η^N where η = ±1 for plus/minus distributions.
+    eta : int
+        Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+        sign, not η raised to the power n: the even- and odd-integer moment
+        sequences are continued separately and η selects the branch.
     
     Returns
     -------
@@ -458,16 +467,18 @@ More complex than LO due to two-loop corrections.</p>
         Polarized harmonic sum S&#39;_3(N).
     &#34;&#34;&#34;
     return 0.5 * (
-        (1 + f) * S_3(n/2) + (1 - f) * S_3((n-1)/2))</code></pre>
+        (1 + eta) * S_3(n/2) + (1 - eta) * S_3((n-1)/2))</code></pre>
 </details>
 <div class="desc"><p>Compute third-order polarized harmonic sum S'_3.</p>
-<p>Implements Eq. (30) using the interpolation formula Eq. (31).</p>
+<p>Implements Eq. (31) using the interpolation formula Eq. (32).</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
 <dd>Mellin moment number.</dd>
-<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
-<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+sign, not η raised to the power n: the even- and odd-integer moment
+sequences are continued separately and η selects the branch.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -476,17 +487,17 @@ More complex than LO due to two-loop corrections.</p>
 </dl></div>
 </dd>
 <dt id="tparton.m_evolution.Stilde"><code class="name flex">
-<span>def <span class="ident">Stilde</span></span>(<span>n, f)</span>
+<span>def <span class="ident">Stilde</span></span>(<span>n, eta)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def Stilde(n, f):
+<pre><code class="python">def Stilde(n, eta):
     &#34;&#34;&#34;Compute the S-tilde harmonic sum function.
     
-    Implements Eq. (32) which appears in the NLO splitting function moment.
+    Implements Eq. (33) which appears in the NLO splitting function moment.
     This function involves Riemann zeta function ζ(3), dilogarithm integral,
     and digamma function ψ_0.
     
@@ -494,8 +505,10 @@ More complex than LO due to two-loop corrections.</p>
     ----------
     n : complex
         Mellin moment number.
-    f : complex
-        Factor η^N where η = ±1 for plus/minus distributions.
+    eta : int
+        Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+        sign, not η raised to the power n: the even- and odd-integer moment
+        sequences are continued separately and η selects the branch.
     
     Returns
     -------
@@ -503,21 +516,23 @@ More complex than LO due to two-loop corrections.</p>
         S-tilde value at moment N.
     &#34;&#34;&#34;
     temp = -5/8 * zeta3
-    term = f
+    term = eta
     term *= S_1(n) / n / n - zeta2/2 * G(n) + \
         mp.quad(lambda t: mp.power(t, n-1) * mp.polylog(2, t) / (1 + t), [0, 1])
     return temp + term</code></pre>
 </details>
 <div class="desc"><p>Compute the S-tilde harmonic sum function.</p>
-<p>Implements Eq. (32) which appears in the NLO splitting function moment.
+<p>Implements Eq. (33) which appears in the NLO splitting function moment.
 This function involves Riemann zeta function ζ(3), dilogarithm integral,
 and digamma function ψ_0.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>n</code></strong> :&ensp;<code>complex</code></dt>
 <dd>Mellin moment number.</dd>
-<dt><strong><code>f</code></strong> :&ensp;<code>complex</code></dt>
-<dd>Factor η^N where η = ±1 for plus/minus distributions.</dd>
+<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
+<dd>Fixed continuation branch, η = +1 (plus) or −1 (minus). This is a fixed
+sign, not η raised to the power n: the even- and odd-integer moment
+sequences are continued separately and η selects the branch.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -658,45 +673,6 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
 <dd>Strong coupling constant α_s(Q²).</dd>
 </dl></div>
 </dd>
-<dt id="tparton.m_evolution.etaN"><code class="name flex">
-<span>def <span class="ident">etaN</span></span>(<span>n, eta)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def etaN(n, eta):
-    &#34;&#34;&#34;Compute η^n efficiently.
-
-    Parameters
-    ----------
-    n : int or complex
-        Exponent (Mellin moment index).
-    eta : int
-        Base, typically ±1 for plus/minus distributions.
-
-    Returns
-    -------
-    complex
-        η raised to the n-th power.
-    &#34;&#34;&#34;
-    return 1 if eta == 1 else mp.power(eta, n)</code></pre>
-</details>
-<div class="desc"><p>Compute η^n efficiently.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>n</code></strong> :&ensp;<code>int</code> or <code>complex</code></dt>
-<dd>Exponent (Mellin moment index).</dd>
-<dt><strong><code>eta</code></strong> :&ensp;<code>int</code></dt>
-<dd>Base, typically ±1 for plus/minus distributions.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>complex</code></dt>
-<dd>η raised to the n-th power.</dd>
-</dl></div>
-</dd>
 <dt id="tparton.m_evolution.evolve"><code class="name flex">
 <span>def <span class="ident">evolve</span></span>(<span>pdf: numpy.ndarray,<br>Q0_2: float = 0.16,<br>Q2: float = 5.0,<br>l_QCD: float = 0.25,<br>n_f: int = 5,<br>CG: float = 3,<br>morp: str = 'minus',<br>order: int = 2,<br>n_x: int = 200,<br>verbose: bool = False,<br>Q0_2_a: float = 8315.178393760001,<br>a0: float = mpf('0.0093901416424218252'),<br>alpha_num: bool = True,<br>degree: int = 5) ‑> numpy.ndarray</span>
 </code></dt>
@@ -728,8 +704,8 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
     
     This method:
     1. Computes Mellin moments (Eq. 20): M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
-    2. Evolves moments using Eq. (24) with splitting function moments from
-       Eq. (26) for LO and Eq. (27) for NLO
+    2. Evolves moments using Eq. (25) with splitting function moments from
+       Eq. (27) for LO and Eq. (28) for NLO
     3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen&#39;s
        method with accelerated alternating series convergence
     
@@ -828,7 +804,7 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
     # Convert the pdf into one compatible with mpmath&#39;s internal floating point representation
     pdf = lambda x: mp.mpf(pdf_fun(float(x)).item())
 
-    # The type of distribution determines eta in Eq. (31)
+    # The type of distribution determines eta in Eq. (32)
     eta = 1 if morp == &#39;plus&#39; else -1
 
     # Calculate the color constants
@@ -856,12 +832,14 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
     # Even if pdf(0) != 0, this slight change will not significantly affect the final numerical result.
     xs = xs[1:-1]
 
-    # A function representing the Mellin transform of pdf(x), Eq. (20)
+    # A function representing the Mellin transform of pdf(x), Eq. (21)
     pdf_m = lambda s: mellin(pdf, s)
-    # A function representing the resulting evolved moments, Eq. (24)
+    # A function representing the resulting evolved moments, Eq. (25)
     pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf))
-    # Perform Mellin inversion on the evolved moments, Eq. (36)
-    pdf_evolved = np.array([inv_mellin(pdf_evolved_m, x, degree=degree, verbose=verbose).__complex__().real for x in xs])
+    # Perform Mellin inversion on the evolved moments, Eq. (37)
+    # mp.re() takes the real part for both mpf and mpc returns; mpf.__complex__
+    # was removed in mpmath 1.4, so do not rely on it here.
+    pdf_evolved = np.array([float(mp.re(inv_mellin(pdf_evolved_m, x, degree=degree, verbose=verbose))) for x in xs])
 
     # Reinstate the endpoints x = 0 and x = 1
     xs = np.pad(xs, 1)
@@ -879,8 +857,8 @@ Uses mpmath's odefun for high-precision ODE integration.</p>
 Faster and less discretization-dependent than the direct integration method.</p>
 <p>This method:
 1. Computes Mellin moments (Eq. 20): M<a href="s">f</a> = ∫₀^∞ x^{s-1} f(x) dx
-2. Evolves moments using Eq. (24) with splitting function moments from
-Eq. (26) for LO and Eq. (27) for NLO
+2. Evolves moments using Eq. (25) with splitting function moments from
+Eq. (27) for LO and Eq. (28) for NLO
 3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen's
 method with accelerated alternating series convergence</p>
 <h2 id="parameters">Parameters</h2>
@@ -969,7 +947,7 @@ due to padding at boundaries.</dd>
 <pre><code class="python">def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf):
     &#34;&#34;&#34;Evolve a single Mellin moment from initial to final energy scale.
     
-    Implements Eq. (24) from the paper (Vogelsang&#39;s formula).
+    Implements Eq. (25) from the paper (Vogelsang&#39;s formula).
     Combines LO and NLO splitting function moments with running coupling.
     
     Parameters
@@ -1006,7 +984,7 @@ due to padding at boundaries.</dd>
     return total</code></pre>
 </details>
 <div class="desc"><p>Evolve a single Mellin moment from initial to final energy scale.</p>
-<p>Implements Eq. (24) from the paper (Vogelsang's formula).
+<p>Implements Eq. (25) from the paper (Vogelsang's formula).
 Combines LO and NLO splitting function moments with running coupling.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -1048,7 +1026,7 @@ Combines LO and NLO splitting function moments with running coupling.</p>
 <pre><code class="python">def inv_mellin(f, x, degree=5, verbose=True):
     &#34;&#34;&#34;Compute the inverse Mellin transform using Cohen contour method.
     
-    Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
+    Implements Eq. (37) for reconstructing the PDF from its Mellin moments.
     Uses mpmath&#39;s invertlaplace with the &#39;cohen&#39; method for optimal
     convergence. Higher degree values increase accuracy but slow computation.
     
@@ -1078,7 +1056,7 @@ Combines LO and NLO splitting function moments with running coupling.</p>
     return res</code></pre>
 </details>
 <div class="desc"><p>Compute the inverse Mellin transform using Cohen contour method.</p>
-<p>Implements Eq. (36) for reconstructing the PDF from its Mellin moments.
+<p>Implements Eq. (37) for reconstructing the PDF from its Mellin moments.
 Uses mpmath's invertlaplace with the 'cohen' method for optimal
 convergence. Higher degree values increase accuracy but slow computation.</p>
 <h2 id="parameters">Parameters</h2>
@@ -1192,7 +1170,7 @@ evolve:</p></div>
 <pre><code class="python">def mellin(f, s):
     &#34;&#34;&#34;Compute the Mellin transform of a function.
     
-    Implements Eq. (20): M[f](s) = ∫₀¹ t^(s-1) f(t) dt.
+    Implements Eq. (21): M[f](s) = ∫₀¹ t^(s-1) f(t) dt.
     Uses mpmath.quad for high-precision integration.
     
     Parameters
@@ -1210,7 +1188,7 @@ evolve:</p></div>
     return mp.quad(lambda t: mp.power(t, s-1) * f(t), [0, 1])</code></pre>
 </details>
 <div class="desc"><p>Compute the Mellin transform of a function.</p>
-<p>Implements Eq. (20): M<a href="s">f</a> = ∫₀¹ t^(s-1) f(t) dt.
+<p>Implements Eq. (21): M<a href="s">f</a> = ∫₀¹ t^(s-1) f(t) dt.
 Uses mpmath.quad for high-precision integration.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
@@ -1364,7 +1342,6 @@ Uses mpmath.quad for high-precision integration.</p>
 <li><code><a title="tparton.m_evolution.Stilde" href="#tparton.m_evolution.Stilde">Stilde</a></code></li>
 <li><code><a title="tparton.m_evolution.alpha_S" href="#tparton.m_evolution.alpha_S">alpha_S</a></code></li>
 <li><code><a title="tparton.m_evolution.alpha_S_num" href="#tparton.m_evolution.alpha_S_num">alpha_S_num</a></code></li>
-<li><code><a title="tparton.m_evolution.etaN" href="#tparton.m_evolution.etaN">etaN</a></code></li>
 <li><code><a title="tparton.m_evolution.evolve" href="#tparton.m_evolution.evolve">evolve</a></code></li>
 <li><code><a title="tparton.m_evolution.evolveMoment" href="#tparton.m_evolution.evolveMoment">evolveMoment</a></code></li>
 <li><code><a title="tparton.m_evolution.inv_mellin" href="#tparton.m_evolution.inv_mellin">inv_mellin</a></code></li>

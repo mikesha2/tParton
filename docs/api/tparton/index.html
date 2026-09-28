@@ -134,8 +134,8 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     
     This method:
     1. Computes Mellin moments (Eq. 20): M[f](s) = ∫₀^∞ x^{s-1} f(x) dx
-    2. Evolves moments using Eq. (24) with splitting function moments from
-       Eq. (26) for LO and Eq. (27) for NLO
+    2. Evolves moments using Eq. (25) with splitting function moments from
+       Eq. (27) for LO and Eq. (28) for NLO
     3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen&#39;s
        method with accelerated alternating series convergence
     
@@ -234,7 +234,7 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     # Convert the pdf into one compatible with mpmath&#39;s internal floating point representation
     pdf = lambda x: mp.mpf(pdf_fun(float(x)).item())
 
-    # The type of distribution determines eta in Eq. (31)
+    # The type of distribution determines eta in Eq. (32)
     eta = 1 if morp == &#39;plus&#39; else -1
 
     # Calculate the color constants
@@ -262,12 +262,14 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     # Even if pdf(0) != 0, this slight change will not significantly affect the final numerical result.
     xs = xs[1:-1]
 
-    # A function representing the Mellin transform of pdf(x), Eq. (20)
+    # A function representing the Mellin transform of pdf(x), Eq. (21)
     pdf_m = lambda s: mellin(pdf, s)
-    # A function representing the resulting evolved moments, Eq. (24)
+    # A function representing the resulting evolved moments, Eq. (25)
     pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf))
-    # Perform Mellin inversion on the evolved moments, Eq. (36)
-    pdf_evolved = np.array([inv_mellin(pdf_evolved_m, x, degree=degree, verbose=verbose).__complex__().real for x in xs])
+    # Perform Mellin inversion on the evolved moments, Eq. (37)
+    # mp.re() takes the real part for both mpf and mpc returns; mpf.__complex__
+    # was removed in mpmath 1.4, so do not rely on it here.
+    pdf_evolved = np.array([float(mp.re(inv_mellin(pdf_evolved_m, x, degree=degree, verbose=verbose))) for x in xs])
 
     # Reinstate the endpoints x = 0 and x = 1
     xs = np.pad(xs, 1)
@@ -285,8 +287,8 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
 Faster and less discretization-dependent than the direct integration method.</p>
 <p>This method:
 1. Computes Mellin moments (Eq. 20): M<a href="s">f</a> = ∫₀^∞ x^{s-1} f(x) dx
-2. Evolves moments using Eq. (24) with splitting function moments from
-Eq. (26) for LO and Eq. (27) for NLO
+2. Evolves moments using Eq. (25) with splitting function moments from
+Eq. (27) for LO and Eq. (28) for NLO
 3. Reconstructs PDF via inverse Mellin transform (Eq. 36) using Cohen's
 method with accelerated alternating series convergence</p>
 <h2 id="parameters">Parameters</h2>
@@ -489,8 +491,10 @@ due to padding at boundaries.</dd>
     tmin = np.log(Q0_2)
     tmax = np.log(Q2)
 
-    # Define the timepoints between those energy scales at which Eq. (1) will be integrated
-    ts = np.linspace(tmin, tmax, n_t)
+    # Define the timepoints between those energy scales at which Eq. (1) will be integrated.
+    # These are the n_t left endpoints of n_t equal sub-intervals, consistent with the
+    # Euler step dt = (tmax - tmin) / n_t used below.
+    ts = np.linspace(tmin, tmax, n_t + 1)[:-1]
     
     def _beta_ode(x, a):
         &#34;&#34;&#34;QCD beta-function ODE for running coupling.
