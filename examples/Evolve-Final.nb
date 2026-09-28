@@ -267,7 +267,7 @@ Cell[BoxData[
       FractionBox["1", "2"], 
       RowBox[{"(", 
        RowBox[{"1", "+", 
-        SuperscriptBox["\[Eta]", "n"]}], ")"}], 
+        "\[Eta]"}], ")"}], 
       RowBox[{
        SubscriptBox["S", "k"], "[", 
        FractionBox["n", "2"], "]"}]}], "+", 
@@ -275,7 +275,7 @@ Cell[BoxData[
       FractionBox["1", "2"], 
       RowBox[{"(", 
        RowBox[{"1", "-", 
-        SuperscriptBox["\[Eta]", "n"]}], ")"}], 
+        "\[Eta]"}], ")"}], 
       RowBox[{
        SubscriptBox["S", "k"], "[", 
        FractionBox[
@@ -315,7 +315,7 @@ Cell[BoxData[
        FractionBox["5", "8"]}], 
       RowBox[{"Zeta", "[", "3", "]"}]}], "+", 
      RowBox[{
-      SuperscriptBox["\[Eta]", "n"], 
+      "\[Eta]", 
       RowBox[{"(", 
        RowBox[{
         FractionBox[

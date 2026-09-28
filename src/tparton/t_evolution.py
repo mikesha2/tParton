@@ -238,7 +238,7 @@ def integrate(pdf: np.ndarray, i: int, z: np.ndarray, alp: float, order: int,
               CF: float, sign: int, CG: int, Tf: float, xs: np.ndarray) -> float:
     """Perform convolution of PDF with splitting function at a given x value.
     
-    Implements the Mellin convolution integral from Eq. (19).
+    Implements the Mellin convolution integral from Eq. (20).
     Uses Simpson's rule for numerical integration. Handles plus distribution
     prescriptions via ln(1-x) terms. Interpolates PDF between grid points
     for smooth convolution.
@@ -251,7 +251,7 @@ def integrate(pdf: np.ndarray, i: int, z: np.ndarray, alp: float, order: int,
     # Evaluate the splitting function at the points z
     p0, p1, p0pf, p1pf, plus0, del0, plus1, del1 = splitting(z, CF, order, sign, CG, Tf)
 
-    # Implement Eq. (19), instead of Eq. (7) for the convolution
+    # Implement Eq. (20), instead of Eq. (7) for the convolution
     func = ((p0 + (alp * p1 if order == 2 else 0)) * interp(xs[i] / z, xs, pdf)) + \
         (p0pf + (alp * p1pf if order == 2 else 0)) * pdf[i]
 
@@ -417,8 +417,10 @@ def evolve(
     tmin = np.log(Q0_2)
     tmax = np.log(Q2)
 
-    # Define the timepoints between those energy scales at which Eq. (1) will be integrated
-    ts = np.linspace(tmin, tmax, n_t)
+    # Define the timepoints between those energy scales at which Eq. (1) will be integrated.
+    # These are the n_t left endpoints of n_t equal sub-intervals, consistent with the
+    # Euler step dt = (tmax - tmin) / n_t used below.
+    ts = np.linspace(tmin, tmax, n_t + 1)[:-1]
     
     def _beta_ode(x, a):
         """QCD beta-function ODE for running coupling.
