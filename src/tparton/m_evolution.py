@@ -566,7 +566,8 @@ def evolve(
     Returns
     -------
     ndarray
-        Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n_x+2, 2)
+        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n_x+2),
+        so that result[0] is the x grid and result[1] the evolved values.
         due to padding at boundaries.
     
     Notes
@@ -664,7 +665,9 @@ def evolve(
     # Pad the evolved pdf so that pdf(0) = pdf(1) = 0
     pdf_evolved = np.pad(pdf_evolved, 1)
     # Organize the (x, x*pdf_evolved(x)) pairs into an array
-    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)), axis=1)
+    # Row-major (2, N): row 0 is x, row 1 is x*f_evolved(x). The notebooks and the
+    # stored .npz reference data index this as result[0] / result[1].
+    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)))
     print('Done!')
     return pdf_evolved
 

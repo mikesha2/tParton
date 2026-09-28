@@ -180,7 +180,8 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     Returns
     -------
     ndarray
-        Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n_x+2, 2)
+        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n_x+2),
+        so that result[0] is the x grid and result[1] the evolved values.
         due to padding at boundaries.
     
     Notes
@@ -278,7 +279,9 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     # Pad the evolved pdf so that pdf(0) = pdf(1) = 0
     pdf_evolved = np.pad(pdf_evolved, 1)
     # Organize the (x, x*pdf_evolved(x)) pairs into an array
-    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)), axis=1)
+    # Row-major (2, N): row 0 is x, row 1 is x*f_evolved(x). The notebooks and the
+    # stored .npz reference data index this as result[0] / result[1].
+    pdf_evolved = np.stack((xs, np.array(xs) * np.array(pdf_evolved)))
     print(&#39;Done!&#39;)
     return pdf_evolved</code></pre>
 </details>
@@ -332,7 +335,8 @@ Higher values increase accuracy but slow computation.</dd>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>ndarray</code></dt>
-<dd>Evolved PDF as 2D array [[x, x*f_evolved(x)], &hellip;]. Shape: (n_x+2, 2)
+<dd>Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n_x+2),
+so that result[0] is the x grid and result[1] the evolved values.
 due to padding at boundaries.</dd>
 </dl>
 <h2 id="notes">Notes</h2>
@@ -451,7 +455,8 @@ due to padding at boundaries.</dd>
     Returns
     -------
     ndarray
-        Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n+1, 2)
+        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n+1),
+        so that result[0] is the x grid and result[1] the evolved values.
         where n is the number of input points.
     
     Examples
@@ -560,7 +565,9 @@ due to padding at boundaries.</dd>
         # Ensure that x*pdf(x) = 0 at x = 0 and x = 1
         inc = np.pad(inc, 1)
         res += dt * inc * alp
-    return np.stack((xs, res), axis=1)</code></pre>
+    # Row-major (2, N): row 0 is x, row 1 is x*f_evolved(x). The notebooks and the
+    # stored .npz reference data index this as result[0] / result[1].
+    return np.stack((xs, res))</code></pre>
 </details>
 <div class="desc"><p>Evolve transversity PDF using the direct integration method (Hirai).</p>
 <p>This is the main function for PDF evolution using direct numerical integration
@@ -618,7 +625,8 @@ If False, uses analytical approximation.</dd>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>ndarray</code></dt>
-<dd>Evolved PDF as 2D array [[x, x*f_evolved(x)], &hellip;]. Shape: (n+1, 2)
+<dd>Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n+1),
+so that result[0] is the x grid and result[1] the evolved values.
 where n is the number of input points.</dd>
 </dl>
 <h2 id="examples">Examples</h2>

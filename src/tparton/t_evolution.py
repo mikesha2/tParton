@@ -377,7 +377,8 @@ def evolve(
     Returns
     -------
     ndarray
-        Evolved PDF as 2D array [[x, x*f_evolved(x)], ...]. Shape: (n+1, 2)
+        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n+1),
+        so that result[0] is the x grid and result[1] the evolved values.
         where n is the number of input points.
     
     Examples
@@ -486,7 +487,9 @@ def evolve(
         # Ensure that x*pdf(x) = 0 at x = 0 and x = 1
         inc = np.pad(inc, 1)
         res += dt * inc * alp
-    return np.stack((xs, res), axis=1)
+    # Row-major (2, N): row 0 is x, row 1 is x*f_evolved(x). The notebooks and the
+    # stored .npz reference data index this as result[0] / result[1].
+    return np.stack((xs, res))
 
 
 def main():

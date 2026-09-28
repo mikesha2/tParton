@@ -77,8 +77,8 @@ def test_hirai_method_consistency(input_pdf, reference_data_hirai):
     )
     
     # Extract x and evolved PDF values
-    x_result = result[:, 0]
-    pdf_result = result[:, 1]
+    x_result = result[0]
+    pdf_result = result[1]
     
     # Verify basic properties
     assert len(x_result) == 101, "Should have 101 x values"
@@ -112,8 +112,8 @@ def test_vogelsang_method_consistency(input_pdf, reference_data_vogelsang):
     )
     
     # Extract x and evolved PDF values
-    x_result = result[:, 0]
-    pdf_result = result[:, 1]
+    x_result = result[0]
+    pdf_result = result[1]
     
     # Verify basic properties
     assert len(x_result) == 302, "Should have 302 x values (n_x+2 due to padding)"
@@ -164,11 +164,11 @@ def test_both_methods_give_similar_results(input_pdf):
     
     # Compare results (they should agree within a few percent due to different numerics)
     # Interpolate Vogelsang result onto Hirai grid for comparison
-    x_hirai = result_hirai[:, 0]
-    pdf_hirai = result_hirai[:, 1]
+    x_hirai = result_hirai[0]
+    pdf_hirai = result_hirai[1]
     
-    x_vogelsang = result_vogelsang[:, 0]
-    pdf_vogelsang = result_vogelsang[:, 1]
+    x_vogelsang = result_vogelsang[0]
+    pdf_vogelsang = result_vogelsang[1]
     
     # Only compare in region where both have significant values (x > 0.01)
     mask = x_hirai > 0.01
