@@ -48,7 +48,7 @@ References
 - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
 """
 __docformat__ = "numpy"
-from .constants import constants
+from .constants import constants, split_pdf_input
 import mpmath as mp
 import numpy as np
 from scipy.interpolate import interp1d as interp
@@ -458,11 +458,18 @@ def inv_mellin(f, x, degree=5, verbose=True):
         print(x, x*res)
     return res
 
-def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf):
+def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf, order=2):
     """Evolve a single Mellin moment from initial to final energy scale.
     
-    Implements Eq. (25) from the paper (Vogelsang's formula).
-    Combines LO and NLO splitting function moments with running coupling.
+    Implements Eq. (25) from the paper (Vogelsang's formula) at NLO, and
+    Eq. (26) at LO. The perturbative order is handled explicitly here, so that
+    the LO result is the pure LO evolution factor
+    
+        E_LO = (α_S(Q²)/α_S(Q₀²))^{-2 M[Δ_T P_qq^(0)](n)/β₀}
+    
+    with no NLO splitting moment and no β₁ contribution. Both branches η = ±1
+    therefore give the same LO factor, since η enters only through the NLO
+    splitting moment.
     
     Parameters
     ----------
@@ -477,25 +484,33 @@ def evolveMoment(n, pdf_m, alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, 
     beta0 : float
         Leading QCD beta function coefficient.
     beta1 : float
-        Next-to-leading QCD beta function coefficient.
+        Next-to-leading QCD beta function coefficient. Unused when `order` is 1.
     eta : int
-        Distribution type: 1 for plus, -1 for minus.
+        Fixed continuation branch, η = +1 (plus) or −1 (minus). Unused when
+        `order` is 1.
     CF : float
         Color factor.
     NC : int
         Number of colors.
     Tf : float
         Flavor factor.
+    order : int, optional
+        Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
     
     Returns
     -------
     complex
         Evolved Mellin moment at scale Q².
     """
-    total = 1
-    total += (alpha_S_Q0_2 - alpha_S_Q2) / pi / beta0 * (NLO_splitting_function_moment(n, eta, CF, NC, Tf) - beta1 / 2 / beta0 * LO_splitting_function_moment(n, CF))
-    total *= mp.power(alpha_S_Q2 / alpha_S_Q0_2, -2 / beta0 * LO_splitting_function_moment(n, CF)) * pdf_m
-    return total
+    # The LO evolution factor of Eq. (26), common to both orders
+    total = mp.power(alpha_S_Q2 / alpha_S_Q0_2, -2 / beta0 * LO_splitting_function_moment(n, CF))
+    if order == 2:
+        # The NLO correction of Eq. (25). At LO this term is absent entirely:
+        # zeroing beta1 alone would leave the NLO splitting moment in place.
+        total *= 1 + (alpha_S_Q0_2 - alpha_S_Q2) / pi / beta0 * (
+            NLO_splitting_function_moment(n, eta, CF, NC, Tf)
+            - beta1 / 2 / beta0 * LO_splitting_function_moment(n, CF))
+    return total * pdf_m
 
 def evolve(
     pdf: np.ndarray,
@@ -528,8 +543,12 @@ def evolve(
     Parameters
     ----------
     pdf : ndarray
-        Input PDF as x*f(x). Can be 1D array (values at x evenly
-        spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        Input PDF in the tilde convention x*f(x). Accepted formats are a 1D
+        array of shape (N,) or a single-column array of shape (N, 1), both
+        taken as the x*f(x) values at x evenly spaced on [0, 1] inclusive, or
+        a two-column array of shape (N, 2) holding
+        [[x0, x0*f(x0)], [x1, x1*f(x1)], ...]. Note that the second column is
+        x*f(x), not f(x).
     Q0_2 : float, optional
         Initial energy scale squared in GeV² (default: 0.16).
     Q2 : float, optional
@@ -542,8 +561,13 @@ def evolve(
     CG : float, optional
         Number of colors, NC (default: 3).
     morp : str, optional
-        Distribution type (default: 'minus'). Options are 'plus'
-        (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
+        Charge-conjugation combination of a single quark flavor (default:
+        'minus'). Options are 'plus' (ΔT q⁺ = ΔT q + ΔT q̄) or 'minus'
+        (ΔT q⁻ = ΔT q − ΔT q̄). This selects the continuation branch η = ±1
+        of the splitting function moments; it does not refer to a flavor
+        combination such as ΔT u ± ΔT d. A flavor difference such as
+        ΔT u − ΔT d is itself a valid non-singlet input, and is evolved with
+        whichever branch its charge-conjugation structure calls for.
     order : int, optional
         Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
     n_x : int, optional
@@ -566,9 +590,11 @@ def evolve(
     Returns
     -------
     ndarray
-        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n_x+2),
-        so that result[0] is the x grid and result[1] the evolved values.
-        due to padding at boundaries.
+        Evolved PDF as a 2D array [x, x*f_evolved(x)], arranged by row, so
+        that result[0] is the x grid and result[1] the evolved x*f(x) values.
+        The shape is (2, n_x+2) when n_x > 0, the two extra points being the
+        padded endpoints x = 0 and x = 1; when n_x <= 0 the input x grid is
+        reused and the shape is (2, N).
     
     Notes
     -----
@@ -588,7 +614,9 @@ def evolve(
     >>> x = np.linspace(0, 1, 100)
     >>> pdf_in = x * (1-x)**3  # x*f(x) format
     >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
-    >>> x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    >>> x_out, xf_out = pdf_out[0], pdf_out[1]
+    >>> len(x_out) == len(xf_out)
+    True
     
     See Also
     --------
@@ -602,12 +630,8 @@ def evolve(
     - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
 
-    if pdf.shape[-1] == 1:
-        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
-        xs = np.linspace(0, 1, len(pdf))
-    else:
-        # Otherwise split the input array
-        xs, pdf = pdf[:, 0], pdf[:, 1]
+    # Normalize every supported input format to a pair of 1D arrays
+    xs, pdf = split_pdf_input(pdf)
     
     # Divide x*pdf(x) by x. 
     # In the Hirai method, the evolution of x*pdf(x) and pdf(x) are numerically identical and do not require this extra step.
@@ -628,10 +652,13 @@ def evolve(
     NC, CF, Tf, beta0, beta1 = constants(CG, n_f)
 
     if order == 1:
-        # If the desired order of accuracy is LO, we simply set beta1 to 0, which reproduces the relevant LO equations
+        # If the desired order of accuracy is LO, we set beta1 to 0 so that the
+        # LO running coupling is used. The NLO splitting function moment is
+        # dropped inside evolveMoment() via its `order` argument; it cannot be
+        # suppressed by a local rebinding here, because evolveMoment() resolves
+        # the module-level function, nor by rebinding the module global, which
+        # would corrupt later NLO calls in the same process.
         beta1 = 0
-        # For the sake of efficiency, we also redefine the NLO splitting function moment to be the zero function
-        NLO_splitting_function_moment = lambda n, eta, CF, NC, Tf: 0
     
     if alpha_num:
         # Use the numerically evolved alpha_S
@@ -652,7 +679,7 @@ def evolve(
     # A function representing the Mellin transform of pdf(x), Eq. (21)
     pdf_m = lambda s: mellin(pdf, s)
     # A function representing the resulting evolved moments, Eq. (25)
-    pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf))
+    pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf, order))
     # Perform Mellin inversion on the evolved moments, Eq. (37)
     # mp.re() takes the real part for both mpf and mpc returns; mpf.__complex__
     # was removed in mpmath 1.4, so do not rely on it here.

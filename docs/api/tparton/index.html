@@ -142,8 +142,12 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     Parameters
     ----------
     pdf : ndarray
-        Input PDF as x*f(x). Can be 1D array (values at x evenly
-        spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        Input PDF in the tilde convention x*f(x). Accepted formats are a 1D
+        array of shape (N,) or a single-column array of shape (N, 1), both
+        taken as the x*f(x) values at x evenly spaced on [0, 1] inclusive, or
+        a two-column array of shape (N, 2) holding
+        [[x0, x0*f(x0)], [x1, x1*f(x1)], ...]. Note that the second column is
+        x*f(x), not f(x).
     Q0_2 : float, optional
         Initial energy scale squared in GeV² (default: 0.16).
     Q2 : float, optional
@@ -156,8 +160,13 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     CG : float, optional
         Number of colors, NC (default: 3).
     morp : str, optional
-        Distribution type (default: &#39;minus&#39;). Options are &#39;plus&#39;
-        (ΔT q⁺ = ΔT u + ΔT d) or &#39;minus&#39; (ΔT q⁻ = ΔT u - ΔT d).
+        Charge-conjugation combination of a single quark flavor (default:
+        &#39;minus&#39;). Options are &#39;plus&#39; (ΔT q⁺ = ΔT q + ΔT q̄) or &#39;minus&#39;
+        (ΔT q⁻ = ΔT q − ΔT q̄). This selects the continuation branch η = ±1
+        of the splitting function moments; it does not refer to a flavor
+        combination such as ΔT u ± ΔT d. A flavor difference such as
+        ΔT u − ΔT d is itself a valid non-singlet input, and is evolved with
+        whichever branch its charge-conjugation structure calls for.
     order : int, optional
         Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
     n_x : int, optional
@@ -180,9 +189,11 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     Returns
     -------
     ndarray
-        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n_x+2),
-        so that result[0] is the x grid and result[1] the evolved values.
-        due to padding at boundaries.
+        Evolved PDF as a 2D array [x, x*f_evolved(x)], arranged by row, so
+        that result[0] is the x grid and result[1] the evolved x*f(x) values.
+        The shape is (2, n_x+2) when n_x &gt; 0, the two extra points being the
+        padded endpoints x = 0 and x = 1; when n_x &lt;= 0 the input x grid is
+        reused and the shape is (2, N).
     
     Notes
     -----
@@ -202,7 +213,9 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     &gt;&gt;&gt; x = np.linspace(0, 1, 100)
     &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
     &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
-    &gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    &gt;&gt;&gt; x_out, xf_out = pdf_out[0], pdf_out[1]
+    &gt;&gt;&gt; len(x_out) == len(xf_out)
+    True
     
     See Also
     --------
@@ -216,12 +229,8 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     - Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221
     &#34;&#34;&#34;
 
-    if pdf.shape[-1] == 1:
-        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
-        xs = np.linspace(0, 1, len(pdf))
-    else:
-        # Otherwise split the input array
-        xs, pdf = pdf[:, 0], pdf[:, 1]
+    # Normalize every supported input format to a pair of 1D arrays
+    xs, pdf = split_pdf_input(pdf)
     
     # Divide x*pdf(x) by x. 
     # In the Hirai method, the evolution of x*pdf(x) and pdf(x) are numerically identical and do not require this extra step.
@@ -242,10 +251,13 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     NC, CF, Tf, beta0, beta1 = constants(CG, n_f)
 
     if order == 1:
-        # If the desired order of accuracy is LO, we simply set beta1 to 0, which reproduces the relevant LO equations
+        # If the desired order of accuracy is LO, we set beta1 to 0 so that the
+        # LO running coupling is used. The NLO splitting function moment is
+        # dropped inside evolveMoment() via its `order` argument; it cannot be
+        # suppressed by a local rebinding here, because evolveMoment() resolves
+        # the module-level function, nor by rebinding the module global, which
+        # would corrupt later NLO calls in the same process.
         beta1 = 0
-        # For the sake of efficiency, we also redefine the NLO splitting function moment to be the zero function
-        NLO_splitting_function_moment = lambda n, eta, CF, NC, Tf: 0
     
     if alpha_num:
         # Use the numerically evolved alpha_S
@@ -266,7 +278,7 @@ result = t_evolve(input_pdf, Q0_squared=3.1, Q_squared=10.6,
     # A function representing the Mellin transform of pdf(x), Eq. (21)
     pdf_m = lambda s: mellin(pdf, s)
     # A function representing the resulting evolved moments, Eq. (25)
-    pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf))
+    pdf_evolved_m = lambda s: mpc(evolveMoment(s, pdf_m(s), alpha_S_Q0_2, alpha_S_Q2, beta0, beta1, eta, CF, NC, Tf, order))
     # Perform Mellin inversion on the evolved moments, Eq. (37)
     # mp.re() takes the real part for both mpf and mpc returns; mpf.__complex__
     # was removed in mpmath 1.4, so do not rely on it here.
@@ -297,8 +309,12 @@ method with accelerated alternating series convergence</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>
-<dd>Input PDF as x<em>f(x). Can be 1D array (values at x evenly
-spaced on [0, 1]) or 2D array ([[x0, x0</em>f(x0)], [x1, x1*f(x1)], &hellip;]).</dd>
+<dd>Input PDF in the tilde convention x<em>f(x). Accepted formats are a 1D
+array of shape (N,) or a single-column array of shape (N, 1), both
+taken as the x</em>f(x) values at x evenly spaced on [0, 1] inclusive, or
+a two-column array of shape (N, 2) holding
+[[x0, x0<em>f(x0)], [x1, x1</em>f(x1)], &hellip;]. Note that the second column is
+x*f(x), not f(x).</dd>
 <dt><strong><code>Q0_2</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>Initial energy scale squared in GeV² (default: 0.16).</dd>
 <dt><strong><code>Q2</code></strong> :&ensp;<code>float</code>, optional</dt>
@@ -311,8 +327,13 @@ Only used if alpha_num=False.</dd>
 <dt><strong><code>CG</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>Number of colors, NC (default: 3).</dd>
 <dt><strong><code>morp</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Distribution type (default: 'minus'). Options are 'plus'
-(ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).</dd>
+<dd>Charge-conjugation combination of a single quark flavor (default:
+'minus'). Options are 'plus' (ΔT q⁺ = ΔT q + ΔT q̄) or 'minus'
+(ΔT q⁻ = ΔT q − ΔT q̄). This selects the continuation branch η = ±1
+of the splitting function moments; it does not refer to a flavor
+combination such as ΔT u ± ΔT d. A flavor difference such as
+ΔT u − ΔT d is itself a valid non-singlet input, and is evolved with
+whichever branch its charge-conjugation structure calls for.</dd>
 <dt><strong><code>order</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Perturbative order (default: 2). Use 1 for LO or 2 for NLO.</dd>
 <dt><strong><code>n_x</code></strong> :&ensp;<code>int</code>, optional</dt>
@@ -335,9 +356,11 @@ Higher values increase accuracy but slow computation.</dd>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>ndarray</code></dt>
-<dd>Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n_x+2),
-so that result[0] is the x grid and result[1] the evolved values.
-due to padding at boundaries.</dd>
+<dd>Evolved PDF as a 2D array [x, x<em>f_evolved(x)], arranged by row, so
+that result[0] is the x grid and result[1] the evolved x</em>f(x) values.
+The shape is (2, n_x+2) when n_x &gt; 0, the two extra points being the
+padded endpoints x = 0 and x = 1; when n_x &lt;= 0 the input x grid is
+reused and the shape is (2, N).</dd>
 </dl>
 <h2 id="notes">Notes</h2>
 <p>Advantages over direct integration (t_evolution.evolve):
@@ -353,7 +376,9 @@ due to padding at boundaries.</dd>
 &gt;&gt;&gt; x = np.linspace(0, 1, 100)
 &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
 &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, order=2)
-&gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+&gt;&gt;&gt; x_out, xf_out = pdf_out[0], pdf_out[1]
+&gt;&gt;&gt; len(x_out) == len(xf_out)
+True
 </code></pre>
 <h2 id="see-also">See Also</h2>
 <dl>
@@ -413,8 +438,12 @@ due to padding at boundaries.</dd>
     Parameters
     ----------
     pdf : ndarray
-        Input PDF as x*f(x). Can be 1D array (values at x evenly
-        spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        Input PDF in the tilde convention x*f(x). Accepted formats are a 1D
+        array of shape (N,) or a single-column array of shape (N, 1), both
+        taken as the x*f(x) values at x evenly spaced on [0, 1] inclusive, or
+        a two-column array of shape (N, 2) holding
+        [[x0, x0*f(x0)], [x1, x1*f(x1)], ...]. Note that the second column is
+        x*f(x), not f(x).
     Q0_2 : float, optional
         Initial energy scale squared in GeV² (default: 0.16).
     Q2 : float, optional
@@ -433,8 +462,13 @@ due to padding at boundaries.</dd>
         Number of z points for convolution integrals (default: 500).
         More points = better accuracy but slower.
     morp : str, optional
-        Distribution type (default: &#39;plus&#39;). Options are &#39;plus&#39;
-        (ΔT q⁺ = ΔT u + ΔT d) or &#39;minus&#39; (ΔT q⁻ = ΔT u - ΔT d).
+        Charge-conjugation combination of a single quark flavor (default:
+        &#39;plus&#39;). Options are &#39;plus&#39; (ΔT q⁺ = ΔT q + ΔT q̄) or &#39;minus&#39;
+        (ΔT q⁻ = ΔT q − ΔT q̄). This selects which transversity splitting
+        function ΔT P_q± is used; it does not refer to a flavor combination
+        such as ΔT u ± ΔT d. A flavor difference such as ΔT u − ΔT d is itself
+        a valid non-singlet input, and is evolved with whichever branch its
+        charge-conjugation structure calls for.
     order : int, optional
         Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
     logScale : bool, optional
@@ -455,9 +489,10 @@ due to padding at boundaries.</dd>
     Returns
     -------
     ndarray
-        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n+1),
-        so that result[0] is the x grid and result[1] the evolved values.
-        where n is the number of input points.
+        Evolved PDF as a 2D array [x, x*f_evolved(x)], arranged by row, so
+        that result[0] is the x grid and result[1] the evolved x*f(x) values.
+        The shape is (2, N), where N is the number of input points: this
+        method evolves the input grid in place and does not resample it.
     
     Examples
     --------
@@ -466,7 +501,9 @@ due to padding at boundaries.</dd>
     &gt;&gt;&gt; x = np.linspace(0, 1, 100)
     &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
     &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
-    &gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    &gt;&gt;&gt; x_out, xf_out = pdf_out[0], pdf_out[1]
+    &gt;&gt;&gt; len(x_out) == len(xf_out)
+    True
     
     See Also
     --------
@@ -479,12 +516,8 @@ due to padding at boundaries.</dd>
     - Hirai, M., Kumano, S., &amp; Saito, N. (1998). Comput. Phys. Commun. 111, 150-160
     - Sha, C.M. &amp; Ma, B. (2025). arXiv:2409.00221
     &#34;&#34;&#34;
-    if pdf.shape[-1] == 1:
-        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
-        xs = np.linspace(0, 1, len(pdf))
-    else:
-        # Otherwise split the input array
-        xs, pdf = pdf[:, 0], pdf[:, 1]
+    # Normalize every supported input format to a pair of 1D arrays
+    xs, pdf = split_pdf_input(pdf)
 
     sign = 1 if morp == &#39;plus&#39; else -1
     lnlam = 2 * np.log(l_QCD)
@@ -519,22 +552,29 @@ due to padding at boundaries.</dd>
         return -beta0 * a * a - (beta1 * a * a * a if order == 2 else 0)
     ode = _beta_ode
 
-    # SciPy requires that the times be monotonically increasing or decreasing
-    less = ts &lt; np.log(Q0_2_a)
-    ts_less = ts[less]
-    ts_greater =ts[~less]
-
-    # For energies strictly below the reference energy, evolve toward lower t
-    alp2pi_num_less = odeint(ode, a0, [np.log(Q0_2_a)] + list(ts_less[::-1]), tfirst=True).flatten() * 2
-    alp2pi_num_less = alp2pi_num_less[-1:0:-1]
-    # For energies strictly above the reference energy, evolve toward higher t
-    alp2pi_num_greater = odeint(ode, a0, [np.log(Q0_2_a)] + list(ts_greater), tfirst=True).flatten() * 2
-    # Combine the alpha / 2 pi in increasing order of energy scale
-    alp2pi_num_greater = alp2pi_num_greater[1:]
-    alp2pi_num = list(alp2pi_num_less) + list(alp2pi_num_greater)
     if alpha_num:
-        # Use the numerically evolved alpha_S / 2 pi
-        alp2pi_use = alp2pi_num
+        # Use the numerically evolved alpha_S / 2 pi, integrating outward from
+        # the reference scale t_ref = ln(Q0_2_a) at which alpha_S is known.
+        #
+        # SciPy&#39;s odeint requires a monotonic time array, whereas the Euler grid
+        # ts above is decreasing whenever the evolution runs downward in Q2. So
+        # the sample points below and above t_ref are integrated separately,
+        # each sorted by increasing distance from t_ref, and the results are
+        # scattered back onto the original ordering of ts. Sorting ts itself and
+        # evolving on the sorted grid would instead misalign the coupling with
+        # the Euler steps.
+        t_ref = np.log(Q0_2_a)
+        alp2pi_use = np.empty_like(ts)
+        below = ts &lt; t_ref
+        for mask, direction in ((below, -1.0), (~below, 1.0)):
+            idx = np.flatnonzero(mask)
+            if len(idx) == 0:
+                continue
+            # Order these sample points so that t moves monotonically away from
+            # t_ref, which is the first point of the integration
+            idx = idx[np.argsort(direction * ts[idx])]
+            sol = odeint(ode, a0, np.concatenate(([t_ref], ts[idx])), tfirst=True).flatten()
+            alp2pi_use[idx] = sol[1:] * 2
     else:
         # Use the approximate analytical expression for alpha_S in Eq. (4)
         alp2pi_use = alp2pi(ts, lnlam, order, beta0, beta1)
@@ -583,8 +623,12 @@ Mellin method.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>pdf</code></strong> :&ensp;<code>ndarray</code></dt>
-<dd>Input PDF as x<em>f(x). Can be 1D array (values at x evenly
-spaced on [0, 1]) or 2D array ([[x0, x0</em>f(x0)], [x1, x1*f(x1)], &hellip;]).</dd>
+<dd>Input PDF in the tilde convention x<em>f(x). Accepted formats are a 1D
+array of shape (N,) or a single-column array of shape (N, 1), both
+taken as the x</em>f(x) values at x evenly spaced on [0, 1] inclusive, or
+a two-column array of shape (N, 2) holding
+[[x0, x0<em>f(x0)], [x1, x1</em>f(x1)], &hellip;]. Note that the second column is
+x*f(x), not f(x).</dd>
 <dt><strong><code>Q0_2</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>Initial energy scale squared in GeV² (default: 0.16).</dd>
 <dt><strong><code>Q2</code></strong> :&ensp;<code>float</code>, optional</dt>
@@ -603,8 +647,13 @@ More steps = better accuracy but slower.</dd>
 <dd>Number of z points for convolution integrals (default: 500).
 More points = better accuracy but slower.</dd>
 <dt><strong><code>morp</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Distribution type (default: 'plus'). Options are 'plus'
-(ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).</dd>
+<dd>Charge-conjugation combination of a single quark flavor (default:
+'plus'). Options are 'plus' (ΔT q⁺ = ΔT q + ΔT q̄) or 'minus'
+(ΔT q⁻ = ΔT q − ΔT q̄). This selects which transversity splitting
+function ΔT P_q± is used; it does not refer to a flavor combination
+such as ΔT u ± ΔT d. A flavor difference such as ΔT u − ΔT d is itself
+a valid non-singlet input, and is evolved with whichever branch its
+charge-conjugation structure calls for.</dd>
 <dt><strong><code>order</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Perturbative order (default: 2). Use 1 for LO or 2 for NLO.</dd>
 <dt><strong><code>logScale</code></strong> :&ensp;<code>bool</code>, optional</dt>
@@ -625,9 +674,10 @@ If False, uses analytical approximation.</dd>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>ndarray</code></dt>
-<dd>Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n+1),
-so that result[0] is the x grid and result[1] the evolved values.
-where n is the number of input points.</dd>
+<dd>Evolved PDF as a 2D array [x, x<em>f_evolved(x)], arranged by row, so
+that result[0] is the x grid and result[1] the evolved x</em>f(x) values.
+The shape is (2, N), where N is the number of input points: this
+method evolves the input grid in place and does not resample it.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
 <pre><code class="language-python-repl">&gt;&gt;&gt; import numpy as np
@@ -635,7 +685,9 @@ where n is the number of input points.</dd>
 &gt;&gt;&gt; x = np.linspace(0, 1, 100)
 &gt;&gt;&gt; pdf_in = x * (1-x)**3  # x*f(x) format
 &gt;&gt;&gt; pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
-&gt;&gt;&gt; x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+&gt;&gt;&gt; x_out, xf_out = pdf_out[0], pdf_out[1]
+&gt;&gt;&gt; len(x_out) == len(xf_out)
+True
 </code></pre>
 <h2 id="see-also">See Also</h2>
 <dl>

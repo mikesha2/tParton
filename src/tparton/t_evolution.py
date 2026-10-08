@@ -48,7 +48,7 @@ References
 """
 __docformat__ = "numpy"
 
-from .constants import constants
+from .constants import constants, split_pdf_input
 import numpy as np
 from scipy.integrate import simpson
 from numpy._core.multiarray import interp
@@ -335,8 +335,12 @@ def evolve(
     Parameters
     ----------
     pdf : ndarray
-        Input PDF as x*f(x). Can be 1D array (values at x evenly
-        spaced on [0, 1]) or 2D array ([[x0, x0*f(x0)], [x1, x1*f(x1)], ...]).
+        Input PDF in the tilde convention x*f(x). Accepted formats are a 1D
+        array of shape (N,) or a single-column array of shape (N, 1), both
+        taken as the x*f(x) values at x evenly spaced on [0, 1] inclusive, or
+        a two-column array of shape (N, 2) holding
+        [[x0, x0*f(x0)], [x1, x1*f(x1)], ...]. Note that the second column is
+        x*f(x), not f(x).
     Q0_2 : float, optional
         Initial energy scale squared in GeV² (default: 0.16).
     Q2 : float, optional
@@ -355,8 +359,13 @@ def evolve(
         Number of z points for convolution integrals (default: 500).
         More points = better accuracy but slower.
     morp : str, optional
-        Distribution type (default: 'plus'). Options are 'plus'
-        (ΔT q⁺ = ΔT u + ΔT d) or 'minus' (ΔT q⁻ = ΔT u - ΔT d).
+        Charge-conjugation combination of a single quark flavor (default:
+        'plus'). Options are 'plus' (ΔT q⁺ = ΔT q + ΔT q̄) or 'minus'
+        (ΔT q⁻ = ΔT q − ΔT q̄). This selects which transversity splitting
+        function ΔT P_q± is used; it does not refer to a flavor combination
+        such as ΔT u ± ΔT d. A flavor difference such as ΔT u − ΔT d is itself
+        a valid non-singlet input, and is evolved with whichever branch its
+        charge-conjugation structure calls for.
     order : int, optional
         Perturbative order (default: 2). Use 1 for LO or 2 for NLO.
     logScale : bool, optional
@@ -377,9 +386,10 @@ def evolve(
     Returns
     -------
     ndarray
-        Evolved PDF as a 2D array [x, x*f_evolved(x)]. Shape: (2, n+1),
-        so that result[0] is the x grid and result[1] the evolved values.
-        where n is the number of input points.
+        Evolved PDF as a 2D array [x, x*f_evolved(x)], arranged by row, so
+        that result[0] is the x grid and result[1] the evolved x*f(x) values.
+        The shape is (2, N), where N is the number of input points: this
+        method evolves the input grid in place and does not resample it.
     
     Examples
     --------
@@ -388,7 +398,9 @@ def evolve(
     >>> x = np.linspace(0, 1, 100)
     >>> pdf_in = x * (1-x)**3  # x*f(x) format
     >>> pdf_out = evolve(pdf_in, Q0_2=4.0, Q2=100.0, n_t=200, n_z=1000)
-    >>> x_out, xf_out = pdf_out[:, 0], pdf_out[:, 1]
+    >>> x_out, xf_out = pdf_out[0], pdf_out[1]
+    >>> len(x_out) == len(xf_out)
+    True
     
     See Also
     --------
@@ -401,12 +413,8 @@ def evolve(
     - Hirai, M., Kumano, S., & Saito, N. (1998). Comput. Phys. Commun. 111, 150-160
     - Sha, C.M. & Ma, B. (2025). arXiv:2409.00221
     """
-    if pdf.shape[-1] == 1:
-        # If only the x*pdf(x) values are supplied, assume a linear spacing from 0 to 1
-        xs = np.linspace(0, 1, len(pdf))
-    else:
-        # Otherwise split the input array
-        xs, pdf = pdf[:, 0], pdf[:, 1]
+    # Normalize every supported input format to a pair of 1D arrays
+    xs, pdf = split_pdf_input(pdf)
 
     sign = 1 if morp == 'plus' else -1
     lnlam = 2 * np.log(l_QCD)
@@ -441,22 +449,29 @@ def evolve(
         return -beta0 * a * a - (beta1 * a * a * a if order == 2 else 0)
     ode = _beta_ode
 
-    # SciPy requires that the times be monotonically increasing or decreasing
-    less = ts < np.log(Q0_2_a)
-    ts_less = ts[less]
-    ts_greater =ts[~less]
-
-    # For energies strictly below the reference energy, evolve toward lower t
-    alp2pi_num_less = odeint(ode, a0, [np.log(Q0_2_a)] + list(ts_less[::-1]), tfirst=True).flatten() * 2
-    alp2pi_num_less = alp2pi_num_less[-1:0:-1]
-    # For energies strictly above the reference energy, evolve toward higher t
-    alp2pi_num_greater = odeint(ode, a0, [np.log(Q0_2_a)] + list(ts_greater), tfirst=True).flatten() * 2
-    # Combine the alpha / 2 pi in increasing order of energy scale
-    alp2pi_num_greater = alp2pi_num_greater[1:]
-    alp2pi_num = list(alp2pi_num_less) + list(alp2pi_num_greater)
     if alpha_num:
-        # Use the numerically evolved alpha_S / 2 pi
-        alp2pi_use = alp2pi_num
+        # Use the numerically evolved alpha_S / 2 pi, integrating outward from
+        # the reference scale t_ref = ln(Q0_2_a) at which alpha_S is known.
+        #
+        # SciPy's odeint requires a monotonic time array, whereas the Euler grid
+        # ts above is decreasing whenever the evolution runs downward in Q2. So
+        # the sample points below and above t_ref are integrated separately,
+        # each sorted by increasing distance from t_ref, and the results are
+        # scattered back onto the original ordering of ts. Sorting ts itself and
+        # evolving on the sorted grid would instead misalign the coupling with
+        # the Euler steps.
+        t_ref = np.log(Q0_2_a)
+        alp2pi_use = np.empty_like(ts)
+        below = ts < t_ref
+        for mask, direction in ((below, -1.0), (~below, 1.0)):
+            idx = np.flatnonzero(mask)
+            if len(idx) == 0:
+                continue
+            # Order these sample points so that t moves monotonically away from
+            # t_ref, which is the first point of the integration
+            idx = idx[np.argsort(direction * ts[idx])]
+            sol = odeint(ode, a0, np.concatenate(([t_ref], ts[idx])), tfirst=True).flatten()
+            alp2pi_use[idx] = sol[1:] * 2
     else:
         # Use the approximate analytical expression for alpha_S in Eq. (4)
         alp2pi_use = alp2pi(ts, lnlam, order, beta0, beta1)

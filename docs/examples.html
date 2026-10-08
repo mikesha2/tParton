@@ -280,13 +280,19 @@ result = m_evolve(pdf, Q0_2=4, Q2=200, degree=3)
 </code></pre>
 
 <h3>Evolution Types</h3>
-<p>The <code>morp</code> parameter selects the quark combination:</p>
-<pre><code class="language-python"># Plus combination: ΔT q⁺ = ΔT u + ΔT d
+<p>The <code>morp</code> parameter selects the charge-conjugation combination of a
+single quark flavor, which fixes the continuation branch η = ±1 of the
+splitting function moments. It does <em>not</em> refer to a flavor combination
+such as ΔT u ± ΔT d:</p>
+<pre><code class="language-python"># Plus combination: ΔT q⁺ = ΔT q + ΔT q̄
 result = m_evolve(pdf, Q0_2=4, Q2=200, morp='plus')
 
-# Minus combination: ΔT q⁻ = ΔT u - ΔT d
+# Minus combination: ΔT q⁻ = ΔT q − ΔT q̄
 result = m_evolve(pdf, Q0_2=4, Q2=200, morp='minus')
 </code></pre>
+<p>A flavor non-singlet difference such as ΔT u − ΔT d is itself a perfectly
+valid input; it is evolved with whichever branch its charge-conjugation
+structure calls for.</p>
 </section>
 
 <section id="parameter-studies">
@@ -301,13 +307,13 @@ result = m_evolve(pdf, Q0_2=4, Q2=200, morp='minus')
 <p>The Vogelsang method uses Cohen's accelerated alternating series for the inverse Mellin transform. The <code>degree</code> parameter controls convergence accuracy. Higher degrees improve accuracy but increase computation time:</p>
 
 <img src="fig3_optimal_degree_heatmap.svg" alt="Optimal degree analysis heatmap" style="width:100%; max-width:800px; margin:20px 0;">
-<p><em>Figure 3b: Relative error heatmap as a function of degree and number of x points. The optimal degree depends on the desired accuracy and available computational resources. For most applications, degree=5 provides a good balance.</em></p>
+<p><em>Figure 3b: Relative error heatmap as a function of degree and the number of input x points N<sub>x</sub>&prime;. The reference is the Hirai result with the numerical α<sub>S</sub> at N<sub>x</sub>=3000 and N<sub>t</sub>=500, and the colorscale is logarithmic. In this benchmark degree 7 gives the smallest error at every N<sub>x</sub>&prime;; that is a property of this input and reference, not a universally optimal degree. For most applications, degree=5 to 7 provides a good balance.</em></p>
 
 <h3>Discretization Analysis for Hirai Method</h3>
-<p>The direct integration method requires careful selection of time steps (<code>n_t</code>) and integration points (<code>n_z</code>). Both parameters affect accuracy and computation time:</p>
+<p>The direct integration method requires careful selection of time steps (<code>n_t</code>) and the number of x points N<sub>x</sub>. Both parameters affect accuracy and computation time:</p>
 
 <img src="fig4_heatmap.svg" alt="Discretization parameter study" style="width:100%; max-width:800px; margin:20px 0;">
-<p><em>Figure 4: Relative error as a function of n_t (time steps) and n_x (spatial resolution). The Hirai method converges with sufficient discretization, but requires more points than the Mellin method for comparable accuracy.</em></p>
+<p><em>Figure 4: Relative error as a function of N<sub>t</sub> (time steps) and N<sub>x</sub> (spatial resolution), against the same reference and on the same logarithmic colorscale as Figure 3b. The Hirai method converges with sufficient discretization, but requires more points than the Mellin method for comparable accuracy.</em></p>
 
 <h3>Recommendations</h3>
 <ul>
