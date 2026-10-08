@@ -8,8 +8,8 @@ authors:
   - family-names: Ma
     given-names: Bailing
 title: "tParton: A Python package for next-to-leading order evolution of transversity parton distribution functions"
-version: 3.0.1
-date-released: 2026-09-28
+version: 3.0.2
+date-released: 2026-10-08
 url: "https://github.com/mikesha2/tParton"
 repository-code: "https://github.com/mikesha2/tParton"
 license: MIT

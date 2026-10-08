@@ -49,6 +49,6 @@ __docformat__ = "numpy"
 from .t_evolution import evolve as t_evolve
 from .m_evolution import evolve as m_evolve
 
-__version__ = "1.0.0"
+__version__ = "3.0.2"
 __author__ = "Congzhou M Sha, Bailing Ma"
 __all__ = ['t_evolve', 'm_evolve']
