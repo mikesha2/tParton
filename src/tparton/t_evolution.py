@@ -48,7 +48,7 @@ References
 """
 __docformat__ = "numpy"
 
-from .constants import constants, split_pdf_input
+from .constants import constants, split_pdf_input, str2bool
 import numpy as np
 from scipy.integrate import simpson
 from numpy._core.multiarray import interp
@@ -507,7 +507,7 @@ def evolve(
     return np.stack((xs, res))
 
 
-def main():
+def main(argv=None):
     """Command-line interface for direct integration evolution method.
     
     Parses command-line arguments and runs PDF evolution using Hirai's method.
@@ -532,15 +532,15 @@ def main():
     parser.add_argument('--order', metavar='order', nargs='?', action='store', type=int, default=2, help='1: leading order, 2: NLO DGLAP (default 2)')
     parser.add_argument('--nt', metavar='n_t', nargs='?', action='store', type=int, default=100, help='Number of steps to numerically integrate the DGLAP equations (default 100)')
     parser.add_argument('--nz', metavar='n_z', nargs='?', action='store', type=int, default=1000, help='Number of steps for numerical integration (default 1000)')
-    parser.add_argument('--logScale', nargs='?', action='store', type=bool, default=True, help='True if integration should be done on a log scale (default True)')
+    parser.add_argument('--logScale', nargs='?', action='store', type=str2bool, const=True, default=True, help='True if integration should be done on a log scale (default True)')
     parser.add_argument('--delim', nargs='?', action='store', type=str, default=' ', help='Delimiter for data file (default \' \'). If given without an argument, then the delimiter is whitespace (i.e. Mathematica output.)')
-    parser.add_argument('--alpha_num', metavar='alpha_num', nargs='?', action='store', type=bool, default=True, help='Set to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter.')
+    parser.add_argument('--alpha_num', metavar='alpha_num', nargs='?', action='store', type=str2bool, const=True, default=True, help='True (default) to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter; False to use the analytic coupling with -l.')
     parser.add_argument('--Q0sqalpha', metavar='Q0sqalpha', nargs='?', action='store', type=float, default=91.1876**2, help='The reference energy squared at which the strong coupling constant is known. Default is the squared Z boson mass. Use in conjunction with --a0. Only used when --alpha_num is True.')
     parser.add_argument('--a0', metavar='a0', nargs='?', action='store', type=float, default=0.118 / 4 / np.pi, help='The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = Z boson mass squared. Only used when --alpha_num is True.')
-    parser.add_argument('-v', nargs='?', action='store', type=bool, default=False, help='Verbose output (default False)')
+    parser.add_argument('-v', nargs='?', action='store', type=str2bool, const=True, default=False, help='Verbose output (default False)')
 
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     f = args.input
     if args.delim is None:
         pdf = np.genfromtxt(f)

@@ -119,3 +119,40 @@ def split_pdf_input(pdf):
             f'values; got shape {pdf.shape}'
         )
     return xs, values
+
+def str2bool(value):
+    """Parse a command-line boolean such as ``True``/``False``.
+
+    ``argparse`` with ``type=bool`` calls ``bool()`` on the raw string, and every
+    non-empty string, including ``'False'``, is truthy. Both command-line
+    interfaces use this function instead so that the user's choice reaches
+    ``evolve()``.
+
+    Parameters
+    ----------
+    value : str
+        One of ``true``/``false``, ``yes``/``no``, ``on``/``off`` or ``1``/``0``,
+        in any case.
+
+    Returns
+    -------
+    bool
+
+    Raises
+    ------
+    argparse.ArgumentTypeError
+        If `value` is not one of the strings above.
+
+    Example
+    -------
+    >>> from tparton.constants import str2bool
+    >>> str2bool('False')
+    False
+    """
+    import argparse
+    s = str(value).strip().lower()
+    if s in ('true', 't', 'yes', 'y', 'on', '1'):
+        return True
+    if s in ('false', 'f', 'no', 'n', 'off', '0'):
+        return False
+    raise argparse.ArgumentTypeError(f'expected a boolean (True or False), got {value!r}')

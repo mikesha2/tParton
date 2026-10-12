@@ -230,7 +230,11 @@ python -m tparton t input.dat 3.1 10.6 --morp plus -o output.dat
 
 # Specify numerical parameters
 python -m tparton t input.dat 3.1 10.6 --morp plus \
-    --n_t 200 --n_z 1000 --logScale -o output.dat
+    --nt 200 --nz 1000 --logScale True -o output.dat
+
+# Use the analytical alpha_s with Lambda_QCD = 0.231 GeV instead of the
+# numerical alpha_s (the default). Boolean options take True or False.
+python -m tparton t input.dat 3.1 10.6 --alpha_num False -l 0.231 -o output.dat
 </code></pre>
 
 <h3>Additional Options</h3>

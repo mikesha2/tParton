@@ -44,6 +44,16 @@ An example run will look like:
 
 We are evolving the `INPUTPDF.dat` from 3.1 to 10.6 GeV<sup>2</sup>, for the plus type distribution, and with output written to `OUTPUTPDF.dat`.
 
+Boolean options such as `--alpha_num`, `--logScale` and `-v` take `True` or `False`, for example `--alpha_num False -l 0.231` to use the analytical coupling with the given QCD scale. A bare flag such as `--alpha_num` means `True`.
+
+## Running the tests
+
+From this directory, with `pytest` installed:
+
+`python -m pytest`
+
+The tests do not need the package to be installed, and do not read any files from `examples/`.
+
 ## Importing the tParton package
 
 To use the Hirai ODE integration method:

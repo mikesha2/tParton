@@ -39,27 +39,13 @@ def input_pdf():
     return diff
 
 
-@pytest.fixture
-def reference_data_hirai():
-    """Load reference data for Hirai method."""
-    data = np.load('examples/hirai_approx.npz')
-    return data
-
-
-@pytest.fixture
-def reference_data_vogelsang():
-    """Load reference data for Vogelsang method."""
-    data = np.load('examples/vogelsang_approx.npz')
-    return data
-
-
-def test_hirai_method_consistency(input_pdf, reference_data_hirai):
+def test_hirai_method_consistency(input_pdf):
     """Test that Hirai (direct integration) method produces expected results.
     
     This test evolves a transversity PDF using the direct integration method
-    and verifies the code runs successfully. Note: Exact numerical comparison
-    with reference data is not performed because we use a coarser grid (n=100)
-    for faster testing, while reference data was generated with n=3000.
+    and verifies the code runs successfully. No comparison with the stored
+    reference data is made, because we use a coarser grid (n=100) for faster
+    testing, while the reference data was generated with n=3000.
     """
     from tparton.t_evolution import evolve
     
@@ -89,13 +75,13 @@ def test_hirai_method_consistency(input_pdf, reference_data_hirai):
     assert np.all(pdf_result >= 0) or np.all(pdf_result <= 0), "PDF should have consistent sign"
 
 
-def test_vogelsang_method_consistency(input_pdf, reference_data_vogelsang):
+def test_vogelsang_method_consistency(input_pdf):
     """Test that Vogelsang (Mellin moment) method produces expected results.
     
     This test evolves a transversity PDF using the Mellin moment method
-    and verifies the code runs successfully. Note: Exact numerical comparison
-    with reference data is not performed because we use a coarser grid (n_x=300)
-    for faster testing, while reference data was generated with n_x=3000.
+    and verifies the code runs successfully. No comparison with the stored
+    reference data is made, because we use a coarser grid (n_x=300) for faster
+    testing, while the reference data was generated with n_x=3000.
     """
     from tparton.m_evolution import evolve
     
@@ -445,6 +431,88 @@ def test_truncated_and_unexpanded_nlo_prescriptions_differ(qcd):
     d_un = unexpanded[1] - unexpanded[-1]
     assert -0.15 < float(d_un / d_tr - 1) < -0.13
 
+
+
+# ---------------------------------------------------------------------------
+# Command-line boolean options
+#
+# argparse with type=bool turns every non-empty string, including 'False',
+# into True, so `--alpha_num False` used to run with the numerical coupling.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("text, expected", [
+    ("True", True), ("true", True), ("1", True), ("yes", True),
+    ("False", False), ("false", False), ("0", False), ("no", False),
+])
+def test_str2bool_parses_both_values(text, expected):
+    from tparton.constants import str2bool
+    assert str2bool(text) is expected
+
+
+def test_str2bool_rejects_other_strings():
+    import argparse
+    from tparton.constants import str2bool
+    with pytest.raises(argparse.ArgumentTypeError):
+        str2bool("maybe")
+
+
+CLI_FLAGS = {
+    'm': {'--alpha_num': 'alpha_num', '-v': 'verbose'},
+    't': {'--alpha_num': 'alpha_num', '--logScale': 'logScale', '-v': 'verbose'},
+}
+
+
+@pytest.mark.parametrize("method, flag, kwarg", [
+    (method, flag, kwarg) for method, flags in CLI_FLAGS.items() for flag, kwarg in flags.items()
+])
+@pytest.mark.parametrize("given, expected", [
+    (["True"], True), (["False"], False), ([], True),
+])
+def test_cli_boolean_options_reach_evolve(tmp_path, monkeypatch, method, flag, kwarg, given, expected):
+    """The True/False written on the command line is what evolve() receives.
+
+    A bare flag (no value) means True.
+    """
+    import importlib
+    module = importlib.import_module('tparton.m_evolution' if method == 'm' else 'tparton.t_evolution')
+    received = {}
+
+    def fake_evolve(pdf, **kwargs):
+        received.update(kwargs)
+        return np.stack((pdf[:, 0], pdf[:, 1]))
+
+    monkeypatch.setattr(module, 'evolve', fake_evolve)
+    infile = tmp_path / 'in.dat'
+    np.savetxt(infile, np.array([[0.0, 0.0], [0.5, 0.1], [1.0, 0.0]]))
+    module.main([method, str(infile), '4', '200', '-o', str(tmp_path / 'out.dat'), flag, *given])
+    assert received[kwarg] is expected
+
+
+def test_cli_alpha_num_false_matches_api(tmp_path, input_pdf):
+    """End to end: `python -m tparton t ... --alpha_num False` uses the analytic coupling."""
+    import os
+    import subprocess
+    import sys
+    import tparton
+    from tparton.t_evolution import evolve
+
+    infile = tmp_path / 'in.dat'
+    np.savetxt(infile, input_pdf)
+    env = dict(os.environ, PYTHONPATH=os.path.dirname(os.path.dirname(tparton.__file__)))
+    common = ['-l', '0.231', '--nf', '4', '--nt', '20', '--nz', '50', '--logScale', 'True']
+    out = {}
+    for choice in ('False', 'True'):
+        outfile = tmp_path / f'out_{choice}.dat'
+        subprocess.run([sys.executable, '-m', 'tparton', 't', str(infile), '4', '200',
+                        '-o', str(outfile), *common, '--alpha_num', choice],
+                       check=True, env=env, capture_output=True)
+        out[choice] = np.loadtxt(outfile).T
+
+    api = {flag: evolve(input_pdf, Q0_2=4.0, Q2=200.0, l_QCD=0.231, n_f=4, n_t=20, n_z=50,
+                        logScale=True, alpha_num=flag) for flag in (False, True)}
+    np.testing.assert_allclose(out['False'], api[False], rtol=1e-12, atol=1e-15)
+    np.testing.assert_allclose(out['True'], api[True], rtol=1e-12, atol=1e-15)
+    assert not np.allclose(api[False][1], api[True][1])
 
 if __name__ == "__main__":
     # Run tests with pytest

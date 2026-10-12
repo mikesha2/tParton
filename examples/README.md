@@ -14,10 +14,12 @@ Suggested run order is as follows:
 
 2. "Evolve-Final.nb" is a Mathematica notebook containing the numerical validation of moments as well as the Mathematica implementation of Hirai's method. Results are saved to "mathematica.dat" and "mathematica_diff.dat".
 
-3. "Running Hirai.ipynb" and "Running Vogelsang.ipynb" perform the evolutions using the analytical expressions for the strong coupling constant, saving their results to "hirai.npz" and "vogelsang.npz". The same files with "*-exact_alpha.ipynb" perform the evolutions using the numerically evolved strong coupling constant.
+3. "Running Hirai.ipynb" and "Running Vogelsang.ipynb" perform the evolutions using the analytical expressions for the strong coupling constant, saving their results to "hirai_approx.npz" and "vogelsang_approx.npz". The same files with "*-exact_alpha.ipynb" perform the evolutions using the numerically evolved strong coupling constant, saving to "hirai-exact_alpha.npz" and "vogelsang-exact_alpha.npz". The Vogelsang results use Cohen's method to degree 5 (the default) and are used in Figures 1 and 3.
 
-4. The "vogelsang_exact_alpha_variable_degree" folder varies the degree of approximation and input PDF granularity in Vogelsang evolution (Figure 4).
+4. "Running Vogelsang-fig2_deg7.ipynb" repeats the Vogelsang evolution of the u - d difference with Cohen's method to degree 7, for both choices of the strong coupling constant, saving to "vogelsang_fig2_deg7.npz". Figure 2 reads its Vogelsang curves from this file; its Hirai curves come from step 3.
 
-5. The "hirai_exact_alpha_nx_nt" folder varies the number of interpolation points and timesteps in Hirai evolution (Figure 5).
+5. The "vogelsang_exact_alpha_variable_degree" folder varies the degree of approximation and input PDF granularity in Vogelsang evolution (Figure 4).
 
-6. "Figures.ipynb" reproduces our figures.
+6. The "hirai_exact_alpha_nx_nt" folder varies the number of interpolation points and timesteps in Hirai evolution (Figure 5).
+
+7. "Figures.ipynb" reproduces our figures.
