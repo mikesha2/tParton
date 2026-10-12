@@ -464,14 +464,14 @@ prescriptions via ln(1-x) terms. Interpolates PDF between grid points
 for smooth convolution.</p></div>
 </dd>
 <dt id="tparton.t_evolution.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>)</span>
+<span>def <span class="ident">main</span></span>(<span>argv=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def main():
+<pre><code class="python">def main(argv=None):
     &#34;&#34;&#34;Command-line interface for direct integration evolution method.
     
     Parses command-line arguments and runs PDF evolution using Hirai&#39;s method.
@@ -496,15 +496,15 @@ for smooth convolution.</p></div>
     parser.add_argument(&#39;--order&#39;, metavar=&#39;order&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=2, help=&#39;1: leading order, 2: NLO DGLAP (default 2)&#39;)
     parser.add_argument(&#39;--nt&#39;, metavar=&#39;n_t&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=100, help=&#39;Number of steps to numerically integrate the DGLAP equations (default 100)&#39;)
     parser.add_argument(&#39;--nz&#39;, metavar=&#39;n_z&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=int, default=1000, help=&#39;Number of steps for numerical integration (default 1000)&#39;)
-    parser.add_argument(&#39;--logScale&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=bool, default=True, help=&#39;True if integration should be done on a log scale (default True)&#39;)
+    parser.add_argument(&#39;--logScale&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=str2bool, const=True, default=True, help=&#39;True if integration should be done on a log scale (default True)&#39;)
     parser.add_argument(&#39;--delim&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=str, default=&#39; &#39;, help=&#39;Delimiter for data file (default \&#39; \&#39;). If given without an argument, then the delimiter is whitespace (i.e. Mathematica output.)&#39;)
-    parser.add_argument(&#39;--alpha_num&#39;, metavar=&#39;alpha_num&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=bool, default=True, help=&#39;Set to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter.&#39;)
+    parser.add_argument(&#39;--alpha_num&#39;, metavar=&#39;alpha_num&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=str2bool, const=True, default=True, help=&#39;True (default) to use the numerical solution for the strong coupling constant, numerically evolved at LO or NLO depending on the --order parameter; False to use the analytic coupling with -l.&#39;)
     parser.add_argument(&#39;--Q0sqalpha&#39;, metavar=&#39;Q0sqalpha&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=float, default=91.1876**2, help=&#39;The reference energy squared at which the strong coupling constant is known. Default is the squared Z boson mass. Use in conjunction with --a0. Only used when --alpha_num is True.&#39;)
     parser.add_argument(&#39;--a0&#39;, metavar=&#39;a0&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=float, default=0.118 / 4 / np.pi, help=&#39;The reference value of the strong coupling constant a = alpha / (4 pi) at the corresponding reference energy --Q0sqalpha. Default is 0.118 / (4 pi), at energy Q0sqalpha = Z boson mass squared. Only used when --alpha_num is True.&#39;)
-    parser.add_argument(&#39;-v&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=bool, default=False, help=&#39;Verbose output (default False)&#39;)
+    parser.add_argument(&#39;-v&#39;, nargs=&#39;?&#39;, action=&#39;store&#39;, type=str2bool, const=True, default=False, help=&#39;Verbose output (default False)&#39;)
 
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     f = args.input
     if args.delim is None:
         pdf = np.genfromtxt(f)
